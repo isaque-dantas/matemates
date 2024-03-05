@@ -4,11 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="711787ac-f71f-4ac6-8676-1350490c29f0" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/matemates.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/matemates.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="711787ac-f71f-4ac6-8676-1350490c29f0" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -39,7 +35,7 @@
     "Flask server.matemates.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
+    "git-widget-placeholder": "main",
     "last_opened_file_path": "/home/isaque/PycharmProjects/matemates/run.py",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -95,7 +91,7 @@
       <option name="presentableId" value="Default" />
       <updated>1709644202301</updated>
       <workItem from="1709644206134" duration="779000" />
-      <workItem from="1709669526279" duration="1876000" />
+      <workItem from="1709669526279" duration="2191000" />
     </task>
     <servers />
   </component>
