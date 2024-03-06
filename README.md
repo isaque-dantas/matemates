@@ -15,5 +15,5 @@
 
 Este é o projeto integrador dos estudantes Davi Lucas, Isaque Dantas e Lucas Henrique, do IFRN Campus Natal - Zona-Norte.
 
-Orientador: Prof. Rafael The Bonifácio de Andrade
-Co-orientadora: Profa. {{ teacher_name }}
+- Orientador: Prof. Rafael The Bonifácio de Andrade
+- Co-orientadora: Profa. {{ teacher_name }}
