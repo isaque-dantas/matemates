@@ -1,7 +1,11 @@
-# Byte-compiled / optimized / DLL files
 .idea/
+secret_keys.py
 
-__pycache__/
+*.bak
+
+# Byte-compiled / optimized / DLL files
+
+**/__pycache__/
 *.py[cod]
 *$py.class
 
