@@ -1,5 +1,6 @@
 from flask_login import UserMixin
 from app.models import db
+from app import app
 
 
 class User(db.Model, UserMixin):
@@ -81,3 +82,8 @@ class Definition(db.Model):
                 'trigonometria', 'teoria dos números', 'matemática discreta')
     )
     order = db.Column(db.Integer, nullable=False)
+
+
+# if __name__ == '__main__':
+#     with app.app_context():
+#         db.drop_all()
