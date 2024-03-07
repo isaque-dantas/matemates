@@ -7,3 +7,5 @@ blueprint = Blueprint('default', __name__)
 @blueprint.route('/index')
 def index():
     return render_template('index.html')
+
+
