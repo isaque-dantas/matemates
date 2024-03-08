@@ -1,5 +1,11 @@
 {% extends 'base.html' %}
 
+{% block edit_term_button %}
+    {% if user_is_admin %}
+        <a href="" class="btn-nav"><span></span><span></span><span></span><span></span>EDITAR</a>
+    {% endif %}
+{% endblock %}
+
 {% block navbar_nav_xl %}
     <a href="" class="link-nav">PALAVRAS</a>
     <a href="" class="link-nav">PERFIL</a>
@@ -14,3 +20,5 @@
     <li><a class="dropdown-item" href="#">MENU</a></li>
     <li></li>
 {% endblock %}
+
+

@@ -8,4 +8,4 @@ blueprint = Blueprint('default', __name__)
 def term_info(term_content):
     term = Term.get_term_by_content(term_content)
 
-    return render_template('entry.html', term=term, enumerate=enumerate, format=format)
+    return render_template('entry.html', term=term, enumerate=enumerate, format=format, user_is_admin=True)
