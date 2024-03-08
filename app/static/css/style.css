@@ -230,17 +230,13 @@ nav{
     left: 30px;
 }
 /*--*/
-.significado, .uso{
+.significado{
     position: relative;
     width: 100%;
     background: repeating-conic-gradient(from var(--a), #1B8EF2 0%, #1B8EF2 5%, transparent 5%, transparent 40%, #1B8EF2 50%);
     animation: animacao-borda 15s linear infinite;
     border-radius: 20px;
-    z-index: -1;
-}
-
-.uso{
-    background: #0e0b1c;
+    overflow: hidden;
 }
 
 @property --a{
@@ -276,19 +272,38 @@ nav{
     inset: 4px;
     background: #0e0b1c;
     border-radius: 15px;
-    z-index: -1;
+
 }
 
-.significado p {
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    word-break: break-all;
+.significado li {
+    position: relative;
+    z-index: 2;
+    margin-bottom: 10px;
 }
 
+.significado-conteudo, .perguntas{
+    overflow-y: auto;
+    max-height: 200px;
+    z-index: 2;
+    position: relative;
+    padding-right: 20px;
+    width: 100%;
+}
 
+.significado-conteudo::-webkit-scrollbar, .perguntas::-webkit-scrollbar{
+    width: 3px;
+    border-radius: 5px;
+    background: #ffffff2e;
+    padding: 10px 0 0 0;
+}
+
+.significado-conteudo::-webkit-scrollbar-thumb, .perguntas::-webkit-scrollbar-thumb{
+    width: 3px;
+    background: #ffffff;
+}
 
 .significado .area{
-    margin: 4px 0 0 0;
+    padding: 7px 0 0 0;
     line-height: 25px;
 }
 
@@ -296,6 +311,12 @@ nav{
     border: solid 1px white;
     padding: 0 5px 2px 5px;
     border-radius: 4px;
+}
+
+.representacao{
+    z-index: 2;
+    width: 100%;
+    max-width: 300px;
 }
 
 .imagem img{
@@ -309,6 +330,87 @@ nav{
     width: 150px;
     height: 150px;
 }
+/*--*/
+.perguntas{
+    margin: 4rem 3rem 3rem 3rem;
+}
+
+.titulo-perguntas{
+    margin: 1rem 3rem 3rem 3.75rem;
+}
+/*--*/
+.btn-exemplo-definicao{
+    background: white;
+    color: black;
+    letter-spacing: 0.1em;
+    font-size: 1em;
+    padding: 10px 30px;
+    transition: 0.5s;
+    position: relative;
+    color: white;
+    border-radius: 30px;
+}
+
+.btn-exemplo-definicao:hover{
+    letter-spacing: 0.2em;
+    background: var(--clr);
+    color: var(--clr);
+    box-shadow: 0 0 35px var(--clr);
+}
+
+.btn-exemplo-definicao:before{
+    content: '';
+    position: absolute;
+    inset: 2px;
+    background: #0e0b1c;
+    border-radius: 30px;
+}
+
+.btn-exemplo-definicao span{
+    position: relative;
+    z-index: 1;
+}
+
+.btn-exemplo-definicao i{
+    position: absolute;
+    inset: 0;
+    display: block;
+}
+
+.btn-exemplo-definicao i::before{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 70%;
+    width: 20px;
+    height: 4px;
+    background: #0e0b1c;
+    transform: translateX(-50%) skewX(325deg); 
+    transition: 0.5s;
+}
+
+.btn-exemplo-definicao:hover i::before{
+    width: 30px;
+    left: 30%;
+}
+
+.btn-exemplo-definicao i::after{
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 30%;
+    width: 20px;
+    height: 4px;
+    background: #0e0b1c;
+    transform: translateX(-50%) skewX(325deg); 
+    transition: 0.5s;
+}
+
+.btn-exemplo-definicao:hover i::after{
+    width: 30px;
+    left: 70%;
+}
+
 /*--*/
 .pesquisa-responsivo{
     display: none;
@@ -401,18 +503,14 @@ nav{
         align-self: center;
     }
 
-    .significado{
+    .sig{
         flex-direction: column;
         justify-content: center;
     }
 
-    .p-5{
-        padding: 2rem!important;
-    }
-
-    .representacao{
-        display: flex;
-        flex-direction: column;
+    .representacao, .representacao .p-5{
+        align-self: center;
+        padding-top: 0!important;
     }
 
     .exemplo{
@@ -441,6 +539,14 @@ nav{
 
     .btn-nav{
         display: none;
+    }
+
+    .significado-conteudo, .significado-conteudo .m-5{
+        width: auto;
+    }
+
+    .btn-exemplo-definicao{
+        width: 100%;
     }
 }
 

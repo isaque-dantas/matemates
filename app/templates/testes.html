@@ -23,7 +23,7 @@
 </head>
 
 <body>
-    <script src="script.js"></script>
+    <script src="../static/js/script.js"></script>
     <div class="bolhas">
         <div class="fundo-bolhas">
             <span style="--i:20.946"></span>
@@ -129,52 +129,11 @@
             <span style="--i:22.349"></span>
             <span style="--i:9.696"></span>
             <span style="--i:24.954"></span>
-            <span style="--i:7.2645"></span>
-            <span style="--i:29.5326"></span>
-            <span style="--i:12.952"></span>
-            <span style="--i:23.648"></span>
-            <span style="--i:21.755"></span>
-            <span style="--i:20.917"></span>
-            <span style="--i:18.9972"></span>
-            <span style="--i:9.014"></span>
-            <span style="--i:22.929"></span>
-            <span style="--i:24.148"></span>
-            <span style="--i:20.376"></span>
-            <span style="--i:7.842"></span>
-            <span style="--i:13.3852"></span>
-            <span style="--i:29.467"></span>
-            <span style="--i:13.528"></span>
-            <span style="--i:10.395"></span>
-            <span style="--i:5.957"></span>
-            <span style="--i:7.5375"></span>
-            <span style="--i:26.285"></span>
-            <span style="--i:3.3184"></span>
-            <span style="--i:14.6795"></span>
-            <span style="--i:17.382546"></span>
-            <span style="--i:8.6795"></span>
-            <span style="--i:27.8234"></span>
-            <span style="--i:18.6842"></span>
-            <span style="--i:9.44715"></span>
-            <span style="--i:13.3751"></span>
-            <span style="--i:16.4872"></span>
-            <span style="--i:7.4871"></span>
-            <span style="--i:25.4275"></span>
-            <span style="--i:4.37651"></span>
-            <span style="--i:20.478268"></span>
-            <span style="--i:21.96857"></span>
-            <span style="--i:23.792"></span>
-            <span style="--i:27.375"></span>
-            <span style="--i:24.645"></span>
-            <span style="--i:7.876"></span>
-            <span style="--i:29.7956"></span>
-            <span style="--i:12.6782"></span>
-            <span style="--i:23.782"></span>
-            <span style="--i:21.948"></span>
         </div>
         <section>
             <header>
                 <div class="container d-flex justify-content-between pt-2 align-items-center">
-                    <img src="img/LOGO.png" alt="" class="logo">
+                    <img src="../static/img/LOGO.png" alt="" class="logo">
                     <nav class="d-flex justify-content-between  align-items-center">
                         <a href="" class="link-nav">PALAVRAS</a>
                         <a href="" class="link-nav">PERFIL</a>
@@ -211,34 +170,49 @@
                         </div>
                     </section>
 
-                    
 
-                    <section>
-                        <div class="significado mt-5 d-flex justify-content-between">
-                            <ol class="p-5 lh-lg">
+
+                    <section class="significado mt-5">
+                        <div class="sig d-flex justify-content-between" id="significado">
+                            <ol class="significado-conteudo m-5 lh-lg">
                                 <li>Nome da primeira letra do alfabeto grego α, A.</li>
-                                <li>Princípio, começo.</li>
                                 <li class="area"><span>termoquimica</span><br>Identificação de ângulos na geometria</li>
+                                <li class="area"><span>Figurado</span><br>Aquilo que dá origem a; princípio: a musa é o
+                                    alfa do pintor</li>
+                                <li class="area"><span>Astronomia</span><br>Estrela principal de uma constelação</li>
+                                <li class="area"><span>Química</span><br>Símbolo que designa o grau de dissociação
+                                    eletrolítica</li>
+                                <li class="area"><span>Física</span><br>Indicação do ângulo de rotação óptica</li>
                             </ol>
-                            
+
                             <!--APAGAR ESSA PARTE CASO NÃO TENHA IMAGEM E EXPLICAÇÃO-->
                             <div class="representacao p-5 d-flex flex-column justify-content-center">
                                 <div class="imagem d-flex justify-content-center fs-1">α</div>
                                 <div class="exemplo d-flex align-items-center justify-content-center">
-                                    <img src="img/alfa.png" alt="">
+                                    <img src="../static/img/alfa.png" alt="">
                                 </div>
                             </div>
-                            <!------------------------------------------------------->  
+                            <!------------------------------------------------------->
                         </div>
 
-                    </section>
-                    <section>
-                        <div class=".uso d-flex justify-content-between">
-                            <ol class="p-5 lh-lg">
-                                <p class="m-0">Qual o seno de 30°?</p><p class="text-primary">R: 1/2</p>
-                            </ol>
+                        <div class="d-none justify-content-between lh-lg position-relative" id="exemplo">
+                            <h5 class="titulo-perguntas position-absolute z-2">Perguntas :</h5>
+                            <ul class="perguntas lh-lg">
+                                <li>a + b<br>R: 2</li>
+                                <li>c + d<br>R: 4</li>
+                                <li>e + f<br>R: 8</li>
+                                <li>g + h<br>R: 16</li>
+                                <li>i + j<br>R: 32</li>
+                                <li>k + l<br>R: 64</li>
+                            </ul>
                         </div>
                     </section>
+                    <div class="btn-box">
+                        <button class="btn-exemplo-definicao d-block mt-5 border-0" style="--clr:#1e9bff" id="btn-ex" onclick="mostrarExemplos()"><span>VEJA
+                            EXEMPLOS</span><i></i></button>
+                        <button class="btn-exemplo-definicao d-none mt-5 border-0" style="--clr:#1e9bff" id="btn-sig"
+                            onclick="mostrarSignificado()"><span>VOLTE PARA DEFINIÇÃO</span><i></i></button>
+                    </div>
                 </section>
 
                 <section class="recomendacao col-3">
