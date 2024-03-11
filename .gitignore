@@ -1,6 +1,6 @@
 .idea/
 secret_keys.py
-
+**/test-zone.py
 *.bak
 
 # Byte-compiled / optimized / DLL files
