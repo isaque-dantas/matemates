@@ -1,6 +1,16 @@
 from flask_login import UserMixin
 from app.models import db
-from app import app
+
+import unicodedata
+from operator import itemgetter
+import re
+
+
+def normalize_string(query_string: str) -> str:
+    normalized = unicodedata.normalize('NFD', query_string)
+    return ''.join(
+        [char for char in normalized if not unicodedata.combining(char)]
+    ).casefold()
 
 
 class User(db.Model, UserMixin):
@@ -47,6 +57,48 @@ class Term(db.Model):
     @staticmethod
     def get_term_by_content(content):
         return Term.query.filter_by(content=content).first()
+
+    @staticmethod
+    def search(search_sentence, gender=None, grammatical_category=None):
+        if gender is not None and grammatical_category is not None:
+            terms_ids = Term.query.with_entities(Term.id).filter_by(gender=gender).filter_by(
+                grammatical_category=grammatical_category).all()
+        elif gender is not None:
+            terms_ids = Term.query.with_entities(Term.id).filter_by(gender=gender).all()
+        elif grammatical_category is not None:
+            terms_ids = Term.query.with_entities(Term.id).filter_by(grammatical_category=grammatical_category).all()
+        else:
+            terms_ids = Term.query.with_entities(Term.id).all()
+
+        terms_ids_and_occurrences = []
+
+        for term_id in terms_ids:
+            terms_ids_and_occurrences.append(
+                {'term_id': term_id, 'occurrences': 0}
+            )
+
+        normalized_search_sentence = normalize_string(search_sentence)
+
+        for search_word in normalized_search_sentence.split():
+            for i, term_id_and_occurrences in enumerate(terms_ids_and_occurrences):
+                term_id = term_id_and_occurrences['term_id']
+                term_content = Term.query.with_entities(Term.content).get(term_id)
+                normalized_term_content = normalize_string(term_content)
+
+                matched_strings = re.findall(rf'.*{search_word}.*', normalized_term_content)
+
+                if matched_strings and search_word == normalized_term_content:
+                    terms_ids_and_occurrences[i]['occurrences'] += 3
+                elif matched_strings:
+                    terms_ids_and_occurrences[i]['occurrences'] += 1
+
+            #     print(f'{search_word} / {term_content} => {matched_strings}')
+            # print()
+
+        terms_ids_and_occurrences = sorted(terms_ids_and_occurrences, key=itemgetter('term'))
+        terms_ids_and_occurrences = sorted(terms_ids_and_occurrences, key=itemgetter('occurrences'), reverse=True)
+
+        return terms_ids_and_occurrences
 
     def get_one(self, entity):
         return entity.query.filter_by(term_id=self.id).first()

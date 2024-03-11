@@ -5,7 +5,14 @@ blueprint = Blueprint('default', __name__)
 
 
 @blueprint.route('/term/<term_content>')
-def term_info(term_content):
+def term_data(term_content):
+    term = Term.get_term_by_content(term_content)
+
+    return render_template('entry.html', term=term, enumerate=enumerate, format=format, user_is_admin=True)
+
+
+@blueprint.route('/term/<term_content>')
+def term_search(term_content):
     term = Term.get_term_by_content(term_content)
 
     return render_template('entry.html', term=term, enumerate=enumerate, format=format, user_is_admin=True)
