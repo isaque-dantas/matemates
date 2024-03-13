@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileAllowed
-from wtforms import StringField, SubmitField, DateField, TimeField, TextAreaField, SelectField, FileField
+from wtforms import StringField, SubmitField, SelectField, FileField
 from wtforms.validators import DataRequired, Length
 
 from app.models.tables import Term, Definition
