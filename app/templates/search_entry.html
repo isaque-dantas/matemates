@@ -12,9 +12,9 @@
                     <h5 class="card-title fw-bold fs-3 mt-1 mb-4">{{ term.content }}</h5>
                     <ol class="d-flex flex-column gap-2">
                         {% for definition in term.get_definitions() %}
-                            {% if definition.related_math_area %}
+                            {% if definition.related_knowledge_area %}
                                 <li class="area">
-                                    <span class="border p-1 rounded" style="font-size: 14px; font-family: monospace">{{ definition.related_math_area }}</span><br>{{ definition.content }}</li>
+                                    <span class="border p-1 rounded" style="font-size: 14px; font-family: monospace">{{ definition.related_knowledge_area }}</span><br>{{ definition.content }}</li>
                             {% else %}
                                 <li>{{ definition.content }}</li>
                             {% endif %}

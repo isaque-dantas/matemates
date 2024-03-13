@@ -29,9 +29,9 @@
                 <div class="sig d-flex justify-content-between" id="significado">
                     <ol class="significado-conteudo m-5 lh-lg">
                         {% for definition in term.get_definitions() %}
-                            {% if definition.related_math_area %}
+                            {% if definition.related_knowledge_area %}
                                 <li class="area">
-                                    <span>{{ definition.related_math_area }}</span><br>{{ definition.content }}</li>
+                                    <span>{{ definition.related_knowledge_area }}</span><br>{{ definition.content }}</li>
                             {% else %}
                                 <li>{{ definition.content }}</li>
                             {% endif %}
