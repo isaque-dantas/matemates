@@ -2,6 +2,7 @@
 secret_keys.py
 **/test-zone.py
 *.bak
+*.bkp
 
 # Byte-compiled / optimized / DLL files
 
