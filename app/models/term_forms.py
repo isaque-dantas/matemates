@@ -7,12 +7,6 @@ from app.models.tables import Term, Definition
 
 
 class TermCreationForm(FlaskForm):
-    title = StringField('Título',
-                        validators=[
-                            DataRequired(),
-                            Length(max=Term.MAX_LENGTH['title'])
-                        ])
-
     content = StringField('Conteúdo',
                           validators=[
                               DataRequired(),
@@ -25,15 +19,15 @@ class TermCreationForm(FlaskForm):
                                          Length(max=Definition.MAX_LENGTH['content'])
                                      ])
 
-    definition_math_related_area = SelectField('Área da matemática',
-                                               choices=[
-                                                   ('álgebra', 'Álgebra'),
-                                                   ('cálculo', 'Cálculo'),
-                                                   ('estatística e probabilidade', 'Estatística e probabilidade'),
-                                                   ('trigonometria', 'Trigonometria'),
-                                                   ('teoria dos números', 'Estatística e probabilidade'),
-                                                   ('estatística e probabilidade', 'matemática discreta')
-                                               ])
+    knowledge_area = SelectField('Área do conhecimento',
+                                 choices=[
+                                     ('álgebra', 'Álgebra'),
+                                     ('cálculo', 'Cálculo'),
+                                     ('estatística e probabilidade', 'Estatística e probabilidade'),
+                                     ('trigonometria', 'Trigonometria'),
+                                     ('teoria dos números', 'Estatística e probabilidade'),
+                                     ('estatística e probabilidade', 'matemática discreta')
+                                 ])
 
     grammatical_category = SelectField('Classe gramatical',
                                        choices=[

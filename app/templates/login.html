@@ -1,0 +1,24 @@
+{% extends 'base-with-navbar-nav.html' %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+    <main class="container my-5">
+        <div class="d-flex justify-content-center align-items-center pt-5 mt-5">
+            <div style="min-width: 560px;">
+                <form action="/login" method="post">
+                    {{ form.hidden_tag() }}
+                    <div class="mb-5">
+                        {{ form.email.label(class="form-label mb-1") }}
+                        {{ form.email(class="form-control") }}
+                    </div>
+                    <div>
+                        {{ form.password.label(class="form-label mb-1") }}
+                        {{ form.password(class="form-control") }}
+                    </div>
+                    {{ form.submit(class="btn btn-outline-light px-4 py-2 mt-5") }}
+                </form>
+            </div>
+        </div>
+    </main>
+{% endblock %}

@@ -1,4 +1,6 @@
 from flask import Flask
+from flask_login import LoginManager
+
 from app.secret_keys import FLASK_SECRET_KEY, MYSQL_USER_PASSWORD
 
 app = Flask(__name__)
@@ -8,8 +10,24 @@ app.config['SQLALCHEMY_DATABASE_URI'] = \
     f'mysql+pymysql://dba_matemates:{MYSQL_USER_PASSWORD}@localhost/matemates_db'
 
 from app.controllers import term
+from app.controllers import user
+from app.controllers import dashboard
 
 app.register_blueprint(term.term_blueprint)
+app.register_blueprint(user.user_blueprint)
+app.register_blueprint(dashboard.dashboard_blueprint)
+
+from app.models.tables import User
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.get_by_id(int(user_id))
+
 
 if __name__ == '__main__':
     app.run(debug=True)

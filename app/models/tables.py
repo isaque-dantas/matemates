@@ -1,6 +1,8 @@
 from flask_login import UserMixin
 from app.models import db
 
+from werkzeug.security import generate_password_hash, check_password_hash
+
 import unicodedata
 from operator import itemgetter
 import re
@@ -34,7 +36,39 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(MAX_LENGTH['username']), nullable=False, unique=True)
     phone_number = db.Column(db.String(MAX_LENGTH['phone_number']))
     birth_date = db.Column(db.Date, nullable=False)
-    role = db.Column(db.Enum('admin', 'normal'))
+    role = db.Column(db.Enum('admin', 'normal'), nullable=False)
+
+    @staticmethod
+    def register(form):
+        password_hash = generate_password_hash(form.password.data)
+
+        new_user = User(
+            first_name=form.first_name.data,
+            last_name=form.last_name.data,
+            username=form.username.data,
+            password_hash=password_hash,
+            email=form.email.data,
+            phone_number=form.phone_number.data,
+            birth_date=form.birth_date.data,
+            role='normal'
+        )
+
+        db.session.add(new_user)
+        db.session.commit()
+
+    @staticmethod
+    def get_by_email(email):
+        return User.query.filter_by(email=email).first()
+
+    @staticmethod
+    def get_by_id(user_id):
+        return User.query.get_or_404(user_id)
+
+    def is_password_valid(self, password):
+        return check_password_hash(self.password_hash, password)
+
+    def is_admin(self):
+        return self.role == 'admin'
 
 
 class Term(db.Model):
@@ -50,6 +84,10 @@ class Term(db.Model):
     grammatical_category = db.Column(
         db.Enum('substantivo', 'verbo', 'adjetivo', 'numeral'), nullable=False
     )
+
+    @staticmethod
+    def register(form):
+        pass
 
     def get_gender_in_full(self):
         return Term.abbreviation_to_gender_in_full(self.gender)
@@ -179,7 +217,10 @@ class Definition(db.Model):
     order = db.Column(db.Integer, nullable=False)
     term_id = db.Column(db.Integer, db.ForeignKey('term.id'))
 
-# if __name__ == '__main__':
-#     with app.app_context():
-#         db.create_all()
-#         db.drop_all()
+
+if __name__ == '__main__':
+    from app import app
+
+    with app.app_context():
+        db.drop_all()
+        db.create_all()
