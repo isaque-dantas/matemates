@@ -172,7 +172,7 @@ class Definition(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     content = db.Column(db.String(MAX_LENGTH['content']), nullable=False)
-    related_knowledge_area = db.Column(
+    knowledge_area = db.Column(
         db.Enum('álgebra', 'cálculo', 'geometria', 'estatística e probabilidade',
                 'trigonometria', 'teoria dos números', 'matemática discreta', 'física')
     )

@@ -25,7 +25,7 @@ DROP TABLE IF EXISTS `definition`;
 CREATE TABLE `definition` (
   `id` int NOT NULL AUTO_INCREMENT,
   `content` varchar(256) NOT NULL,
-  `related_knowledge_area` enum('álgebra','cálculo','geometria','estatística e probabilidade','trigonometria','teoria dos números','matemática discreta') NOT NULL,
+  `knowledge_area` enum('álgebra','cálculo','geometria','estatística e probabilidade','trigonometria','teoria dos números','matemática discreta') NOT NULL,
   `order` int NOT NULL,
   `term_id` int DEFAULT NULL,
   PRIMARY KEY (`id`),
