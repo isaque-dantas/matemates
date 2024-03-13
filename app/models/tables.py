@@ -78,41 +78,40 @@ class Term(db.Model):
         #     terms_ids = Term.query.with_entities(Term.id).filter_by(grammatical_category=grammatical_category).all()
         # else:
         #     terms_ids = Term.query.with_entities(Term.id).all()
-        terms_ids = Term.query.with_entities(Term.id).all()
+        terms = Term.query.with_entities(Term.id, Term.content).all()
 
-        terms_ids_and_occurrences = []
+        terms_and_occurrences = []
 
-        for term_id in terms_ids:
-            terms_ids_and_occurrences.append(
-                {'term_id': term_id, 'occurrences': 0}
+        for term in terms:
+            terms_and_occurrences.append(
+                {'term_id': term.id, 'content': term.content, 'occurrences': 0}
             )
 
         normalized_search_sentence = normalize_string(search_sentence)
 
         for search_word in normalized_search_sentence.split():
-            for i, term_id_and_occurrences in enumerate(terms_ids_and_occurrences):
-                term_id = term_id_and_occurrences['term_id']
-                term_content = Term.query.with_entities(Term.content).get(term_id)
-                normalized_term_content = normalize_string(term_content)
+            for i, term_and_occurrences in enumerate(terms_and_occurrences):
+                normalized_term_content = normalize_string(term_and_occurrences['content'])
 
                 matched_strings = re.findall(rf'.*{search_word}.*', normalized_term_content)
 
-                if matched_strings is not None and search_word == normalized_term_content:
-                    terms_ids_and_occurrences[i]['occurrences'] += 3
-                elif matched_strings is not None:
-                    terms_ids_and_occurrences[i]['occurrences'] += 1
+                if matched_strings and search_word == normalized_term_content:
+                    terms_and_occurrences[i]['occurrences'] += 3
+                elif matched_strings:
+                    terms_and_occurrences[i]['occurrences'] += 1
 
             #     print(f'{search_word} / {term_content} => {matched_strings}')
             # print()
 
-        terms_ids_and_occurrences = sorted(terms_ids_and_occurrences, key=itemgetter('term'))
-        terms_ids_and_occurrences = sorted(terms_ids_and_occurrences, key=itemgetter('occurrences'), reverse=True)
+        terms_and_occurrences = sorted(terms_and_occurrences, key=itemgetter('content'))
+        terms_and_occurrences = sorted(terms_and_occurrences, key=itemgetter('occurrences'), reverse=True)
 
         terms = []
-        for term_id_and_occurrences in terms_ids_and_occurrences:
-            terms.append(
-                Term.query.get(term_id_and_occurrences['term_id'])
-            )
+        for term_and_occurrences in terms_and_occurrences:
+            if term_and_occurrences['occurrences'] != 0:
+                terms.append(
+                    Term.query.get(term_and_occurrences['term_id'])
+                )
 
         return terms
 

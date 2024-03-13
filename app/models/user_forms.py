@@ -35,7 +35,7 @@ class RegisterForm(FlaskForm):
                            Length(max=User.MAX_LENGTH['email']),
                        ])
 
-    phone_number = FileField('Telefone')
+    phone_number = StringField('Telefone')
     birth_date = DateField('Data de nascimento')
 
     submit = SubmitField('Confirmar')
