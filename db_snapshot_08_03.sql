@@ -25,7 +25,7 @@ DROP TABLE IF EXISTS `definition`;
 CREATE TABLE `definition` (
   `id` int NOT NULL AUTO_INCREMENT,
   `content` varchar(256) NOT NULL,
-  `related_math_area` enum('álgebra','cálculo','geometria','estatística e probabilidade','trigonometria','teoria dos números','matemática discreta') DEFAULT NULL,
+  `related_math_area` enum('álgebra','cálculo','geometria','estatística e probabilidade','trigonometria','teoria dos números','matemática discreta') NOT NULL,
   `order` int NOT NULL,
   `term_id` int DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -172,6 +172,7 @@ CREATE TABLE `user` (
   `username` varchar(24) NOT NULL,
   `phone_number` varchar(32) DEFAULT NULL,
   `birth_date` date NOT NULL,
+  `role` enum('admin', 'normal') NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`),
   UNIQUE KEY `username` (`username`)

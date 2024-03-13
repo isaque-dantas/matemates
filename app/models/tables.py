@@ -34,10 +34,15 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(MAX_LENGTH['username']), nullable=False, unique=True)
     phone_number = db.Column(db.String(MAX_LENGTH['phone_number']))
     birth_date = db.Column(db.Date, nullable=False)
+    role = db.Column(db.Enum('admin', 'normal'))
 
 
 class Term(db.Model):
     __tablename__ = 'term'
+
+    MAX_CONTENT = {
+        'content': 256
+    }
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     gender = db.Column(db.Enum('M', 'F'), nullable=False)
@@ -47,28 +52,33 @@ class Term(db.Model):
     )
 
     def get_gender_in_full(self):
+        return Term.abbreviation_to_gender_in_full(self.gender)
+
+    @staticmethod
+    def abbreviation_to_gender_in_full(abbreviation):
         gender_in_full = {
             'M': 'masculino',
             'F': 'feminino',
         }
 
-        return gender_in_full[self.gender]
+        return gender_in_full[abbreviation]
 
     @staticmethod
     def get_term_by_content(content):
         return Term.query.filter_by(content=content).first()
 
     @staticmethod
-    def search(search_sentence, gender=None, grammatical_category=None):
-        if gender is not None and grammatical_category is not None:
-            terms_ids = Term.query.with_entities(Term.id).filter_by(gender=gender).filter_by(
-                grammatical_category=grammatical_category).all()
-        elif gender is not None:
-            terms_ids = Term.query.with_entities(Term.id).filter_by(gender=gender).all()
-        elif grammatical_category is not None:
-            terms_ids = Term.query.with_entities(Term.id).filter_by(grammatical_category=grammatical_category).all()
-        else:
-            terms_ids = Term.query.with_entities(Term.id).all()
+    def search_for_related_terms(search_sentence, gender=None, grammatical_category=None):
+        # if gender is not None and grammatical_category is not None:
+        #     terms_ids = Term.query.with_entities(Term.id).filter_by(gender=gender).filter_by(
+        #         grammatical_category=grammatical_category).all()
+        # elif gender is not None:
+        #     terms_ids = Term.query.with_entities(Term.id).filter_by(gender=gender).all()
+        # elif grammatical_category is not None:
+        #     terms_ids = Term.query.with_entities(Term.id).filter_by(grammatical_category=grammatical_category).all()
+        # else:
+        #     terms_ids = Term.query.with_entities(Term.id).all()
+        terms_ids = Term.query.with_entities(Term.id).all()
 
         terms_ids_and_occurrences = []
 
@@ -87,9 +97,9 @@ class Term(db.Model):
 
                 matched_strings = re.findall(rf'.*{search_word}.*', normalized_term_content)
 
-                if matched_strings and search_word == normalized_term_content:
+                if matched_strings is not None and search_word == normalized_term_content:
                     terms_ids_and_occurrences[i]['occurrences'] += 3
-                elif matched_strings:
+                elif matched_strings is not None:
                     terms_ids_and_occurrences[i]['occurrences'] += 1
 
             #     print(f'{search_word} / {term_content} => {matched_strings}')
@@ -98,7 +108,13 @@ class Term(db.Model):
         terms_ids_and_occurrences = sorted(terms_ids_and_occurrences, key=itemgetter('term'))
         terms_ids_and_occurrences = sorted(terms_ids_and_occurrences, key=itemgetter('occurrences'), reverse=True)
 
-        return terms_ids_and_occurrences
+        terms = []
+        for term_id_and_occurrences in terms_ids_and_occurrences:
+            terms.append(
+                Term.query.get(term_id_and_occurrences['term_id'])
+            )
+
+        return terms
 
     def get_one(self, entity):
         return entity.query.filter_by(term_id=self.id).first()
@@ -151,8 +167,12 @@ class Syllable(db.Model):
 class Definition(db.Model):
     __tablename__ = 'definition'
 
+    MAX_LENGTH = {
+        'content': 256
+    }
+
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    content = db.Column(db.String(256), nullable=False)
+    content = db.Column(db.String(MAX_LENGTH['content']), nullable=False)
     related_math_area = db.Column(
         db.Enum('álgebra', 'cálculo', 'geometria', 'estatística e probabilidade',
                 'trigonometria', 'teoria dos números', 'matemática discreta')

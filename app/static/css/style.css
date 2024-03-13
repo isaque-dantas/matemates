@@ -327,8 +327,8 @@ nav{
     border: solid 3px white;
     border-radius: 5px;
     padding: 20px;
-    width: 150px;
-    height: 150px;
+    max-width: 150px;
+    max-height: 150px;
 }
 /*--*/
 .perguntas{
