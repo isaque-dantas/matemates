@@ -7,6 +7,14 @@ from app.models.user_forms import LoginForm, RegisterForm
 user_blueprint = Blueprint('user', __name__)
 
 
+def is_user_admin(user):
+    if isinstance(user, AnonymousUserMixin):
+        user_is_admin = False
+    else:
+        user_is_admin = user.is_admin()
+    return user_is_admin
+
+
 def is_current_user_logged_in() -> bool:
     return not isinstance(current_user, AnonymousUserMixin)
 
@@ -44,4 +52,3 @@ def register():
     #     return redirect(url_for('user.register'))
 
     return render_template('register.html', form=form)
-

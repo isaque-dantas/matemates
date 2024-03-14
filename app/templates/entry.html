@@ -16,7 +16,7 @@
                 <div class="position-absolute">
                     <p>{{ term.grammatical_category.capitalize() }} {{ term.get_gender_in_full() }}</p>
                     <h1>
-                        {% for i, syllable in enumerate(term.get_syllables()) %}{#
+                        {% for i, syllable in enumerate(term.syllables) %}{#
                             #}{% if i != 0 %}.{% endif %}{#
                             #}{{ syllable.content }}{#
                     #}{% endfor %}
@@ -28,46 +28,56 @@
             <section class="significado mt-5">
                 <div class="sig d-flex justify-content-between" id="significado">
                     <ol class="significado-conteudo m-5 lh-lg">
-                        {% for definition in term.get_definitions() %}
-                            {% if definition.related_knowledge_area %}
+                        {% for definition in term.definitions %}
+                            {% if definition.knowledge_areas %}
                                 <li class="area">
-                                    <span>{{ definition.related_knowledge_area }}</span><br>{{ definition.content }}</li>
+                                    {% for knowledge_area in definition.knowledge_areas %}
+                                        <span class="border p-1 rounded me-2"
+                                              style="font-size: 14px; font-family: monospace">{{ knowledge_area.content }}
+                                                                </span>
+                                    {% endfor %}
+
+                                    <div class="mt-2">{{ definition.content }}</div>
+                                </li>
                             {% else %}
                                 <li>{{ definition.content }}</li>
                             {% endif %}
                         {% endfor %}
                     </ol>
 
-                    <!--APAGAR ESSA PARTE CASO NÃO TENHA IMAGEM E EXPLICAÇÃO-->
-                    <div class="representacao p-5 d-flex flex-column justify-content-center">
-                        <div class="imagem d-flex justify-content-center fs-1">α</div>
-                        <div class="exemplo d-flex align-items-center justify-content-center">
-                            <img src={{ url_for('static', filename='img/{}'.format(term.get_image().path)) }} alt="">
+                    {% if term.image %}
+                        <div class="representacao p-5 d-flex flex-column justify-content-center">
+                            <div class="imagem d-flex justify-content-center fs-1">α</div>
+                            <div class="exemplo d-flex align-items-center justify-content-center">
+                                <img src={{ url_for('static', filename='img/{}'.format(term.image.path)) }} alt="">
+                            </div>
                         </div>
+                    {% endif %}
+                </div>
+                {% if term.questions %}
+                    <div class="d-none justify-content-between lh-lg position-relative" id="exemplo">
+                        <h5 class="titulo-perguntas position-absolute z-2">Questões</h5>
+                        <ul class="perguntas lh-lg">
+                            {% for question in term.questions %}
+                                {% if question.explanation %}
+                                    <li>{{ question.statement }}<br>R: {{ question.answer }}<br>E: {{ question.explanation }}
+                                    </li>
+                                {% else %}
+                                    <li>{{ question.statement }}<br>R: {{ question.answer }}</li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
                     </div>
-                    <!------------------------------------------------------->
-                </div>
-
-                <div class="d-none justify-content-between lh-lg position-relative" id="exemplo">
-                    <h5 class="titulo-perguntas position-absolute z-2">Questões</h5>
-                    <ul class="perguntas lh-lg">
-                        {% for question in term.get_questions() %}
-                            {% if question.explanation %}
-                                <li>{{ question.statement }}<br>R: {{ question.answer }}<br>E: {{ question.explanation }}
-                                </li>
-                            {% else %}
-                                <li>{{ question.statement }}<br>R: {{ question.answer }}</li>
-                            {% endif %}
-                        {% endfor %}
-                    </ul>
-                </div>
+                {% endif %}
             </section>
-            <div class="btn-box">
-                <button class="btn-exemplo-definicao d-block mt-5 border-0" style="--clr:#1e9bff" id="btn-ex"
-                        onclick="mostrarExemplos()"><span>VEJA EXEMPLOS</span><i></i></button>
-                <button class="btn-exemplo-definicao d-none mt-5 border-0" style="--clr:#1e9bff" id="btn-sig"
-                        onclick="mostrarSignificado()"><span>VOLTE PARA DEFINIÇÃO</span><i></i></button>
-            </div>
+            {% if term.questions %}
+                <div class="btn-box">
+                    <button class="btn-exemplo-definicao d-block mt-5 border-0" style="--clr:#1e9bff" id="btn-ex"
+                            onclick="mostrarExemplos()"><span>VEJA EXEMPLOS</span><i></i></button>
+                    <button class="btn-exemplo-definicao d-none mt-5 border-0" style="--clr:#1e9bff" id="btn-sig"
+                            onclick="mostrarSignificado()"><span>VOLTE PARA DEFINIÇÃO</span><i></i></button>
+                </div>
+            {% endif %}
         </section>
 
         <section class="recomendacao col-3">

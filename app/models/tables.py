@@ -85,6 +85,7 @@ class Term(db.Model):
         db.Enum('substantivo', 'verbo', 'adjetivo', 'numeral'), nullable=False
     )
 
+    image = db.relationship('Image', backref='term', uselist=False)
     questions = db.relationship('Question', backref='term')
     syllables = db.relationship('Syllable', backref='term')
     definitions = db.relationship('Definition', backref='term')
@@ -157,24 +158,6 @@ class Term(db.Model):
 
         return terms
 
-    def get_one(self, entity):
-        return entity.query.filter_by(term_id=self.id).first()
-
-    def get_many(self, entity):
-        return entity.query.filter_by(term_id=self.id).order_by(entity.order.asc()).all()
-
-    def get_image(self):
-        return self.get_one(Image)
-
-    def get_questions(self):
-        return self.get_many(Question)
-
-    def get_definitions(self):
-        return self.get_many(Definition)
-
-    def get_syllables(self):
-        return self.get_many(Syllable)
-
 
 class Image(db.Model):
     __tablename__ = 'image'
@@ -231,73 +214,12 @@ class KnowledgeArea(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     content = db.Column(db.String(128), nullable=False)
     subject = db.Column(db.String(128), nullable=False)
-    knowledge_areas = db.relationship('Term', secondary=definition_knowledge_area, backref='knowledge_areas')
+    definitions = db.relationship('Definition', secondary=definition_knowledge_area, backref='knowledge_areas')
 
 
-if __name__ == '__main__':
-    from app import app
-    from datetime import date
-
-    with app.app_context():
-        # db.drop_all()
-        # db.create_all()
-
-        isaque = User(
-            first_name='Isaque',
-            last_name='Dantas',
-            username='isaque-dantas',
-            password_hash=generate_password_hash('123456'),
-            email='isaque@email.com',
-            phone_number='912344321',
-            birth_date=date(year=2007),
-            role='normal'
-        )
-
-        db.session.add(isaque)
-
-        cos = Term(
-            content='cosseno',
-            gender='M',
-            grammatical_category='substantivo'
-        )
-
-        cos_definition = Definition(
-            content='Razão entre o cateto adjacente e a hipotenusa de determinado ângulo em um triângulo retângulo.',
-            order=0
-        )
-
-        cos_image = Image(path='alpha.png', term_id=cos.id)
-
-        trigonometry = KnowledgeArea(content='trigonometria', subject='mathematics')
-        cos_definition.knowledge_areas.append(cos_definition)
-
-        db.session.add_all([
-            Syllable(content='cos', order=0, term=cos),
-            Syllable(content='se', order=1, term=cos),
-            Syllable(content='no', order=2, term=cos),
-            cos, cos_definition, trigonometry
-        ])
-
-        calculator = Term(
-            content='calculadora',
-            gender='F',
-            grammatical_category='substantivo'
-        )
-
-        calculator_definition = Definition(
-            content='Aparelho eletrônico usado para fazer cálculos matemáticos.',
-            order=0
-        )
-
-        calculator_image = Image(path='alpha.png', term_id=calculator.id)
-
-        db.session.add_all([
-            Syllable(content='cal', order=0, term=calculator),
-            Syllable(content='cu', order=1, term=calculator),
-            Syllable(content='la', order=2, term=calculator),
-            Syllable(content='do', order=3, term=calculator),
-            Syllable(content='ra', order=4, term=calculator),
-            calculator, calculator_definition
-        ])
-
-        db.session.commit()
+# if __name__ == '__main__':
+#     from app import app
+#
+#     with app.app_context():
+#         db.drop_all()
+#         db.create_all()

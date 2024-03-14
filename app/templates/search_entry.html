@@ -4,28 +4,39 @@
 
 {% block content %}
     <main class="container my-5">
-    {% if terms %}
-        {% for term in terms %}
-            <a href="{{ url_for('term.term_data', term_content=term.content) }}" class="card text-decoration-none" style="max-width: 320px;">
-                <div class="card-body">
-                    <h6 class="card-subtitle text-body-secondary">{{ term.grammatical_category }} {{ term.get_gender_in_full() }}</h6>
-                    <h5 class="card-title fw-bold fs-3 mt-1 mb-4">{{ term.content }}</h5>
-                    <ol class="d-flex flex-column gap-2">
-                        {% for definition in term.get_definitions() %}
-                            {% if definition.related_knowledge_area %}
-                                <li class="area">
-                                    <span class="border p-1 rounded" style="font-size: 14px; font-family: monospace">{{ definition.related_knowledge_area }}</span><br>{{ definition.content }}</li>
-                            {% else %}
-                                <li>{{ definition.content }}</li>
-                            {% endif %}
-                        {% endfor %}
-                    </ol>
-                </div>
-            </a>
-        {% endfor %}
-    {% else %}
-        <hr class="mt-5">
-        <h5 class="text-center text-secondary mt-5">Não foram encontrados resultados para a sua pesquisa</h5>
-    {% endif %}
+        <h1 class="fs-2 mb-5">Resultados encontrados para "{{ search_query }}"</h1>
+        {% if terms %}
+            <div class="row">
+                {% for term in terms %}
+                    <div class="col-3"><a href="{{ url_for('term.term_data', term_content=term.content) }}"
+                                          class="card text-decoration-none">
+                        <div class="card-body">
+                            <h6 class="card-subtitle text-body-secondary">{{ term.grammatical_category }} {{ term.get_gender_in_full() }}</h6>
+                            <h5 class="card-title fw-bold fs-3 mt-1 mb-4">{{ term.content }}</h5>
+                            <ol class="d-flex flex-column gap-2">
+                                {% for definition in term.definitions %}
+                                    {% if definition.knowledge_areas %}
+                                        <li class="area">
+                                            {% for knowledge_area in definition.knowledge_areas %}
+                                                <span class="border p-1 rounded"
+                                                      style="font-size: 14px; font-family: monospace">{{ knowledge_area.content }}
+                                                                </span>
+                                            {% endfor %}
+
+                                            <div class="mt-2">{{ definition.content }}</div>
+                                        </li>
+                                    {% else %}
+                                        <li>{{ definition.content }}</li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ol>
+                        </div>
+                    </a></div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <hr class="mt-5">
+            <h5 class="text-center text-secondary mt-5">Não foram encontrados resultados para a sua pesquisa</h5>
+        {% endif %}
     </main>
 {% endblock %}
