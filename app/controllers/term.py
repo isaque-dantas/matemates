@@ -21,3 +21,8 @@ def term_search(search_query):
 
     return render_template('search_entry.html', search_query=search_query, terms=terms,
                            user_is_admin=is_user_admin(current_user))
+
+
+@term_blueprint.route('/create_term')
+def term_creation():
+    return render_template('entry-creation.html')

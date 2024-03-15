@@ -23,6 +23,9 @@ def is_current_user_logged_in() -> bool:
 def login():
     form = LoginForm()
 
+    if is_current_user_logged_in():
+        return redirect(url_for('dashboard.index'))
+
     if form.validate_on_submit():
         user = User.get_by_email(form.email.data)
 
@@ -52,3 +55,10 @@ def register():
     #     return redirect(url_for('user.register'))
 
     return render_template('register.html', form=form)
+
+
+@user_blueprint.route('/logout')
+def logout():
+    logout_user()
+
+    return redirect(url_for('login.index'))
