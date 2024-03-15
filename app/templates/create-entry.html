@@ -1,162 +1,11 @@
-<!DOCTYPE html>
-<html lang="pt-Br">
+{% extends 'base-with-navbar-nav.html' %}
 
-<head>
-    <!--PRINCIPAL-->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Texto com imagem e exemplo</title>
+{% block title %}Matematês // Criar termo{% endblock %}
 
-    <!--BOOTSTRAP-->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
-    <!--CSS-->
-    <link rel="stylesheet" href="../static/css/style.css">
-
-    <!--FONTES-->
-
-</head>
-
-<body>
-    <script src="../static/js/script.js"></script>
-    <div class="bolhas">
-        <div class="fundo-bolhas">
-            <span style="--i:20.946"></span>
-            <span style="--i:18.412"></span>
-            <span style="--i:9.412"></span>
-            <span style="--i:13.412"></span>
-            <span style="--i:16.890"></span>
-            <span style="--i:7.480"></span>
-            <span style="--i:25.203"></span>
-            <span style="--i:4.586"></span>
-            <span style="--i:20.350"></span>
-            <span style="--i:21.842"></span>
-            <span style="--i:23.699"></span>
-            <span style="--i:27.940"></span>
-            <span style="--i:24.638"></span>
-            <span style="--i:7.555"></span>
-            <span style="--i:29.452"></span>
-            <span style="--i:12.68"></span>
-            <span style="--i:23.901"></span>
-            <span style="--i:21.498"></span>
-            <span style="--i:26.387"></span>
-            <span style="--i:20.243"></span>
-            <span style="--i:18.805"></span>
-            <span style="--i:4.243"></span>
-            <span style="--i:17.518"></span>
-            <span style="--i:25.713"></span>
-            <span style="--i:19.538"></span>
-            <span style="--i:2.325"></span>
-            <span style="--i:27.3653"></span>
-            <span style="--i:16.685"></span>
-            <span style="--i:22.349"></span>
-            <span style="--i:9.696"></span>
-            <span style="--i:24.954"></span>
-            <span style="--i:7.2645"></span>
-            <span style="--i:29.5326"></span>
-            <span style="--i:12.952"></span>
-            <span style="--i:23.648"></span>
-            <span style="--i:21.755"></span>
-            <span style="--i:20.917"></span>
-            <span style="--i:18.9972"></span>
-            <span style="--i:9.014"></span>
-            <span style="--i:22.929"></span>
-            <span style="--i:24.148"></span>
-            <span style="--i:20.376"></span>
-            <span style="--i:7.842"></span>
-            <span style="--i:13.3852"></span>
-            <span style="--i:29.467"></span>
-            <span style="--i:13.528"></span>
-            <span style="--i:10.395"></span>
-            <span style="--i:5.957"></span>
-            <span style="--i:7.5375"></span>
-            <span style="--i:26.285"></span>
-            <span style="--i:3.3184"></span>
-            <span style="--i:14.6795"></span>
-            <span style="--i:17.382546"></span>
-            <span style="--i:8.6795"></span>
-            <span style="--i:27.8234"></span>
-            <span style="--i:18.6842"></span>
-            <span style="--i:9.44715"></span>
-            <span style="--i:13.3751"></span>
-            <span style="--i:16.4872"></span>
-            <span style="--i:7.4871"></span>
-            <span style="--i:25.4275"></span>
-            <span style="--i:4.37651"></span>
-            <span style="--i:20.478268"></span>
-            <span style="--i:21.96857"></span>
-            <span style="--i:23.792"></span>
-            <span style="--i:27.375"></span>
-            <span style="--i:24.645"></span>
-            <span style="--i:7.876"></span>
-            <span style="--i:29.7956"></span>
-            <span style="--i:12.6782"></span>
-            <span style="--i:23.782"></span>
-            <span style="--i:21.948"></span>
-            <span style="--i:20.946"></span>
-            <span style="--i:18.412"></span>
-            <span style="--i:9.412"></span>
-            <span style="--i:13.412"></span>
-            <span style="--i:16.890"></span>
-            <span style="--i:7.480"></span>
-            <span style="--i:25.203"></span>
-            <span style="--i:4.586"></span>
-            <span style="--i:20.350"></span>
-            <span style="--i:21.842"></span>
-            <span style="--i:23.699"></span>
-            <span style="--i:27.940"></span>
-            <span style="--i:24.638"></span>
-            <span style="--i:7.555"></span>
-            <span style="--i:29.452"></span>
-            <span style="--i:12.68"></span>
-            <span style="--i:23.901"></span>
-            <span style="--i:21.498"></span>
-            <span style="--i:26.387"></span>
-            <span style="--i:20.243"></span>
-            <span style="--i:18.805"></span>
-            <span style="--i:4.243"></span>
-            <span style="--i:17.518"></span>
-            <span style="--i:25.713"></span>
-            <span style="--i:19.538"></span>
-            <span style="--i:2.325"></span>
-            <span style="--i:27.3653"></span>
-            <span style="--i:16.685"></span>
-            <span style="--i:22.349"></span>
-            <span style="--i:9.696"></span>
-            <span style="--i:24.954"></span>
-        </div>
-        <section>
-            <header>
-                <div class="container d-flex justify-content-between pt-2 align-items-center">
-                    <img src="img/LOGO.png" alt="" class="logo">
-                    <nav class="d-flex justify-content-between  align-items-center">
-                        <a href="" class="link-nav">PALAVRAS</a>
-                        <a href="" class="link-nav">PERFIL</a>
-                        <a href="" class="link-nav">HOME</a>
-                        <a href="" class="link-nav">MENU</a>
-                        <a href="" class="btn-nav"><span></span><span></span><span></span><span></span>EDITAR</a>
-                        <div class="dropdown">
-                            <i class="bi bi-three-dots dropdown-toggle fs-1" data-bs-toggle="dropdown"
-                                aria-expanded="false"></i>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">PALAVRAS</a></li>
-                                <li><a class="dropdown-item" href="#">PERFIL</a></li>
-                                <li><a class="dropdown-item" href="#">HOME</a></li>
-                                <li><a class="dropdown-item" href="#">MENU</a></li>
-                                <li></li>
-                            </ul>
-                        </div>
-                    </nav>
-                </div>
-            </header>
-
-            <main class="mt-5">
-                <!--
+{% block content %}
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+<main class="mt-5">
+    <!--
                 <section class="pesquisa-responsivo col-3">
                     <div class="search-box d-flex justify-content-between align-items-center">
                         <input type="text" class="search-txt" placeholder="Pesquise um termo aqui!">
@@ -164,96 +13,93 @@
                     </div>
                 </section>
                 -->
-                <section class="palavra-escolhida container col-8 d-flex flex-column">
-                    <section class="palavra animacao-azul rounded">
-                        <div class="position-absolute">
-                            <div class="classe-genero d-flex gap-2">
-                                <div class="select-classe select">
-                                    <select name="format" id="select-classe">
-                                        <option selected disabled>Classe</option>
-                                        <option value="Substantivo" id="classe-1">Substantivo</option>
-                                        <option value="Adjetivo" id="classe-2">Adjetivo</option>
-                                        <option value="Verbo" id="classe-3">Verbo</option>
-                                        <option value="Numeral" id="classe-4">Numeral</option>
-                                    </select>
-                                </div>
-                                <div class="select-genero select d-block" id="genero">
-                                    <select name="format">
-                                        <option selected disabled>Gênero</option>
-                                        <option value="feminino" id="genero-1">feminino</option>
-                                        <option value="masculino" id="genero-2">masculino</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <input type="text" class="criacao-palavra-escolhida mt-3 p-2"
-                                placeholder="Escreva o verbete"><br>
-                            <span class="aviso-criacao-palavra-escolhida">Digite um ponto final (.) para separar as
-                                sílabas</span>
-
-                        </div>
-                    </section>
-
-
-
-                    <section class="informacoes mt-5 mb-5">
-                        <div class="sig p-4 d-flex" id="significado">
-                            <div class="d-flex z-2 justify-content-center w-100 align-items-center flex-column"
-                                id="definicao-1">
-                                <div class="select-area select">
-                                    <select name="format" id="">
-                                        <option selected disabled>Selecione a área</option>
-                                        <option value="Álgebra" id="area-1">Álgebra</option>
-                                        <option value="Cálculo" id="area-2">Cálculo</option>
-                                        <option value="Estatística e probabilidade" id="area-3">Estatística e
-                                            probabilidade</option>
-                                        <option value="Trigonometria" id="area-4">Trigonometria</option>
-                                        <option value="matemática discreta" id="area-5">matemática discreta</option>
-                                    </select>
-                                </div>
-                                <input type="text" class="criacao-definicao mt-3 p-2 w-75"
-                                    placeholder="Escreva uma definição">
-                            </div>
-
-
-                        </div>
-
-                        <div class="d-none justify-content-between lh-lg position-relative" id="exemplo">
-                            <h5 class="titulo-perguntas position-absolute z-2">Perguntas :</h5>
-                            <ul class="perguntas lh-lg">
-                                <li>a + b<br>R: 2</li>
-                                <li>c + d<br>R: 4</li>
-                                <li>e + f<br>R: 8</li>
-                                <li>g + h<br>R: 16</li>
-                                <li>i + j<br>R: 32</li>
-                                <li>k + l<br>R: 64</li>
-                            </ul>
-                        </div>
-
-
-                        <div class="representacao d-none p-5 justify-content-center" id="representa">
-                            <div class="imagem d-flex justify-content-center fs-1 z-2">α</div>
-                            <div class="exemplo d-flex align-items-center justify-content-center z-2">
-                                <img src="img/alfa.png" alt="">
-                            </div>
-                        </div>
-
-                    </section>
-
-                    <div class="btn-box d-flex justify-content-between">
-                        <button class="btn-exemplo-definicao add-definicao border-0 selecionado" style="--clr:#1e9bff"
-                            id="btn-sig" onclick="mostrarDefinicao(this)"><span>DEFINIÇÃO</span><i></i></button>
-                        <button class="btn-exemplo-definicao add-exemplos border-0" style="--clr:#1e9bff" id="btn-ex"
-                            onclick="mostrarExemplos(this)"><span>
-                                EXEMPLOS</span><i></i></button>
-                        <button class="btn-exemplo-definicao add-img border-0" style="--clr:#1e9bff" id="btn-recomenda"
-                            onclick="mostrarRepresentacao(this)"><span>IMAGENS</span><i></i></button>
+    <section class="palavra-escolhida container col-8 d-flex flex-column">
+        <section class="palavra animacao-azul rounded">
+            <div class="position-absolute">
+                <div class="classe-genero d-flex gap-2">
+                    <div class="select-classe select">
+                        <select name="format" id="select-classe">
+                            <option selected disabled>Classe</option>
+                            <option value="Substantivo" id="classe-1">Substantivo</option>
+                            <option value="Adjetivo" id="classe-2">Adjetivo</option>
+                            <option value="Verbo" id="classe-3">Verbo</option>
+                            <option value="Numeral" id="classe-4">Numeral</option>
+                        </select>
                     </div>
+                    <div class="select-genero select d-block" id="genero">
+                        <select name="format">
+                            <option selected disabled>Gênero</option>
+                            <option value="feminino" id="genero-1">feminino</option>
+                            <option value="masculino" id="genero-2">masculino</option>
+                        </select>
+                    </div>
+                </div>
+
+                <input type="text" class="criacao-palavra-escolhida mt-3 p-2" placeholder="Escreva o verbete"><br>
+                <span class="aviso-criacao-palavra-escolhida">Digite um ponto final (.) para separar as
+                    sílabas</span>
+
+            </div>
+        </section>
 
 
-                </section>
 
-                <!--
+        <section class="informacoes mt-5 mb-5">
+            <div class="sig p-4 d-flex" id="significado">
+                <div class="d-flex z-2 justify-content-center w-100 align-items-center flex-column" id="definicao-1">
+                    <div class="select-area select">
+                        <select name="format" id="">
+                            <option selected disabled>Selecione a área</option>
+                            <option value="Álgebra" id="area-1">Álgebra</option>
+                            <option value="Cálculo" id="area-2">Cálculo</option>
+                            <option value="Estatística e probabilidade" id="area-3">Estatística e
+                                probabilidade</option>
+                            <option value="Trigonometria" id="area-4">Trigonometria</option>
+                            <option value="matemática discreta" id="area-5">matemática discreta</option>
+                        </select>
+                    </div>
+                    <input type="text" class="criacao-definicao mt-3 p-2 w-75" placeholder="Escreva uma definição">
+                </div>
+
+
+            </div>
+
+            <div class="d-none justify-content-between lh-lg position-relative" id="exemplo">
+                <h5 class="titulo-perguntas position-absolute z-2">Perguntas :</h5>
+                <ul class="perguntas lh-lg">
+                    <li>a + b<br>R: 2</li>
+                    <li>c + d<br>R: 4</li>
+                    <li>e + f<br>R: 8</li>
+                    <li>g + h<br>R: 16</li>
+                    <li>i + j<br>R: 32</li>
+                    <li>k + l<br>R: 64</li>
+                </ul>
+            </div>
+
+
+            <div class="representacao d-none p-5 justify-content-center" id="representa">
+                <div class="imagem d-flex justify-content-center fs-1 z-2">α</div>
+                <div class="exemplo d-flex align-items-center justify-content-center z-2">
+                    <img src="img/alfa.png" alt="">
+                </div>
+            </div>
+
+        </section>
+
+        <div class="btn-box d-flex justify-content-between">
+            <button class="btn-exemplo-definicao add-definicao border-0 selecionado" style="--clr:#1e9bff" id="btn-sig"
+                onclick="mostrarDefinicao(this)"><span>DEFINIÇÃO</span><i></i></button>
+            <button class="btn-exemplo-definicao add-exemplos border-0" style="--clr:#1e9bff" id="btn-ex"
+                onclick="mostrarExemplos(this)"><span>
+                    EXEMPLOS</span><i></i></button>
+            <button class="btn-exemplo-definicao add-img border-0" style="--clr:#1e9bff" id="btn-recomenda"
+                onclick="mostrarRepresentacao(this)"><span>IMAGENS</span><i></i></button>
+        </div>
+
+
+    </section>
+
+    <!--
                 <section class="recomendacao col-3">
                     <div class="search-box justify-content-between align-items-center">
                         <input type="text" class="search-txt" placeholder="Pesquise um termo aqui!">
@@ -281,13 +127,5 @@
                 </section>
                  -->
 
-            </main>
-        </section>
-    </div>
-
-
-
-
-</body>
-
-</html>
+</main>
+{% endblock %}

@@ -25,4 +25,4 @@ def term_search(search_query):
 
 @term_blueprint.route('/create_term')
 def term_creation():
-    return render_template('entry-creation.html')
+    return render_template('create-entry.html')
