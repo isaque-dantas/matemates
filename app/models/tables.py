@@ -217,7 +217,7 @@ class KnowledgeArea(db.Model):
     definitions = db.relationship('Definition', secondary=definition_knowledge_area, backref='knowledge_areas')
 
     @staticmethod
-    def get_term_creation_form_choices():
+    def get_term_creation_form_definitions_choices():
         contents = KnowledgeArea.query.with_entities(KnowledgeArea.content).order_by(KnowledgeArea.content).all()
 
         for i, content in enumerate(contents):

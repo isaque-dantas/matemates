@@ -23,7 +23,7 @@ class TermCreationForm(FlaskForm):
         knowledge_area_1 = SelectField('Área do conhecimento',
                                        choices=[
                                          ('', 'Selecione a área'),
-                                         *KnowledgeArea.get_choices()
+                                         *KnowledgeArea.get_term_creation_form_definitions_choices()
                                      ])
 
     grammatical_category = SelectField('Classe gramatical',
