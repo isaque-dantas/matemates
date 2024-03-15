@@ -230,13 +230,14 @@ nav{
     left: 30px;
 }
 /*--*/
-.significado{
+.significado, .informacoes{
     position: relative;
     width: 100%;
     background: repeating-conic-gradient(from var(--a), #1B8EF2 0%, #1B8EF2 5%, transparent 5%, transparent 40%, #1B8EF2 50%);
     animation: animacao-borda 15s linear infinite;
     border-radius: 20px;
     overflow: hidden;
+    height: 40vh;
 }
 
 @property --a{
@@ -254,7 +255,7 @@ nav{
     }
 }
 
-.significado::before{
+.significado::before, .informacoes::before{
     content: '';
     position: absolute;
     width: 100%;
@@ -266,7 +267,7 @@ nav{
     z-index: -1;
 }
 
-.significado::after{
+.significado::after, .informacoes::after{
     content: '';
     position: absolute;
     inset: 4px;
@@ -275,7 +276,7 @@ nav{
 
 }
 
-.significado li {
+.significado li, .informacoes li{
     position: relative;
     z-index: 2;
     margin-bottom: 10px;
@@ -476,6 +477,49 @@ nav{
     width: 100%;
 }
 
+/*-----------*/
+
+.btn-exemplo-definicao.selecionado {
+    letter-spacing: 0.2em;
+    background: var(--clr);
+    color: var(--clr);
+    box-shadow: 0 0 20px var(--clr);
+}
+
+.btn-exemplo-definicao.selecionado i::before,
+.btn-exemplo-definicao.selecionado i::after {
+    width: 0;
+}
+
+.select select, input{
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    outline: 0;
+    padding: 2px 10px;
+    border: none;
+    border-radius: 20px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.select-classe select, .select-genero select, .criacao-palavra-escolhida, .select-area select, .criacao-definicao{
+    background: #0e0b1c;
+    color: rgb(255, 255, 255);
+}
+
+.aviso-criacao-palavra-escolhida{
+    color: rgba(255, 255, 255, 0.414);
+    font-size: 13px;
+    margin: 0 0 0 10px;
+}
+
+.select-area select, .criacao-definicao{
+    box-shadow: 0 0 10px #1B8EF2;
+}
+
+
 @media only screen and (max-device-width: 1199px) {
     .link-nav{
         display: none;
@@ -541,5 +585,24 @@ nav{
 
     .btn-exemplo-definicao{
         width: 100%;
+    }
+    
+    .criacao-definicao{
+        width: 100%!important;
+    }
+
+    .classe-genero, .criacao-palavra-escolhida{
+        justify-content: center;
+        width: 100%;
+    }
+
+    .palavra div{
+        left: auto;
+    }
+
+    .btn-box{
+        flex-direction: column;
+        gap: 40px;
+        margin: 0 0 40px 0;
     }
 }
