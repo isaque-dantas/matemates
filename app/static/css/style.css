@@ -237,7 +237,7 @@ nav{
     animation: animacao-borda 15s linear infinite;
     border-radius: 20px;
     overflow: hidden;
-    height: 40vh;
+    /*height: 40vh;*/
 }
 
 @property --a{
@@ -588,7 +588,7 @@ nav{
     }
     
     .criacao-definicao{
-        width: 100%!important;
+        width: 100% !important;
     }
 
     .classe-genero, .criacao-palavra-escolhida{

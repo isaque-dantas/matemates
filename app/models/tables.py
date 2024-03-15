@@ -74,13 +74,13 @@ class User(db.Model, UserMixin):
 class Term(db.Model):
     __tablename__ = 'term'
 
-    MAX_CONTENT = {
+    MAX_LENGTH = {
         'content': 256
     }
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     content = db.Column(db.String(256), nullable=False)
-    gender = db.Column(db.Enum('M', 'F'), nullable=False)
+    gender = db.Column(db.Enum('M', 'F'), nullable=True)
     grammatical_category = db.Column(
         db.Enum('substantivo', 'verbo', 'adjetivo', 'numeral'), nullable=False
     )
@@ -215,6 +215,16 @@ class KnowledgeArea(db.Model):
     content = db.Column(db.String(128), nullable=False)
     subject = db.Column(db.String(128), nullable=False)
     definitions = db.relationship('Definition', secondary=definition_knowledge_area, backref='knowledge_areas')
+
+    @staticmethod
+    def get_term_creation_form_choices():
+        contents = KnowledgeArea.query.with_entities(KnowledgeArea.content).order_by(KnowledgeArea.content).all()
+
+        for i, content in enumerate(contents):
+            content_capitalized = content[0][0].upper() + content[0][1:]
+            contents[i] = (content[0], content_capitalized)
+
+        return contents
 
 
 # if __name__ == '__main__':

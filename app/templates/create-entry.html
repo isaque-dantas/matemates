@@ -3,129 +3,152 @@
 {% block title %}Matematês // Criar termo{% endblock %}
 
 {% block content %}
-<script src="{{ url_for('static', filename='js/script.js') }}"></script>
-<main class="mt-5">
-    <!--
-                <section class="pesquisa-responsivo col-3">
-                    <div class="search-box d-flex justify-content-between align-items-center">
-                        <input type="text" class="search-txt" placeholder="Pesquise um termo aqui!">
-                        <i class="bi bi-search" alt="lupa"></i>
-                    </div>
-                </section>
-                -->
-    <section class="palavra-escolhida container col-8 d-flex flex-column">
-        <section class="palavra animacao-azul rounded">
-            <div class="position-absolute">
-                <div class="classe-genero d-flex gap-2">
-                    <div class="select-classe select">
-                        <select name="format" id="select-classe">
-                            <option selected disabled>Classe</option>
-                            <option value="Substantivo" id="classe-1">Substantivo</option>
-                            <option value="Adjetivo" id="classe-2">Adjetivo</option>
-                            <option value="Verbo" id="classe-3">Verbo</option>
-                            <option value="Numeral" id="classe-4">Numeral</option>
-                        </select>
-                    </div>
-                    <div class="select-genero select d-block" id="genero">
-                        <select name="format">
-                            <option selected disabled>Gênero</option>
-                            <option value="feminino" id="genero-1">feminino</option>
-                            <option value="masculino" id="genero-2">masculino</option>
-                        </select>
-                    </div>
-                </div>
-
-                <input type="text" class="criacao-palavra-escolhida mt-3 p-2" placeholder="Escreva o verbete"><br>
-                <span class="aviso-criacao-palavra-escolhida">Digite um ponto final (.) para separar as
-                    sílabas</span>
-
-            </div>
-        </section>
-
-
-
-        <section class="informacoes mt-5 mb-5">
-            <div class="sig p-4 d-flex" id="significado">
-                <div class="d-flex z-2 justify-content-center w-100 align-items-center flex-column" id="definicao-1">
-                    <div class="select-area select">
-                        <select name="format" id="">
-                            <option selected disabled>Selecione a área</option>
-                            <option value="Álgebra" id="area-1">Álgebra</option>
-                            <option value="Cálculo" id="area-2">Cálculo</option>
-                            <option value="Estatística e probabilidade" id="area-3">Estatística e
-                                probabilidade</option>
-                            <option value="Trigonometria" id="area-4">Trigonometria</option>
-                            <option value="matemática discreta" id="area-5">matemática discreta</option>
-                        </select>
-                    </div>
-                    <input type="text" class="criacao-definicao mt-3 p-2 w-75" placeholder="Escreva uma definição">
-                </div>
-
-
-            </div>
-
-            <div class="d-none justify-content-between lh-lg position-relative" id="exemplo">
-                <h5 class="titulo-perguntas position-absolute z-2">Perguntas :</h5>
-                <ul class="perguntas lh-lg">
-                    <li>a + b<br>R: 2</li>
-                    <li>c + d<br>R: 4</li>
-                    <li>e + f<br>R: 8</li>
-                    <li>g + h<br>R: 16</li>
-                    <li>i + j<br>R: 32</li>
-                    <li>k + l<br>R: 64</li>
-                </ul>
-            </div>
-
-
-            <div class="representacao d-none p-5 justify-content-center" id="representa">
-                <div class="imagem d-flex justify-content-center fs-1 z-2">α</div>
-                <div class="exemplo d-flex align-items-center justify-content-center z-2">
-                    <img src="img/alfa.png" alt="">
-                </div>
-            </div>
-
-        </section>
-
-        <div class="btn-box d-flex justify-content-between">
-            <button class="btn-exemplo-definicao add-definicao border-0 selecionado" style="--clr:#1e9bff" id="btn-sig"
-                onclick="mostrarDefinicao(this)"><span>DEFINIÇÃO</span><i></i></button>
-            <button class="btn-exemplo-definicao add-exemplos border-0" style="--clr:#1e9bff" id="btn-ex"
-                onclick="mostrarExemplos(this)"><span>
-                    EXEMPLOS</span><i></i></button>
-            <button class="btn-exemplo-definicao add-img border-0" style="--clr:#1e9bff" id="btn-recomenda"
-                onclick="mostrarRepresentacao(this)"><span>IMAGENS</span><i></i></button>
-        </div>
-
-
-    </section>
-
-    <!--
-                <section class="recomendacao col-3">
-                    <div class="search-box justify-content-between align-items-center">
-                        <input type="text" class="search-txt" placeholder="Pesquise um termo aqui!">
-                        <i class="bi bi-search" alt="lupa"></i>
-                    </div>
-                    <a href="" class="link-termo-do-dia">
-                        <div class="termo-do-dia mt-5">
-                            <span></span><span></span><span></span><span></span>
-                            <h4 class="d-flex justify-content-center p-3 rounded-top fw-bold">TERMO DO DIA</h4>
-                            <div class="elementos">
-                                <h2 class="d-flex justify-content-center">Be.ta</h2>
-                                <div class="imagem d-flex justify-content-center fs-1 pb-4">β</div>
-                                <div class="significado-recomendacao">
-                                    <p>Trata-se do homem beta, um termo emprestado da biologia, que significa o oposto
-                                        do
-                                        macho
-                                        alfa, o líder de um grupo de animais.</p>
-                                </div>
-                                <div class="exemplo d-flex align-items-center justify-content-center">
-
-                                </div>
+    <main class="mt-5">
+        <!--
+                    <section class="pesquisa-responsivo col-3">
+                        <div class="search-box d-flex justify-content-between align-items-center">
+                            <input type="text" class="search-txt" placeholder="Pesquise um termo aqui!">
+                            <i class="bi bi-search" alt="lupa"></i>
+                        </div>
+                    </section>
+                    -->
+        <form action="/create_term" method="POST">
+            {{ form.hidden_tag() }}
+            <section class="palavra-escolhida container col-8 d-flex flex-column">
+                <section class="palavra animacao-azul rounded">
+                    <div class="position-absolute">
+                        <div class="classe-genero d-flex gap-2">
+                            <div class="select-classe select">
+                                <select name="format" id="select-classe">
+                                    <option selected disabled>Classe</option>
+                                    <option value="Substantivo" id="classe-1">Substantivo</option>
+                                    <option value="Adjetivo" id="classe-2">Adjetivo</option>
+                                    <option value="Verbo" id="classe-3">Verbo</option>
+                                    <option value="Numeral" id="classe-4">Numeral</option>
+                                </select>
+                            </div>
+                            <div class="select-genero select d-block" id="genero">
+                                <select name="format">
+                                    <option selected disabled>Gênero</option>
+                                    <option value="feminino" id="genero-1">feminino</option>
+                                    <option value="masculino" id="genero-2">masculino</option>
+                                </select>
                             </div>
                         </div>
-                    </a>
-                </section>
-                 -->
 
-</main>
+                        <input type="text" class="criacao-palavra-escolhida mt-3 p-2"
+                               placeholder="Escreva o verbete"><br>
+                        <span class="aviso-criacao-palavra-escolhida">Digite um ponto final (.) para separar as
+                        sílabas</span>
+
+                    </div>
+                </section>
+
+
+                <section class="informacoes mt-5 mb-5">
+                    <div class="sig p-4 d-flex" id="significado">
+                        <div class="d-flex z-2 justify-content-center w-100 align-items-center flex-column">
+                            <div class="d-flex flex-column gap-5 w-100">
+                                <div class="definition w-100 d-flex gap-3 justify-content-center align-items-center"
+                                     id="definicao-1">
+                                    <button type="button" class="btn btn-remove-definition-field btn-dark" disabled>
+                                        <img src="{{ url_for('static', filename='img/trash.svg') }}" alt="">
+                                    </button>
+                                    <div class="select-area select">
+                                        {{ form.knowledge_area_1() }}
+                                        {#<select name="format" id="">#}
+                                        {#    <option selected disabled>Selecione a área</option>#}
+                                        {#    <option value="Álgebra" id="area-1">Álgebra</option>#}
+                                        {#    <option value="Cálculo" id="area-2">Cálculo</option>#}
+                                        {#    <option value="Estatística e probabilidade" id="area-3">Estatística e#}
+                                        {#        probabilidade#}
+                                        {#    </option>#}
+                                        {#    <option value="Trigonometria" id="area-4">Trigonometria</option>#}
+                                        {#    <option value="matemática discreta" id="area-5">matemática discreta</option>#}
+                                        {#</select>#}
+                                    </div>
+
+                                    {{ form.definition_content_1(class="criacao-definicao p-2 w-75", placeholder="Escreva uma definição") }}
+                                </div>
+                            </div>
+
+                            <button type="button" id="btn-add-definition-fields"
+                                    class="btn btn-outline-light mt-5 px-4">
+                                Adicionar outra definição
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="d-none justify-content-between lh-lg position-relative" id="exemplo">
+                        <h5 class="titulo-perguntas position-absolute z-2">Perguntas:</h5>
+                        <ul class="perguntas lh-lg">
+                            <li>a + b<br>R: 2</li>
+                            <li>c + d<br>R: 4</li>
+                            <li>e + f<br>R: 8</li>
+                            <li>g + h<br>R: 16</li>
+                            <li>i + j<br>R: 32</li>
+                            <li>k + l<br>R: 64</li>
+                        </ul>
+                    </div>
+
+
+                    <div class="representacao d-none p-5 justify-content-center" id="representa">
+                        <div class="imagem d-flex justify-content-center fs-1 z-2">α</div>
+                        <div class="exemplo d-flex align-items-center justify-content-center z-2">
+                            {#                            <img src="img/{{ url_for('static', filename='img/') }}" alt="">#}
+                        </div>
+                    </div>
+
+                </section>
+
+                <div class="btn-box d-flex justify-content-between">
+                    <button type="button" class="btn-exemplo-definicao add-definicao border-0 selecionado"
+                            style="--clr:#1e9bff"
+                            id="btn-sig"
+                            onclick="mostrarDefinicao(this)"><span>DEFINIÇÃO</span><i></i></button>
+                    <button type="button" class="btn-exemplo-definicao add-exemplos border-0" style="--clr:#1e9bff"
+                            id="btn-ex"
+                            onclick="mostrarExemplos(this)"><span>
+                        EXEMPLOS</span><i></i></button>
+                    <button type="button" class="btn-exemplo-definicao add-img border-0" style="--clr:#1e9bff"
+                            id="btn-recomenda"
+                            onclick="mostrarRepresentacao(this)"><span>IMAGENS</span><i></i></button>
+                </div>
+
+
+            </section>
+
+            <!--
+                        <section class="recomendacao col-3">
+                            <div class="search-box justify-content-between align-items-center">
+                                <input type="text" class="search-txt" placeholder="Pesquise um termo aqui!">
+                                <i class="bi bi-search" alt="lupa"></i>
+                            </div>
+                            <a href="" class="link-termo-do-dia">
+                                <div class="termo-do-dia mt-5">
+                                    <span></span><span></span><span></span><span></span>
+                                    <h4 class="d-flex justify-content-center p-3 rounded-top fw-bold">TERMO DO DIA</h4>
+                                    <div class="elementos">
+                                        <h2 class="d-flex justify-content-center">Be.ta</h2>
+                                        <div class="imagem d-flex justify-content-center fs-1 pb-4">β</div>
+                                        <div class="significado-recomendacao">
+                                            <p>Trata-se do homem beta, um termo emprestado da biologia, que significa o oposto
+                                                do
+                                                macho
+                                                alfa, o líder de um grupo de animais.</p>
+                                        </div>
+                                        <div class="exemplo d-flex align-items-center justify-content-center">
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </section>
+                         -->
+        </form>
+
+    </main>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/manage-definitions-fields-adding.js') }}"></script>
 {% endblock %}

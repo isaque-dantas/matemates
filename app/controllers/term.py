@@ -1,5 +1,6 @@
 from flask import render_template, Blueprint
 from app.models.tables import Term
+from app.models.term_forms import TermCreationForm
 
 from flask_login import AnonymousUserMixin, current_user
 from app.controllers.user import is_user_admin
@@ -25,4 +26,6 @@ def term_search(search_query):
 
 @term_blueprint.route('/create_term')
 def term_creation():
-    return render_template('create-entry.html')
+    form = TermCreationForm()
+
+    return render_template('create-entry.html', form=form)
