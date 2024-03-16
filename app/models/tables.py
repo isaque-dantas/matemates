@@ -188,11 +188,23 @@ class Syllable(db.Model):
     term_id = db.Column(db.Integer, db.ForeignKey('term.id'))
 
 
-definition_knowledge_area = \
-    db.Table('definition_knowledge_area',
-             db.Column('definition_id', db.Integer, db.ForeignKey('definition.id')),
-             db.Column('knowledge_id', db.Integer, db.ForeignKey('knowledge_area.id'))
-             )
+class KnowledgeArea(db.Model):
+    __tablename__ = 'knowledge_area'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    content = db.Column(db.String(128), nullable=False)
+    subject = db.Column(db.String(128), nullable=False)
+    definitions = db.relationship('Definition', backref='knowledge_area')
+
+    @staticmethod
+    def get_term_creation_form_definitions_choices():
+        contents = KnowledgeArea.query.with_entities(KnowledgeArea.content).order_by(KnowledgeArea.content).all()
+
+        for i, content in enumerate(contents):
+            content_capitalized = content[0][0].upper() + content[0][1:]
+            contents[i] = (content[0], content_capitalized)
+
+        return contents
 
 
 class Definition(db.Model):
@@ -206,26 +218,7 @@ class Definition(db.Model):
     content = db.Column(db.String(MAX_LENGTH['content']), nullable=False)
     order = db.Column(db.Integer, nullable=False)
     term_id = db.Column(db.Integer, db.ForeignKey('term.id'))
-
-
-class KnowledgeArea(db.Model):
-    __tablename__ = 'knowledge_area'
-
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    content = db.Column(db.String(128), nullable=False)
-    subject = db.Column(db.String(128), nullable=False)
-    definitions = db.relationship('Definition', secondary=definition_knowledge_area, backref='knowledge_areas')
-
-    @staticmethod
-    def get_term_creation_form_definitions_choices():
-        contents = KnowledgeArea.query.with_entities(KnowledgeArea.content).order_by(KnowledgeArea.content).all()
-
-        for i, content in enumerate(contents):
-            content_capitalized = content[0][0].upper() + content[0][1:]
-            contents[i] = (content[0], content_capitalized)
-
-        return contents
-
+    knowledge_area_id = db.Column(db.Integer, db.ForeignKey('knowledge_area.id'))
 
 # if __name__ == '__main__':
 #     from app import app

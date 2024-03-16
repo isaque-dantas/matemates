@@ -37,8 +37,7 @@ with app.app_context():
     trigonometry = KnowledgeArea(content='trigonometria', subject='mathematics')
     geometry = KnowledgeArea(content='geometria', subject='mathematics')
 
-    cos_definition.knowledge_areas.append(trigonometry)
-    cos_definition.knowledge_areas.append(geometry)
+    cos_definition.knowledge_area = trigonometry
     cos.definitions.append(cos_definition)
 
     db.session.add_all([

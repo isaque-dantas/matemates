@@ -16,14 +16,9 @@
                             <h5 class="card-title fw-bold fs-3 mt-1 mb-4">{{ term.content }}</h5>
                             <ol class="d-flex flex-column gap-2">
                                 {% for definition in term.definitions %}
-                                    {% if definition.knowledge_areas %}
+                                    {% if definition.knowledge_area %}
                                         <li class="area">
-                                            {% for knowledge_area in definition.knowledge_areas %}
-                                                <span class="border p-1 rounded"
-                                                      style="font-size: 14px; font-family: monospace">{{ knowledge_area.content }}
-                                                                </span>
-                                            {% endfor %}
-
+                                            <span class="border p-1 rounded" style="font-size: 14px; font-family: monospace">{{ definition.knowledge_area.content }}</span>
                                             <div class="mt-2">{{ definition.content }}</div>
                                         </li>
                                     {% else %}
