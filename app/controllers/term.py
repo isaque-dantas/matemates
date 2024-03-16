@@ -1,4 +1,4 @@
-from flask import render_template, Blueprint
+from flask import render_template, Blueprint, abort
 from app.models.tables import Term
 from app.models.term_forms import TermCreationForm
 
@@ -11,9 +11,11 @@ term_blueprint = Blueprint('term', __name__)
 @term_blueprint.route('/term/<term_content>')
 def term_data(term_content):
     term = Term.get_term_by_content(term_content)
-
-    return render_template('entry.html', term=term, enumerate=enumerate, format=format,
-                           user_is_admin=is_user_admin(current_user))
+    if term:
+        return render_template('entry.html', term=term, enumerate=enumerate, format=format,
+                               user_is_admin=is_user_admin(current_user))
+    else:
+        abort(404)
 
 
 @term_blueprint.route('/search/<search_query>')
