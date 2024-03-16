@@ -61,7 +61,7 @@ body{
 /*-------header-------*/
 
 .logo{
-    height: 50px;
+    height: 45px;
 }
 
 header{
@@ -504,7 +504,7 @@ nav{
     cursor: pointer;
 }
 
-.select-classe select, .select-genero select, .criacao-palavra-escolhida, .select-area select, .criacao-definicao{
+.select-classe select, .select-genero select, .criacao-palavra-escolhida, .select-area select, .criacao-definicao, .criacao-pergunta, .criacao-resposta{
     background: #0e0b1c;
     color: rgb(255, 255, 255);
 }
@@ -515,7 +515,7 @@ nav{
     margin: 0 0 0 10px;
 }
 
-.select-area select, .criacao-definicao{
+.select-area select, .criacao-definicao, .criacao-pergunta, .criacao-resposta{
     box-shadow: 0 0 10px #1B8EF2;
 }
 
@@ -605,4 +605,5 @@ nav{
         gap: 40px;
         margin: 0 0 40px 0;
     }
+
 }
