@@ -39,31 +39,31 @@
 
 
                 <section class="informacoes mt-5 mb-5">
-                    <div class="sig p-4 d-flex" id="significado">
-                        <div class="d-flex z-2 align-items-center w-100 flex-column m-5 has-n-field-groups">
-                            <div class="field-groups d-flex flex-column gap-5 w-100">
-                                <div class="field-group d-flex gap-3" id="definicao-1">
-                                    <button type="button" class="btn btn-remove-field-group btn-dark" disabled>
+                    <div class="sig d-flex" id="significado">
+                        <div class="d-flex z-2 align-items-center w-100 flex-column p-5">
+                            <div class="d-flex flex-column gap-5 w-100">
+                                <div class="definition d-flex gap-3"
+                                    id="definicao-1">
+                                    <button type="button" class="btn btn-remove-definition-field btn-dark" disabled>
                                         <img src="{{ url_for('static', filename='img/trash.svg') }}" alt="">
                                     </button>
                                     <div class="select-area select d-flex align-self-stretch">
                                         <select id="knowledge_area_1" name="knowledge_area_1">
                                             {% for value, label in form.knowledge_area_1.choices %}
-                                                {% if loop.first %}
-                                                    <option value="{{ value }}" selected disabled>{{ label }}</option>
-                                                {% else %}
-                                                    <option value="{{ value }}">{{ label }}</option>
-                                                {% endif %}
+                                            {% if loop.first %}
+                                            <option value="{{ value }}" selected disabled>{{ label }}</option>
+                                            {% else %}
+                                            <option value="{{ value }}">{{ label }}</option>
+                                            {% endif %}
                                             {% endfor %}
                                         </select>
                                     </div>
-
                                     {{ form.definition_content_1(class="criacao-definicao p-2 w-100", placeholder="Escreva uma definição") }}
                                 </div>
                             </div>
 
                             <button type="button" class="btn-add-field-group btn btn-outline-light mt-5 px-4">
-                                Adicionar outra definição
+                                Escolha outra definição
                             </button>
                         </div>
                     </div>

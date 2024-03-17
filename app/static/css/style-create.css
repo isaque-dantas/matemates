@@ -565,15 +565,15 @@ nav{
         display: none;
     }
 
-    .significado-conteudo, .significado-conteudo .m-5, .sig div{
+    .significado-conteudo, .significado-conteudo .m-5{
         width: auto !important;
     }
 
-    .btn-exemplo-definicao{
+    .btn-exemplo-definicao, .btn-add-field-group{
         width: 100%;
     }
     
-    .criacao-definicao, .criacao-legenda, .criacao-pergunta, .criacao-resposta{
+    .criacao-definicao, .criacao-legenda, .criacao-pergunta, .criacao-resposta, .select-area, .select-area select{
         width: 100% !important;
     }
 
@@ -585,6 +585,12 @@ nav{
         flex-direction: column;
         gap: 40px;
         margin: 0 0 40px 0;
+    }
+
+    .field-group{
+        flex-direction: column;
+        width: 100% !important;
+        align-items: normal !important;
     }
 
 }
