@@ -1,4 +1,4 @@
-from flask import render_template, Blueprint, abort
+from flask import render_template, Blueprint, abort, flash
 from app.models.tables import Term
 from app.models.term_forms import TermCreationForm
 
@@ -26,8 +26,14 @@ def term_search(search_query):
                            user_is_admin=is_user_admin(current_user))
 
 
-@term_blueprint.route('/create_term')
+@term_blueprint.route('/create_term', methods=['get', 'post'])
 def term_creation():
     form = TermCreationForm()
+
+    if form.validate_on_submit():
+        try:
+            Term.register(form.data)
+        except Exception as e:
+            flash(str(e.args), category='danger')
 
     return render_template('create-entry.html', form=form)
