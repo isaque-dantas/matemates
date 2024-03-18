@@ -7,4 +7,4 @@ dashboard_blueprint = Blueprint('dashboard', __name__)
 @login_required
 @dashboard_blueprint.route('/dashboard')
 def index():
-    return '<h1>Dashboard</h1>'
+    return render_template("dashboard-index.html")
