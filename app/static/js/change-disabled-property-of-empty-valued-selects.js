@@ -6,6 +6,7 @@ selects.forEach(
             const option = options.item(i)
             if (option.value === '') {
                 option.disabled = true
+                option.selected = true
             }
         }
     }
