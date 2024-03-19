@@ -5,6 +5,9 @@
 
 {% block content %}
     <main class="container my-5">
+    <div class="mb-5">
+        {% include 'flash_messages.html' %}
+    </div>
         <div class="d-flex justify-content-center align-items-center pt-5 mt-5">
             <div style="min-width: 560px;">
                 <form action="/login" method="post">
