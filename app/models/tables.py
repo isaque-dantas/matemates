@@ -158,6 +158,9 @@ class Term(db.Model):
 
         return terms
 
+    def get_definition_with_knowledge_area(self, knowledge_area):
+        return Definition.query.filter_by(knowledge_area=knowledge_area, term=self).first()
+
 
 class Image(db.Model):
     __tablename__ = 'image'
@@ -205,6 +208,17 @@ class KnowledgeArea(db.Model):
             contents[i] = (content[0], content_capitalized)
 
         return contents
+
+    @staticmethod
+    def get_all():
+        return KnowledgeArea.query.all()
+
+    def get_related_terms(self):
+        related_definitions = self.definitions
+        related_terms = set()
+        for definition in related_definitions:
+            related_terms.add(definition.term)
+        return related_terms
 
 
 class Definition(db.Model):
