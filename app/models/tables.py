@@ -92,6 +92,7 @@ class Term(db.Model):
 
     @staticmethod
     def register(form_data):
+        print(form_data)
         term_content = form_data['content'].replace('.', '').casefold()
 
         term = Term(
@@ -99,7 +100,8 @@ class Term(db.Model):
             gender=form_data['gender'],
             grammatical_category=form_data['grammatical_category']
         )
-        syllables = term.split('.')
+
+        syllables = form_data['content'].split('.')
         for i, syllable in enumerate(syllables):
             syllable = Syllable(
                 content=syllable,
@@ -123,6 +125,8 @@ class Term(db.Model):
             'definition': [],
             'question': []
         }
+
+        print(form_data)
 
         for key, value in form_data.items():
             if 'definition' not in key and 'question' not in key:
@@ -164,10 +168,16 @@ class Term(db.Model):
 
         db.session.commit()
 
-        # {'content': 'cir.cun.fe.rên.ci.a',
-        #  'definition_content_1': 'Forma geométrica que tem todos os seus pontos equidistantes do centro.',
-        #  'knowledge_area_1': 'geometria', 'question_statement_1': '', 'question_answer_1': '',
-        #  'grammatical_category': 'substantivo', 'gender': 'F', 'image': '', 'image_caption': ''}
+    def delete_term(self):
+        entities_lists = [self.definitions, self.syllables, self.questions]
+
+        for entities_list in entities_lists:
+            for entity in entities_list:
+                db.session.delete(entity)
+
+        db.session.delete(self.image)
+        db.session.delete(self)
+        db.session.commit()
 
     @staticmethod
     def get_index_from_key(key: str):

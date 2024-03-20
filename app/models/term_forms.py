@@ -24,11 +24,6 @@ class TermCreationForm(FlaskForm):
             'Área do conhecimento',
             choices=[
                 ('', 'Selecione uma opção'),
-                ('álgebra', 'Álgebra'),
-                ('cálculo', 'Cálculo'),
-                ('estatística e probabilidade', 'Estatística e probabilidade'),
-                ('trigonometria', 'Trigonometria'),
-                ('matemática discreta', 'Matemática discreta'),
                 *KnowledgeArea.get_term_creation_form_definitions_choices()
             ])
 
