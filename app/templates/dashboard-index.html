@@ -42,53 +42,59 @@
             </div>
         </section>
 
-        <section>
-            {% for knowledge_area in knowledge_areas*3 %}
+        <section class="mb-5">
+            {% for knowledge_area in knowledge_areas %}
                 {% if loop.first %}
                     {% set col_number='8' %}
                 {% else %}
                     {% set col_number='12' %}
                 {% endif %}
 
-                <div class="d-flex justify-content-between">
-                    <div class="mt-5 col-{{ col_number }}">
-                        <h4 class="topic-title p-3 fw-bold">{{ knowledge_area.content.capitalize() }}</h4>
-                        <div class="verbetes-box d-flex gap-5 p-4">
-                            {% for term in list(knowledge_area.get_related_terms())*5 %}
-                                <a href="" class="link-verbete verbete p-3">
-                                    <h2 class="d-flex justify-content-center">
-                                        {%- for syllable in term.syllables -%}
-                                            {%- if loop.first -%}
-                                                {{ syllable.content.capitalize() }}
-                                            {%- else -%}
-                                                .{{ syllable.content }}
-                                            {%- endif -%}
-                                        {%- endfor -%}</h2>
-                                    <div class="significado-recomendacao">
-                                        <p>{{ term.get_definition_with_knowledge_area(knowledge_area).content }}</p>
-                                    </div>
-                                </a>
-                            {% endfor %}
-                        </div>
-                    </div>
-                    {% if loop.first %}
-                        <div class="col-3 d-flex">
-                            <a href="" class="link-termo-do-dia align-self-end">
-                                <div class="termo-do-dia">
-                                    <span></span><span></span><span></span><span></span>
-                                    <h4 class="d-flex justify-content-center p-3 rounded-top fw-bold">TERMO DO DIA</h4>
-                                    <div class="elementos">
-                                        <h2 class="d-flex justify-content-center">Be.ta</h2>
+                {% set related_terms = list(knowledge_area.get_related_terms()) %}
+
+                {% if related_terms %}
+                    <div class="d-flex justify-content-between">
+                        <div class="mt-5 col-{{ col_number }}">
+                            <h4 class="topic-title p-3 fw-bold">{{ knowledge_area.content.capitalize() }}</h4>
+                            <div class="verbetes-box d-flex gap-5 p-4">
+                                {% for term in list(knowledge_area.get_related_terms())*4 %}
+                                    <a href="" class="link-verbete verbete p-3">
+                                        <h2 class="d-flex justify-content-center">
+                                            {%- for syllable in term.syllables -%}
+                                                {%- if loop.first -%}
+                                                    {{ syllable.content.capitalize() }}
+                                                {%- else -%}
+                                                    .{{ syllable.content }}
+                                                {%- endif -%}
+                                            {%- endfor -%}</h2>
                                         <div class="significado-recomendacao">
-                                            <p>Trata-se do homem beta, um termo emprestado da biologia, que significa o
-                                                oposto do macho alfa, o líder de um grupo de animais.</p>
+                                            <p>{{ term.get_definition_with_knowledge_area(knowledge_area).content }}</p>
+                                        </div>
+                                    </a>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% if loop.first %}
+                            <div class="col-3 d-flex">
+                                <a href="" class="link-termo-do-dia align-self-end">
+                                    <div class="termo-do-dia">
+                                        <span></span><span></span><span></span><span></span>
+                                        <h4 class="d-flex justify-content-center p-3 rounded-top fw-bold">TERMO DO
+                                            DIA</h4>
+                                        <div class="elementos">
+                                            <h2 class="d-flex justify-content-center">Be.ta</h2>
+                                            <div class="significado-recomendacao">
+                                                <p>Trata-se do homem beta, um termo emprestado da biologia, que
+                                                    significa o
+                                                    oposto do macho alfa, o líder de um grupo de animais.</p>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </a>
-                        </div>
-                    {% endif %}
-                </div>
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endif %}
             {% endfor %}
         </section>
     </main>
