@@ -34,8 +34,8 @@ with app.app_context():
 
     cos_image = Image(path='alfa.png', term=cos)
 
-    trigonometry = KnowledgeArea(content='trigonometria', subject='mathematics')
-    geometry = KnowledgeArea(content='geometria', subject='mathematics')
+    trigonometry = KnowledgeArea(content='trigonometria', subject='matemática')
+    geometry = KnowledgeArea(content='geometria', subject='matemática')
 
     cos_definition.knowledge_area = trigonometry
     cos.definitions.append(cos_definition)
@@ -44,7 +44,11 @@ with app.app_context():
         Syllable(content='cos', order=0, term=cos),
         Syllable(content='se', order=1, term=cos),
         Syllable(content='no', order=2, term=cos),
-        cos, cos_definition, cos_image, geometry, trigonometry
+        cos, cos_definition, cos_image, geometry, trigonometry,
+        KnowledgeArea(content='álgebra', subject='matemática'),
+        KnowledgeArea(content='cálculo', subject='matemática'),
+        KnowledgeArea(content='estatística e probabilidade', subject='matemática'),
+        KnowledgeArea(content='matemática discreta', subject='matemática')
     ])
 
     calculator = Term(
