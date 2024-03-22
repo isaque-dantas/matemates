@@ -31,12 +31,17 @@ def term_creation():
     form = TermCreationForm()
 
     if form.validate_on_submit():
-        try:
-            Term.register(dict(request.form))
-        except Exception as e:
-            flash(str(e.args), category='danger')
+        print(f'request.files: {dict(request.files)}')
+        print(f'request.form: {dict(request.form)}')
+        form_data = dict(request.form)
+        form_files = dict(request.files)
+        form_data.update(form_files)
+        Term.register(form_data)
+    # try:
+    # except Exception as e:
+    #     flash(str(e.args), category='danger')
 
-    return render_template('create-entry.html', form=form)
+    return render_template('create-entry.html', form=form, user_is_admin=is_user_admin(current_user))
 
 
 @login_required
@@ -46,6 +51,6 @@ def term_deletion(term_content):
         term = Term.get_term_by_content(term_content)
         term.delete_term()
 
-        return redirect(url_for('dashboard.index'))
+        return redirect(url_for('dashboard.index', user_is_admin=is_user_admin(current_user)))
     else:
         abort(403)

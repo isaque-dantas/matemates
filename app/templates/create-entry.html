@@ -8,7 +8,7 @@
         <div class="mb-5">
             {% include 'flash_messages.html' %}
         </div>
-        <form action="/create_term" method="POST">
+        <form enctype="multipart/form-data" method="post">
             {{ form.hidden_tag() }}
             <section class="palavra-escolhida container col-8 d-flex flex-column">
                 <section class="palavra animacao-azul rounded">
@@ -72,7 +72,7 @@
                         <label style="cursor: pointer" for="get-file"
                                class="criacao-imagem z-2 fs-6 mb-3 cursor-pointer"><img
                                 src="../static/img/selecionar-imagem.png" alt=""></label>
-                        {{ form.image_path(class="d-none", id="get-file") }}
+                        {{ form.image(class="d-none", id="get-file") }}
                         {{ form.image_caption(class="criacao-legenda z-2 w-75", placeholder="Crie uma legenda para a imagem") }}
                     </div>
 
@@ -94,7 +94,9 @@
             </section>
         </form>
     </main>
+
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
     <script src="{{ url_for('static', filename='js/manage-field-groups-adding.js') }}"></script>
     <script src="{{ url_for('static', filename='js/change-disabled-property-of-empty-valued-selects.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/fetch-create-term-form.js') }}"></script>
 {% endblock %}

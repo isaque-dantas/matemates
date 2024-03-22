@@ -2,10 +2,12 @@ from flask_login import UserMixin
 from app.models import db
 
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
 
 import unicodedata
 from operator import itemgetter
 import re
+import os
 
 
 def normalize_string(query_string: str) -> str:
@@ -92,7 +94,6 @@ class Term(db.Model):
 
     @staticmethod
     def register(form_data):
-        print(form_data)
         term_content = form_data['content'].replace('.', '').casefold()
 
         term = Term(
@@ -112,12 +113,19 @@ class Term(db.Model):
             term.syllables.append(syllable)
             db.session.add(syllable)
 
-        if form_data['image_path']:
+        image_file = form_data['image']
+        if image_file.filename and image_file:
+            print('added img to db')
+            filename = secure_filename(image_file.filename)
+            image_file.save(os.path.join('app/static/img/entry_illustration/', filename))
+
             image = Image(
-                path=form_data['image_path'],
+                path=filename,
                 caption=form_data['image_caption'] if form_data['image_caption'] else None,
                 term=term
             )
+
+            image_file.close()
 
             db.session.add(image)
 
@@ -125,8 +133,6 @@ class Term(db.Model):
             'definition': [],
             'question': []
         }
-
-        print(form_data)
 
         for key, value in form_data.items():
             if 'definition' not in key and 'question' not in key:
@@ -175,7 +181,9 @@ class Term(db.Model):
             for entity in entities_list:
                 db.session.delete(entity)
 
-        db.session.delete(self.image)
+        if self.image:
+            os.remove(self.image.path)
+            db.session.delete(self.image)
         db.session.delete(self)
         db.session.commit()
 

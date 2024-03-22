@@ -48,7 +48,7 @@ class TermCreationForm(FlaskForm):
                              ('F', Term.abbreviation_to_gender_in_full('F').capitalize())
                          ])
 
-    image_path = FileField('Imagem', validators=[
+    image = FileField('Imagem', validators=[
         FileAllowed(['jpg', 'png', 'jpeg'], 'Apenas arquivos \'jpg\' \'png\' \'jpeg\' são permitidos'),
         DataRequired()
     ])
