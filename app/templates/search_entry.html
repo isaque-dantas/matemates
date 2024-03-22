@@ -18,7 +18,7 @@
         </div>
     </section>
 
-    <h1 class="fs-4 mt-3 ms-3">Resultados encontrados para "{{ search_query }}"</h1>
+    <h1 class="palavra-pesquisada fs-4 mt-3 ms-3">Resultados encontrados para "<span>{{ search_query }}</span>"</h1>
     {% if terms %}
     <div class="verbetes row">
         {% for term in terms %}
@@ -36,7 +36,7 @@
                             <span class="border p-1 rounded" style="font-size: 14px; font-family: monospace">{{
                                 definition.knowledge_area.content }}</span>
                             <div class="text-limit mt-2">{{ definition.content
-                                }}aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</div>
+                                }}</div>
                         </li>
                         {% else %}
                         <li>{{ definition.content }}</li>
