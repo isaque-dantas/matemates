@@ -61,4 +61,4 @@ def register():
 def logout():
     logout_user()
 
-    return redirect(url_for('login.index'))
+    return redirect(url_for('user.login'))

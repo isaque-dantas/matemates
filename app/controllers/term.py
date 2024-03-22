@@ -1,9 +1,9 @@
-from flask import render_template, Blueprint, abort
+from flask import render_template, Blueprint, abort, flash, request, url_for, redirect
+from flask_login import current_user, login_required
+
+from app.controllers.user import is_user_admin
 from app.models.tables import Term
 from app.models.term_forms import TermCreationForm
-
-from flask_login import AnonymousUserMixin, current_user
-from app.controllers.user import is_user_admin
 
 term_blueprint = Blueprint('term', __name__)
 
@@ -26,8 +26,26 @@ def term_search(search_query):
                            user_is_admin=is_user_admin(current_user))
 
 
-@term_blueprint.route('/create_term')
+@term_blueprint.route('/create_term', methods=['get', 'post'])
 def term_creation():
     form = TermCreationForm()
 
+    if form.validate_on_submit():
+        try:
+            Term.register(dict(request.form))
+        except Exception as e:
+            flash(str(e.args), category='danger')
+
     return render_template('create-entry.html', form=form)
+
+
+@login_required
+@term_blueprint.route('/delete_term/<term_content>')
+def term_deletion(term_content):
+    if is_user_admin(current_user):
+        term = Term.get_term_by_content(term_content)
+        term.delete_term()
+
+        return redirect(url_for('dashboard.index'))
+    else:
+        abort(403)

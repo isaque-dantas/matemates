@@ -79,7 +79,7 @@ class Term(db.Model):
     }
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    content = db.Column(db.String(256), nullable=False)
+    content = db.Column(db.String(256), nullable=False, unique=True)
     gender = db.Column(db.Enum('M', 'F'), nullable=True)
     grammatical_category = db.Column(
         db.Enum('substantivo', 'verbo', 'adjetivo', 'numeral'), nullable=False
@@ -91,8 +91,107 @@ class Term(db.Model):
     definitions = db.relationship('Definition', backref='term')
 
     @staticmethod
-    def register(form):
-        pass
+    def register(form_data):
+        print(form_data)
+        term_content = form_data['content'].replace('.', '').casefold()
+
+        term = Term(
+            content=term_content,
+            gender=form_data['gender'],
+            grammatical_category=form_data['grammatical_category']
+        )
+
+        syllables = form_data['content'].split('.')
+        for i, syllable in enumerate(syllables):
+            syllable = Syllable(
+                content=syllable,
+                order=i,
+                term=term
+            )
+
+            term.syllables.append(syllable)
+            db.session.add(syllable)
+
+        if form_data['image_path']:
+            image = Image(
+                path=form_data['image_path'],
+                caption=form_data['image_caption'] if form_data['image_caption'] else None,
+                term=term
+            )
+
+            db.session.add(image)
+
+        n_attributes = {
+            'definition': [],
+            'question': []
+        }
+
+        print(form_data)
+
+        for key, value in form_data.items():
+            if 'definition' not in key and 'question' not in key:
+                continue
+
+            key_index = Term.get_index_from_key(key)
+            key_description = Term.get_description_from_key(key)
+            key_entity_name = Term.get_entity_name_from_key(key)
+
+            try:
+                n_attributes[key_entity_name][key_index].update(
+                    {key_description: value}
+                )
+            except IndexError:
+                n_attributes[key_entity_name].append(
+                    {key_description: value, 'order': key_index}
+                )
+
+        for definition_data in n_attributes['definition']:
+            if definition_data['content'] and definition_data['knowledge_area']:
+                definition = Definition(
+                    content=definition_data['content'],
+                    order=definition_data['order']
+                )
+
+                definition.knowledge_area = KnowledgeArea.query.filter_by(content=definition_data['knowledge_area']).first()
+
+                term.definitions.append(definition)
+                db.session.add(definition)
+
+        for question in n_attributes['question']:
+            if question['statement'] and question['answer']:
+                question = Question(
+                    statement=question['statement'],
+                    answer=question['answer'],
+                    order=question['order']
+                )
+
+                term.questions.append(question)
+                db.session.add(question)
+
+        db.session.commit()
+
+    def delete_term(self):
+        entities_lists = [self.definitions, self.syllables, self.questions]
+
+        for entities_list in entities_lists:
+            for entity in entities_list:
+                db.session.delete(entity)
+
+        db.session.delete(self.image)
+        db.session.delete(self)
+        db.session.commit()
+
+    @staticmethod
+    def get_index_from_key(key: str):
+        return int(key.rsplit('_', 1)[1]) - 1
+
+    @staticmethod
+    def get_description_from_key(key: str):
+        return key.rsplit('_', 1)[0].split('_', 1)[1]
+
+    @staticmethod
+    def get_entity_name_from_key(key: str):
+        return key.split('_', 1)[0]
 
     def get_gender_in_full(self):
         return Term.abbreviation_to_gender_in_full(self.gender)
@@ -195,7 +294,7 @@ class KnowledgeArea(db.Model):
     __tablename__ = 'knowledge_area'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    content = db.Column(db.String(128), nullable=False)
+    content = db.Column(db.String(128), nullable=False, unique=True)
     subject = db.Column(db.String(128), nullable=False)
     definitions = db.relationship('Definition', backref='knowledge_area')
 

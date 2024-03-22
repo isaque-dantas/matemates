@@ -16,23 +16,24 @@ class TermCreationForm(FlaskForm):
 
     definition_content_1 = StringField('Definição #1',
                                        validators=[
-                                         DataRequired(),
-                                         Length(max=Definition.MAX_LENGTH['content'])
-                                     ])
+                                           DataRequired(),
+                                           Length(max=Definition.MAX_LENGTH['content'])
+                                       ])
     with app.app_context():
-        knowledge_area_1 = SelectField('Área do conhecimento',
-                                       choices=[
-                                            ('', 'Selecione uma opção'),
-                                            ('álgebra', 'Álgebra'),
-                                            ('cálculo', 'Cálculo'),
-                                            ('estatística e probabilidade', 'Estatística e probabilidade'),
-                                            ('trigonometria', 'Trigonometria'),
-                                            ('matemática discreta', 'Matemática discreta'),
-                                            *KnowledgeArea.get_term_creation_form_definitions_choices()
-                                     ])
+        definition_knowledge_area_1 = SelectField(
+            'Área do conhecimento',
+            choices=[
+                ('', 'Selecione uma opção'),
+                *KnowledgeArea.get_term_creation_form_definitions_choices()
+            ])
+
+    question_statement_1 = StringField('Enunciado')
+
+    question_answer_1 = StringField('Resposta')
 
     grammatical_category = SelectField('Classe gramatical',
                                        choices=[
+                                           ('', 'Classe'),
                                            ('substantivo', 'Substantivo'),
                                            ('verbo', 'Verbo'),
                                            ('adjetivo', 'Adjetivo'),
@@ -42,12 +43,16 @@ class TermCreationForm(FlaskForm):
 
     gender = SelectField('Classe gramatical',
                          choices=[
-                             ('M', Term.abbreviation_to_gender_in_full('M')),
-                             ('F', Term.abbreviation_to_gender_in_full('F'))
+                             ('', 'Gênero'),
+                             ('M', Term.abbreviation_to_gender_in_full('M').capitalize()),
+                             ('F', Term.abbreviation_to_gender_in_full('F').capitalize())
                          ])
 
-    image = FileField('Imagem', validators=[
-        FileAllowed(['jpg', 'png', 'jpeg'], 'Apenas arquivos \'jpg\' \'png\' \'jpeg\' são permitidos')
+    image_path = FileField('Imagem', validators=[
+        FileAllowed(['jpg', 'png', 'jpeg'], 'Apenas arquivos \'jpg\' \'png\' \'jpeg\' são permitidos'),
+        DataRequired()
     ])
+
+    image_caption = StringField()
 
     submit = SubmitField('Confirmar')

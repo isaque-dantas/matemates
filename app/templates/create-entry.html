@@ -5,6 +5,9 @@
 
 {% block content %}
     <main class="mt-5">
+        <div class="mb-5">
+            {% include 'flash_messages.html' %}
+        </div>
         <form action="/create_term" method="POST">
             {{ form.hidden_tag() }}
             <section class="palavra-escolhida container col-8 d-flex flex-column">
@@ -12,58 +15,36 @@
                     <div class="position-absolute">
                         <div class="classe-genero d-flex gap-2">
                             <div class="select-classe select">
-                                <select name="format" id="select-classe">
-                                    <option selected disabled>Classe</option>
-                                    <option value="Substantivo" id="classe-1">Substantivo</option>
-                                    <option value="Adjetivo" id="classe-2">Adjetivo</option>
-                                    <option value="Verbo" id="classe-3">Verbo</option>
-                                    <option value="Numeral" id="classe-4">Numeral</option>
-                                </select>
+                                {{ form.grammatical_category(id="select-classe") }}
                             </div>
                             <div class="select-genero select d-block" id="genero">
-                                <select name="format">
-                                    <option selected disabled>Gênero</option>
-                                    <option value="feminino" id="genero-1">feminino</option>
-                                    <option value="masculino" id="genero-2">masculino</option>
-                                </select>
+                                {{ form.gender() }}
                             </div>
                         </div>
-
-                        <input type="text" class="criacao-palavra-escolhida mt-3 p-2"
-                               placeholder="Escreva o verbete"><br>
+                        {{ form.content(class="criacao-palavra-escolhida mt-3 p-2", placeholder="Escreva o verbete") }}<br>
                         <span class="aviso-criacao-palavra-escolhida">Digite um ponto final (.) para separar as
                         sílabas</span>
-
                     </div>
                 </section>
 
-
                 <section class="informacoes mt-5 mb-5">
                     <div class="sig d-flex" id="significado">
-                        <div class="d-flex z-2 align-items-center w-100 flex-column p-5">
-                            <div class="d-flex flex-column gap-5 w-100">
-                                <div class="definition d-flex gap-3"
-                                    id="definicao-1">
-                                    <button type="button" class="btn btn-remove-definition-field btn-dark" disabled>
+                        <div class="has-n-field-groups d-flex z-2 align-items-center w-100 flex-column p-5">
+                            <div class="field-groups d-flex flex-column gap-5 w-100">
+                                <div class="field-group definition d-flex gap-3"
+                                     id="definicao-1">
+                                    <button type="button" class="btn btn-remove-field-group btn-dark" disabled>
                                         <img src="{{ url_for('static', filename='img/trash.svg') }}" alt="">
                                     </button>
                                     <div class="select-area select d-flex align-self-stretch">
-                                        <select id="knowledge_area_1" name="knowledge_area_1">
-                                            {% for value, label in form.knowledge_area_1.choices %}
-                                            {% if loop.first %}
-                                            <option value="{{ value }}" selected disabled>{{ label }}</option>
-                                            {% else %}
-                                            <option value="{{ value }}">{{ label }}</option>
-                                            {% endif %}
-                                            {% endfor %}
-                                        </select>
+                                        {{ form.definition_knowledge_area_1() }}
                                     </div>
                                     {{ form.definition_content_1(class="criacao-definicao p-2 w-100", placeholder="Escreva uma definição") }}
                                 </div>
                             </div>
 
                             <button type="button" class="btn-add-field-group btn btn-outline-light mt-5 px-4">
-                                Escolha outra definição
+                                Adicionar outra definição
                             </button>
                         </div>
                     </div>
@@ -77,8 +58,8 @@
                                 </button>
 
                                 <div class="w-100 d-flex flex-column gap-3">
-                                    {{ form.definition_content_1(class="criacao-pergunta", placeholder="Insira o enunciado") }}
-                                    {{ form.definition_content_1(class="criacao-resposta", placeholder="Insira a resposta") }}
+                                    {{ form.question_statement_1(class="criacao-pergunta", placeholder="Insira o enunciado") }}
+                                    {{ form.question_answer_1(class="criacao-resposta", placeholder="Insira a resposta") }}
                                 </div>
                             </div>
                         </div>
@@ -88,13 +69,16 @@
                     </div>
 
                     <div class="representacao d-none flex-column m-5 align-items-center" id="representa">
-                        <label for="get-file" class="criacao-imagem z-2 fs-6 mb-3"><img
+                        <label style="cursor: pointer" for="get-file"
+                               class="criacao-imagem z-2 fs-6 mb-3 cursor-pointer"><img
                                 src="../static/img/selecionar-imagem.png" alt=""></label>
-                        {{ form.image(class="d-none", id="get-file") }}
-                        {{ form.definition_content_1(class="criacao-legenda z-2 w-75", placeholder="Crie uma legenda para imagem") }}
+                        {{ form.image_path(class="d-none", id="get-file") }}
+                        {{ form.image_caption(class="criacao-legenda z-2 w-75", placeholder="Crie uma legenda para a imagem") }}
                     </div>
 
                 </section>
+
+                <button class="btn btn-outline-light px-4 mb-5" type="submit">Enviar</button>
 
                 <div class="btn-box d-flex justify-content-between">
                     <button type="button" class="btn-exemplo-definicao add-definicao border-0 selecionado"
@@ -112,4 +96,5 @@
     </main>
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
     <script src="{{ url_for('static', filename='js/manage-field-groups-adding.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/change-disabled-property-of-empty-valued-selects.js') }}"></script>
 {% endblock %}
