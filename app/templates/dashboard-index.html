@@ -10,8 +10,8 @@
             <input type="text" class="search-txt w-100" placeholder="Pesquise um termo aqui!">
             <i class="bi bi-search" alt="lupa"></i>
         </div>
-        <div class="mt-2">
-            <ul class="search-lyrics d-flex justify-content-between px-4">
+        <div class="letters mt-2">
+            <ul class="search-letters d-flex justify-content-between px-4">
                 <li>A</li>
                 <li>B</li>
                 <li>C</li>
@@ -42,7 +42,7 @@
         </div>
     </section>
 
-    <section class="mb-5">
+    <section class="geral my-5">
         {% for knowledge_area in knowledge_areas %}
         {% if loop.first %}
         {% set col_number='8' %}
@@ -53,7 +53,7 @@
         {% set related_terms = list(knowledge_area.get_related_terms()) %}
 
         {% if related_terms %}
-        <div class="d-flex justify-content-between">
+        <div class="top d-flex justify-content-between">
             <div class="mt-5 col-{{ col_number }}">
                 <h4 class="topic-title p-3 fw-bold">{{ knowledge_area.content.capitalize() }}</h4>
                 <div class="verbetes-box d-flex gap-5 p-4">

@@ -213,7 +213,7 @@ nav{
     line-height: 40px;
 }
 
-.search-lyrics {
+.search-letters {
     list-style: none;
     padding: 0;
 }
@@ -265,29 +265,40 @@ nav{
 .verbetes-box {
     border: solid 2px #8400ff;
     box-shadow: 0 0 5px #8400ff, 0 0 10px #8400ff;
-    border-radius: 10px;
+    border-radius: 10px 10px 0 0;
     overflow-x: scroll;
 }
 
 .verbete {
     min-width: 300px;
-    height: 150px;
+    height: 170px;
+    
     background-color: #0e0b1c;
-    border: solid 2px white;
+    border-top: solid 2px white;
+    border-bottom: solid 2px white;
     border-radius: 5px;
     color: white;
 }
 
+.verbete a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 60px; 
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0), #0e0b1c);
+}
+
 .verbetes-box::-webkit-scrollbar {
-    height: 10px;
+    height: 4px;
     background: #ffffff2e;
-    border-radius: 0 0 10px 10px;    
+    
 }
 
 .verbetes-box::-webkit-scrollbar-thumb {
-    height: 10px;
-    background: #ffffff;
-    border-radius: 0 0 10px 10px;  
+    height: 4px;
+    background: #ffffff8f;
 }
 
 @media only screen and (max-device-width: 1199px) {
@@ -304,5 +315,26 @@ nav{
 
     .dropdown-toggle::after{
         content: none;
+    }
+
+    .top{
+        flex-direction: column-reverse;
+    }
+
+    .top .col-8, .top .col-3{
+        width: 100%;
+    }
+
+    .geral{
+        padding: 20px;
+    }
+
+    .search-letters{
+        display: none !important;
+    }
+
+    .verbete{
+        min-width: 100%;
+        height: 170px;
     }
 }
