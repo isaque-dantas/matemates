@@ -13,6 +13,7 @@ imageInput.addEventListener("change", function (e) {
     reader.onload = function (e) {
       // Set the source of the image element to the data URL
       previewImage.src = e.target.result;
+      previewImage.style.padding = 0;
     };
 
     // Read the contents of the file as a data URL
