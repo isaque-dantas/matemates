@@ -9,6 +9,7 @@ import unicodedata
 from operator import itemgetter
 import re
 import os
+from pymysql.err import IntegrityError
 
 
 def normalize_string(query_string: str) -> str:
@@ -156,27 +157,33 @@ class Term(db.Model):
                 )
 
         for definition_data in n_attributes['definition']:
-            definition = Definition(
-                content=definition_data['content'],
-                order=definition_data['order']
-            )
+            if definition_data['content'] and definition_data['knowledge_area']:
+                definition = Definition(
+                    content=definition_data['content'],
+                    order=definition_data['order']
+                )
 
-            definition.knowledge_area = KnowledgeArea.query.filter_by(content=definition_data['knowledge_area']).first()
+                definition.knowledge_area = KnowledgeArea.query.filter_by(
+                    content=definition_data['knowledge_area']).first()
 
-            term.definitions.append(definition)
-            db.session.add(definition)
+                term.definitions.append(definition)
+                db.session.add(definition)
 
         for question in n_attributes['question']:
-            question = Question(
-                statement=question['statement'],
-                answer=question['answer'],
-                order=question['order']
-            )
+            if question['statement'] and question['answer']:
+                question = Question(
+                    statement=question['statement'],
+                    answer=question['answer'],
+                    order=question['order']
+                )
 
-            term.questions.append(question)
-            db.session.add(question)
+                term.questions.append(question)
+                db.session.add(question)
 
-        db.session.commit()
+        try:
+            db.session.commit()
+        except IntegrityError as e:
+            print(e)
 
     def delete_term(self):
         entities_lists = [self.definitions, self.syllables, self.questions]
