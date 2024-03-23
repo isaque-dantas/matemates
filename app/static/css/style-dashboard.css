@@ -272,15 +272,16 @@ nav{
 .verbete {
     min-width: 300px;
     height: 170px;
-    
+    position: relative;
     background-color: #0e0b1c;
     border-top: solid 2px white;
     border-bottom: solid 2px white;
     border-radius: 5px;
     color: white;
+    overflow: hidden;
 }
 
-.verbete a::after {
+.verbete::after {
     content: '';
     position: absolute;
     bottom: 0;
@@ -300,6 +301,19 @@ nav{
     height: 4px;
     background: #ffffff8f;
 }
+
+/*----Barra de rolagem da pagina----*/
+
+::-webkit-scrollbar {
+    width: 3px;
+    background: #ffffff2e;
+}
+
+::-webkit-scrollbar-thumb{
+    background: #ffffff;
+}
+
+/*^^ Barra de rolagem da pagina ^^*/
 
 @media only screen and (max-device-width: 1199px) {
     .link-nav{
