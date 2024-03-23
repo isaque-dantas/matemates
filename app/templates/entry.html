@@ -4,11 +4,7 @@ endblock %} {% block content %}
 <main class="mt-5 container d-flex justify-content-between">
   <section class="pesquisa-responsivo col-3">
     <div class="search-box d-flex justify-content-between align-items-center">
-      <input
-        type="text"
-        class="search-txt"
-        placeholder="Pesquise um termo aqui!"
-      />
+      <input type="text" class="search-txt" placeholder="Pesquise um termo aqui!" />
       <i class="bi bi-search" alt="lupa"></i>
     </div>
   </section>
@@ -33,10 +29,8 @@ endblock %} {% block content %}
           definition.knowledge_areas %}
           <li class="area">
             {% for knowledge_area in definition.knowledge_areas %}
-            <span
-              class="border p-1 rounded me-2"
-              style="font-size: 14px; font-family: monospace"
-              >{{ knowledge_area.content }}
+            <span class="border p-1 rounded me-2" style="font-size: 14px; font-family: monospace">{{
+              knowledge_area.content }}
             </span>
             {% endfor %}
 
@@ -48,22 +42,16 @@ endblock %} {% block content %}
         </ol>
 
         {% if term.image %}
-        <div
-          class="representacao p-5 d-flex flex-column justify-content-center"
-        >
+        <div class="representacao p-5 d-flex flex-column justify-content-center">
           <div class="imagem d-flex justify-content-center fs-1">α</div>
           <div class="exemplo d-flex align-items-center justify-content-center">
-            <img src={{ url_for('static',
-            filename='img/{}'.format(term.image.path)) }} alt="">
+            <img src={{ url_for('static', filename='img/{}' .format(term.image.path)) }} alt="">
           </div>
         </div>
         {% endif %}
       </div>
       {% if term.questions %}
-      <div
-        class="d-none justify-content-between lh-lg position-relative"
-        id="exemplo"
-      >
+      <div class="d-none justify-content-between lh-lg position-relative" id="exemplo">
         <h5 class="titulo-perguntas position-absolute z-2">Questões</h5>
         <ul class="perguntas lh-lg">
           {% for question in term.questions %} {% if question.explanation %}
@@ -80,20 +68,10 @@ endblock %} {% block content %}
     </section>
     {% if term.questions %}
     <div class="btn-box">
-      <button
-        type="button"
-        class="btn-exemplo-definicao d-block mt-5 border-0"
-        style="--clr: #1e9bff"
-        id="btn-ex"
-      >
+      <button type="button" class="btn-exemplo-definicao d-block mt-5 border-0" style="--clr: #1e9bff" id="btn-ex">
         <span>VEJA EXEMPLOS</span><i></i>
       </button>
-      <button
-        type="button"
-        class="btn-exemplo-definicao d-none mt-5 border-0"
-        style="--clr: #1e9bff"
-        id="btn-sig"
-      >
+      <button type="button" class="btn-exemplo-definicao d-none mt-5 border-0" style="--clr: #1e9bff" id="btn-sig">
         <span>VOLTE PARA DEFINIÇÃO</span><i></i>
       </button>
     </div>
@@ -102,11 +80,7 @@ endblock %} {% block content %}
 
   <section class="recomendacao col-3">
     <div class="search-box justify-content-between align-items-center">
-      <input
-        type="text"
-        class="search-txt"
-        placeholder="Pesquise um termo aqui!"
-      />
+      <input type="text" class="search-txt" placeholder="Pesquise um termo aqui!" />
       <i class="bi bi-search" alt="lupa"></i>
     </div>
     <a href="" class="link-termo-do-dia">
@@ -124,9 +98,7 @@ endblock %} {% block content %}
               significa o oposto do macho alfa, o líder de um grupo de animais.
             </p>
           </div>
-          <div
-            class="legenda d-flex align-items-center justify-content-center"
-          ></div>
+          <div class="legenda d-flex align-items-center justify-content-center"></div>
         </div>
       </div>
     </a>
