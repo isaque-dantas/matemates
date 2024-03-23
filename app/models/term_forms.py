@@ -50,7 +50,6 @@ class TermCreationForm(FlaskForm):
 
     image = FileField('Imagem', validators=[
         FileAllowed(['jpg', 'png', 'jpeg'], 'Apenas arquivos \'jpg\' \'png\' \'jpeg\' são permitidos'),
-        DataRequired()
     ])
 
     image_caption = StringField()

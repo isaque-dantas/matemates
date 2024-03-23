@@ -30,16 +30,16 @@ def term_search(search_query):
 def term_creation():
     form = TermCreationForm()
 
-    if form.validate_on_submit():
-        print(f'request.files: {dict(request.files)}')
-        print(f'request.form: {dict(request.form)}')
-        form_data = dict(request.form)
-        form_files = dict(request.files)
-        form_data.update(form_files)
-        Term.register(form_data)
-    # try:
-    # except Exception as e:
-    #     flash(str(e.args), category='danger')
+    try:
+        if form.validate_on_submit():
+            print(f'request.files: {dict(request.files)}')
+            print(f'request.form: {dict(request.form)}')
+            form_data = dict(request.form)
+            form_files = dict(request.files)
+            form_data.update(form_files)
+            Term.register(form_data)
+    except Exception as e:
+        flash(str(e), category='danger')
 
     return render_template('create-entry.html', form=form, user_is_admin=is_user_admin(current_user))
 

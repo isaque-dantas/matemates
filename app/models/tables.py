@@ -1,5 +1,6 @@
 from flask_login import UserMixin
 from app.models import db
+from pymysql.err import IntegrityError
 
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
@@ -102,6 +103,9 @@ class Term(db.Model):
             grammatical_category=form_data['grammatical_category']
         )
 
+        if not term.has_integrity():
+            raise IntegrityError('Esse termo já foi inserido. Tente novamente com outro termo.')
+
         syllables = form_data['content'].split('.')
         for i, syllable in enumerate(syllables):
             syllable = Syllable(
@@ -186,6 +190,10 @@ class Term(db.Model):
             db.session.delete(self.image)
         db.session.delete(self)
         db.session.commit()
+
+    def has_integrity(self):
+        term_with_same_content = Term.query.filter_by(content=self.content).first()
+        return term_with_same_content is None
 
     @staticmethod
     def get_index_from_key(key: str):
