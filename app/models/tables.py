@@ -180,10 +180,7 @@ class Term(db.Model):
                 term.questions.append(question)
                 db.session.add(question)
 
-        try:
-            db.session.commit()
-        except IntegrityError as e:
-            print(e)
+        db.session.commit()
 
     def delete_term(self):
         entities_lists = [self.definitions, self.syllables, self.questions]
