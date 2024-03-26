@@ -9,11 +9,11 @@ app.config['SECRET_KEY'] = FLASK_SECRET_KEY
 app.config['SQLALCHEMY_DATABASE_URI'] = \
     f'mysql+pymysql://dba_matemates:{MYSQL_USER_PASSWORD}@localhost/matemates_db'
 
-from app.controllers import term, user, dashboard, errors
+from app.controllers import entry, user, dashboard, errors
 
 app.register_blueprint(errors.errors_blueprint)
 app.register_blueprint(user.user_blueprint)
-app.register_blueprint(term.term_blueprint)
+app.register_blueprint(entry.entry_blueprint)
 app.register_blueprint(dashboard.dashboard_blueprint)
 
 from app.models.tables import User

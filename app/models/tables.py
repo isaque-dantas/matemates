@@ -1,11 +1,15 @@
 from flask_login import UserMixin
 from app.models import db
+from pymysql.err import IntegrityError
 
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
 
 import unicodedata
 from operator import itemgetter
 import re
+import os
+from pymysql.err import IntegrityError
 
 
 def normalize_string(query_string: str) -> str:
@@ -39,18 +43,18 @@ class User(db.Model, UserMixin):
     role = db.Column(db.Enum('admin', 'normal'), nullable=False)
 
     @staticmethod
-    def register(form):
-        password_hash = generate_password_hash(form.password.data)
+    def register(form_data):
+        password_hash = generate_password_hash(form_data['password'])
 
         new_user = User(
-            first_name=form.first_name.data,
-            last_name=form.last_name.data,
-            username=form.username.data,
+            first_name=form_data['first_name'],
+            last_name=form_data['last_name'],
+            username=form_data['username'],
             password_hash=password_hash,
-            email=form.email.data,
-            phone_number=form.phone_number.data,
-            birth_date=form.birth_date.data,
-            role='normal'
+            email=form_data['email'],
+            phone_number=form_data['phone_number'],
+            birth_date=form_data['birth_date'],
+            role=form_data['role']
         )
 
         db.session.add(new_user)
@@ -71,53 +75,73 @@ class User(db.Model, UserMixin):
         return self.role == 'admin'
 
 
-class Term(db.Model):
-    __tablename__ = 'term'
-
-    MAX_LENGTH = {
-        'content': 256
-    }
-
+class Entry(db.Model):
+    __tablename__ = 'entry'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     content = db.Column(db.String(256), nullable=False, unique=True)
-    gender = db.Column(db.Enum('M', 'F'), nullable=True)
-    grammatical_category = db.Column(
-        db.Enum('substantivo', 'verbo', 'adjetivo', 'numeral'), nullable=False
-    )
 
-    image = db.relationship('Image', backref='term', uselist=False)
-    questions = db.relationship('Question', backref='term')
-    syllables = db.relationship('Syllable', backref='term')
-    definitions = db.relationship('Definition', backref='term')
+    image = db.relationship('Image', backref='entry', uselist=False)
+    questions = db.relationship('Question', backref='entry')
+    definitions = db.relationship('Definition', backref='entry')
+    terms = db.relationship('Term', backref='entry')
 
     @staticmethod
     def register(form_data):
-        print(form_data)
-        term_content = form_data['content'].replace('.', '').casefold()
+        entry_content = form_data['entry_content'].casefold()
 
-        term = Term(
-            content=term_content,
-            gender=form_data['gender'],
-            grammatical_category=form_data['grammatical_category']
+        entry = Entry(
+            content=entry_content.replace('*', '').replace('.', '')
         )
 
-        syllables = form_data['content'].split('.')
-        for i, syllable in enumerate(syllables):
-            syllable = Syllable(
-                content=syllable,
+        if not entry.has_integrity():
+            raise IntegrityError('Esse verbete já foi inserido. Tente novamente com outro.')
+
+        if ' ' in entry_content and entry_content.count('*') != 2:
+            raise ValueError(
+                'Você precisa definir o termo principal, e apenas um termo principal. Ponha-o entre asteriscos (\'*\').')
+        elif ' ' not in entry_content and entry_content.count('*') != 2:
+            entry_content = entry_content.replace('*', '')
+            entry_content = '*' + entry_content + '*'
+
+        db.session.add(entry)
+
+        terms_contents = entry_content.split()
+        for i, term_content in enumerate(terms_contents):
+            term = Term(
+                content=term_content.replace('.', '').replace('*', ''),
                 order=i,
-                term=term
+                entry=entry
             )
 
-            term.syllables.append(syllable)
-            db.session.add(syllable)
+            if term_content[0] == '*' and term_content[-1] == '*':
+                term.is_main_term = True
+                term.gender = form_data['main_term_gender']
+                term.grammatical_category = form_data['main_term_grammatical_category']
 
-        if form_data['image_path']:
+            db.session.add(term)
+
+            syllables = term_content.split('.')
+            for j, syllable in enumerate(syllables):
+                syllable = Syllable(
+                    content=syllable.replace('*', ''),
+                    order=j,
+                    term=term
+                )
+
+                db.session.add(syllable)
+
+        image_file = form_data['image']
+        if image_file.filename and image_file:
+            filename = secure_filename(image_file.filename)
+            image_file.save(os.path.join('app/static/img/entry_illustration/', filename))
+
             image = Image(
-                path=form_data['image_path'],
+                path=filename,
                 caption=form_data['image_caption'] if form_data['image_caption'] else None,
-                term=term
+                entry=entry
             )
+
+            image_file.close()
 
             db.session.add(image)
 
@@ -126,15 +150,13 @@ class Term(db.Model):
             'question': []
         }
 
-        print(form_data)
-
         for key, value in form_data.items():
             if 'definition' not in key and 'question' not in key:
                 continue
 
-            key_index = Term.get_index_from_key(key)
-            key_description = Term.get_description_from_key(key)
-            key_entity_name = Term.get_entity_name_from_key(key)
+            key_index = Entry.get_index_from_key(key)
+            key_description = Entry.get_description_from_key(key)
+            key_entity_name = Entry.get_entity_name_from_key(key)
 
             try:
                 n_attributes[key_entity_name][key_index].update(
@@ -149,12 +171,11 @@ class Term(db.Model):
             if definition_data['content'] and definition_data['knowledge_area']:
                 definition = Definition(
                     content=definition_data['content'],
-                    order=definition_data['order']
+                    order=definition_data['order'],
+                    entry=entry,
+                    knowledge_area=KnowledgeArea.query.filter_by(content=definition_data['knowledge_area']).first()
                 )
 
-                definition.knowledge_area = KnowledgeArea.query.filter_by(content=definition_data['knowledge_area']).first()
-
-                term.definitions.append(definition)
                 db.session.add(definition)
 
         for question in n_attributes['question']:
@@ -162,24 +183,31 @@ class Term(db.Model):
                 question = Question(
                     statement=question['statement'],
                     answer=question['answer'],
-                    order=question['order']
+                    order=question['order'],
+                    entry=entry
                 )
 
-                term.questions.append(question)
                 db.session.add(question)
 
         db.session.commit()
 
-    def delete_term(self):
-        entities_lists = [self.definitions, self.syllables, self.questions]
+    def delete_entry(self):
+        entities_lists = [self.definitions, self.syllables, self.questions, self.terms]
 
         for entities_list in entities_lists:
             for entity in entities_list:
                 db.session.delete(entity)
 
-        db.session.delete(self.image)
+        if self.image:
+            os.remove(self.image.path)
+            db.session.delete(self.image)
+
         db.session.delete(self)
         db.session.commit()
+
+    def has_integrity(self):
+        entry_with_same_content = Entry.query.filter_by(content=self.content).first()
+        return entry_with_same_content is None
 
     @staticmethod
     def get_index_from_key(key: str):
@@ -193,6 +221,75 @@ class Term(db.Model):
     def get_entity_name_from_key(key: str):
         return key.split('_', 1)[0]
 
+    @staticmethod
+    def get_entry_by_content(content):
+        return Entry.query.filter_by(content=content).first()
+
+    @staticmethod
+    def search_for_related_entries(search_sentence, gender=None, grammatical_category=None):
+        related_entries = Entry.query.with_entities(Entry.id, Entry.content).all()
+
+        entries_and_occurrences = []
+
+        for entry in related_entries:
+            entries_and_occurrences.append(
+                {'entry_id': entry.id, 'content': entry.content, 'occurrences': 0}
+            )
+
+        normalized_search_sentence = normalize_string(search_sentence)
+
+        for search_word in normalized_search_sentence.split():
+            for i, entry_and_occurrences in enumerate(entries_and_occurrences):
+                normalized_entry_content = normalize_string(entry_and_occurrences['content'])
+
+                matched_strings = re.findall(rf'.*{search_word}.*', normalized_entry_content)
+
+                if matched_strings and search_word == normalized_entry_content:
+                    entries_and_occurrences[i]['occurrences'] += 3
+                elif matched_strings:
+                    entries_and_occurrences[i]['occurrences'] += 1
+
+            #     print(f'{search_word} / {entry_content} => {matched_strings}')
+            # print()
+
+        entries_and_occurrences = sorted(entries_and_occurrences, key=itemgetter('content'))
+        entries_and_occurrences = sorted(entries_and_occurrences, key=itemgetter('occurrences'), reverse=True)
+
+        related_entries = []
+        for entry_and_occurrences in entries_and_occurrences:
+            if entry_and_occurrences['occurrences'] != 0:
+                related_entries.append(
+                    Term.query.get(entry_and_occurrences['entry_id'])
+                )
+
+        return related_entries
+
+    def get_definition_with_knowledge_area(self, knowledge_area):
+        return Definition.query.filter_by(knowledge_area=knowledge_area, entry=self).first()
+
+    def get_main_term(self):
+        return Term.query.filter_by(entry=self, is_main_term=True).first()
+
+
+class Term(db.Model):
+    __tablename__ = 'term'
+
+    MAX_LENGTH = {
+        'content': 256
+    }
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    content = db.Column(db.String(256), nullable=False, unique=True)
+    gender = db.Column(db.Enum('M', 'F'), nullable=True)
+    grammatical_category = db.Column(
+        db.Enum('substantivo', 'verbo', 'adjetivo', 'numeral'), nullable=True
+    )
+    is_main_term = db.Column(db.Boolean, nullable=False, default=False)
+    order = db.Column(db.Integer, nullable=False)
+
+    syllables = db.relationship('Syllable', backref='term')
+    entry_id = db.Column(db.Integer, db.ForeignKey('entry.id'))
+
     def get_gender_in_full(self):
         return Term.abbreviation_to_gender_in_full(self.gender)
 
@@ -205,61 +302,6 @@ class Term(db.Model):
 
         return gender_in_full[abbreviation]
 
-    @staticmethod
-    def get_term_by_content(content):
-        return Term.query.filter_by(content=content).first()
-
-    @staticmethod
-    def search_for_related_terms(search_sentence, gender=None, grammatical_category=None):
-        # if gender is not None and grammatical_category is not None:
-        #     terms_ids = Term.query.with_entities(Term.id).filter_by(gender=gender).filter_by(
-        #         grammatical_category=grammatical_category).all()
-        # elif gender is not None:
-        #     terms_ids = Term.query.with_entities(Term.id).filter_by(gender=gender).all()
-        # elif grammatical_category is not None:
-        #     terms_ids = Term.query.with_entities(Term.id).filter_by(grammatical_category=grammatical_category).all()
-        # else:
-        #     terms_ids = Term.query.with_entities(Term.id).all()
-        terms = Term.query.with_entities(Term.id, Term.content).all()
-
-        terms_and_occurrences = []
-
-        for term in terms:
-            terms_and_occurrences.append(
-                {'term_id': term.id, 'content': term.content, 'occurrences': 0}
-            )
-
-        normalized_search_sentence = normalize_string(search_sentence)
-
-        for search_word in normalized_search_sentence.split():
-            for i, term_and_occurrences in enumerate(terms_and_occurrences):
-                normalized_term_content = normalize_string(term_and_occurrences['content'])
-
-                matched_strings = re.findall(rf'.*{search_word}.*', normalized_term_content)
-
-                if matched_strings and search_word == normalized_term_content:
-                    terms_and_occurrences[i]['occurrences'] += 3
-                elif matched_strings:
-                    terms_and_occurrences[i]['occurrences'] += 1
-
-            #     print(f'{search_word} / {term_content} => {matched_strings}')
-            # print()
-
-        terms_and_occurrences = sorted(terms_and_occurrences, key=itemgetter('content'))
-        terms_and_occurrences = sorted(terms_and_occurrences, key=itemgetter('occurrences'), reverse=True)
-
-        terms = []
-        for term_and_occurrences in terms_and_occurrences:
-            if term_and_occurrences['occurrences'] != 0:
-                terms.append(
-                    Term.query.get(term_and_occurrences['term_id'])
-                )
-
-        return terms
-
-    def get_definition_with_knowledge_area(self, knowledge_area):
-        return Definition.query.filter_by(knowledge_area=knowledge_area, term=self).first()
-
 
 class Image(db.Model):
     __tablename__ = 'image'
@@ -267,7 +309,7 @@ class Image(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     path = db.Column(db.String(256), nullable=False)
     caption = db.Column(db.String(256), nullable=True)
-    term_id = db.Column(db.Integer, db.ForeignKey('term.id'))
+    entry_id = db.Column(db.Integer, db.ForeignKey('entry.id'))
 
 
 class Question(db.Model):
@@ -278,14 +320,14 @@ class Question(db.Model):
     answer = db.Column(db.String(256), nullable=False)
     explanation = db.Column(db.String(256), nullable=True)
     order = db.Column(db.Integer, nullable=False)
-    term_id = db.Column(db.Integer, db.ForeignKey('term.id'))
+    entry_id = db.Column(db.Integer, db.ForeignKey('entry.id'))
 
 
 class Syllable(db.Model):
     __tablename__ = 'syllable'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    content = db.Column(db.String(6), nullable=False)
+    content = db.Column(db.String(12), nullable=False)
     order = db.Column(db.Integer, nullable=False)
     term_id = db.Column(db.Integer, db.ForeignKey('term.id'))
 
@@ -312,12 +354,21 @@ class KnowledgeArea(db.Model):
     def get_all():
         return KnowledgeArea.query.all()
 
-    def get_related_terms(self):
+    def get_related_entries(self):
         related_definitions = self.definitions
-        related_terms = set()
+        related_entries = set()
         for definition in related_definitions:
-            related_terms.add(definition.term)
-        return related_terms
+            related_entries.add(definition.entry)
+        return related_entries
+
+    @staticmethod
+    def register(content, subject):
+        knowledge_area = KnowledgeArea(
+            content=content,
+            subject=subject
+        )
+        db.session.add(knowledge_area)
+        db.session.commit()
 
 
 class Definition(db.Model):
@@ -330,7 +381,7 @@ class Definition(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     content = db.Column(db.String(MAX_LENGTH['content']), nullable=False)
     order = db.Column(db.Integer, nullable=False)
-    term_id = db.Column(db.Integer, db.ForeignKey('term.id'))
+    entry_id = db.Column(db.Integer, db.ForeignKey('entry.id'))
     knowledge_area_id = db.Column(db.Integer, db.ForeignKey('knowledge_area.id'))
 
 # if __name__ == '__main__':
