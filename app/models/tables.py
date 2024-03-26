@@ -259,7 +259,7 @@ class Entry(db.Model):
         for entry_and_occurrences in entries_and_occurrences:
             if entry_and_occurrences['occurrences'] != 0:
                 related_entries.append(
-                    Term.query.get(entry_and_occurrences['entry_id'])
+                    Entry.query.get(entry_and_occurrences['entry_id'])
                 )
 
         return related_entries

@@ -21,6 +21,7 @@ def entry_data(entry_content):
 @entry_blueprint.route('/search/<search_query>')
 def entry_search(search_query):
     entries = Entry.search_for_related_entries(search_query)
+    print(f'entries: {entries}')
 
     return render_template('search_entry.html', search_query=search_query, entries=entries,
                            user_is_admin=is_user_admin(current_user))
