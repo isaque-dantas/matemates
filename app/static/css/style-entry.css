@@ -500,7 +500,6 @@ nav{
     padding: 2px 10px;
     border: none;
     border-radius: 20px;
-    text-align: center;
     cursor: pointer;
 }
 
@@ -579,7 +578,6 @@ nav{
     .pesquisa-responsivo{
         display: block;
         width: 80%;
-        align-self: center;
     }
 
     .recomendacao{

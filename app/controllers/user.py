@@ -44,12 +44,12 @@ def register():
     form = RegisterForm()
 
     if form.validate_on_submit():
-        try:
-            User.register(form)
-        except Exception as e:
-            flash(message=str(e), category='danger')
-        else:
-            return redirect(url_for('user.login'))
+        User.register(form)
+        # try:
+        # except Exception as e:
+        #     flash(message=str(e), category='danger')
+        # else:
+        return redirect(url_for('user.login'))
 
     # if request.method == 'POST':
     #     return redirect(url_for('user.register'))
