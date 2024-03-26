@@ -13,7 +13,7 @@ def entry_data(entry_content):
     entry = Entry.get_entry_by_content(entry_content)
     if entry:
         return render_template('entry.html', entry=entry, enumerate=enumerate, format=format,
-                               user_is_admin=is_user_admin(current_user))
+                               user_is_admin=is_user_admin(current_user), is_preview=True)
     else:
         abort(404)
 

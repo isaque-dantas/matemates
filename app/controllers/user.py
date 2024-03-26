@@ -44,7 +44,7 @@ def register():
     form = RegisterForm()
 
     if form.validate_on_submit():
-        User.register(form)
+        User.register(dict(form.data))
         # try:
         # except Exception as e:
         #     flash(message=str(e), category='danger')

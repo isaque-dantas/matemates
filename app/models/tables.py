@@ -44,6 +44,7 @@ class User(db.Model, UserMixin):
 
     @staticmethod
     def register(form_data):
+        print(form_data)
         password_hash = generate_password_hash(form_data['password'])
 
         new_user = User(
@@ -53,9 +54,10 @@ class User(db.Model, UserMixin):
             password_hash=password_hash,
             email=form_data['email'],
             phone_number=form_data['phone_number'],
-            birth_date=form_data['birth_date'],
-            role=form_data['role']
+            birth_date=form_data['birth_date']
         )
+
+        new_user.role = 'admin'
 
         db.session.add(new_user)
         db.session.commit()
