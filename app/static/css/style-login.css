@@ -172,6 +172,7 @@ nav{
     transform: translate(-50%, -50%);
     left: 97%;
     top: 50%;
+    cursor: pointer;
 }
 
 .btn {

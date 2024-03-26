@@ -1,38 +1,32 @@
-{% extends 'base-with-navbar-nav.html' %}
-
-{% block title %}Login{% endblock %}
-{% block style %}style-login{% endblock %}
-
-{% block content %}
+{% extends 'base-with-navbar-nav.html' %} {% block title %}Login{% endblock %}
+{% block style %}style-login{% endblock %} {% block content %}
 <main class="container my-5">
-    <div class="mb-5">
-        {% include 'flash_messages.html' %}
-    </div>
-    <div class="geral position-absolute">
-        <div class="forms-login">
-            <form action="/login" method="post">
-                {{ form.hidden_tag() }}
-                <div class="mb-5">
-                    {{ form.email.label(class="form-label mb-1") }}
-                    <div class="form animacao-azul">
-                        <div class="position-absolute">
-                            {{ form.email(class="form-control") }}
-                        </div>
-                    </div>
-                </div>
-                <div>
-                    {{ form.password.label(class="form-label mb-1") }}
-                    <div class="form animacao-azul">
-                        <div class="position-relative">
-                            {{ form.password(class="form-control") }}
-                            <i class="eye-closed bi bi-eye position-absolute"></i>
-                            <i class="eye-open bi bi-eye-slash position-absolute"></i>
-                        </div>
-                    </div>
-                </div>
-                {{ form.submit(class="btn btn-outline-light px-4 py-2 mt-5") }}
-            </form>
+  <div class="mb-5">{% include 'flash_messages.html' %}</div>
+  <div class="geral position-absolute">
+    <div class="forms-login">
+      <form action="/login" method="post">
+        {{ form.hidden_tag() }}
+        <div class="mb-5">
+          {{ form.email.label(class="form-label mb-1") }}
+          <div class="form animacao-azul">
+            <div class="position-absolute">
+              {{ form.email(class="form-control") }}
+            </div>
+          </div>
         </div>
+        <div>
+          {{ form.password.label(class="form-label mb-1") }}
+          <div class="form animacao-azul">
+            <div class="position-relative">
+              {{ form.password(class="form-control") }}
+              <i class="eye-open bi bi-eye-slash position-absolute"></i>
+            </div>
+          </div>
+        </div>
+        {{ form.submit(class="btn btn-outline-light px-4 py-2 mt-5") }}
+      </form>
     </div>
+  </div>
 </main>
+<script src="{{ url_for('static', filename='js/password.js') }}"></script>
 {% endblock %}
