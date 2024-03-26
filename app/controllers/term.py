@@ -17,6 +17,15 @@ def term_data(term_content):
     else:
         abort(404)
 
+@term_blueprint.route('/validate/<term_content>')
+def term_validate(term_content):
+    term = Term.get_term_by_content(term_content)
+    if term:
+        return render_template('validate-entry.html', term=term, enumerate=enumerate, format=format,
+                               user_is_admin=is_user_admin(current_user))
+    else:
+        abort(404)
+
 
 @term_blueprint.route('/search/<search_query>')
 def term_search(search_query):
