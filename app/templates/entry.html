@@ -1,109 +1,125 @@
-{% extends 'base-with-navbar-nav.html' %} {% block title %}Matematês // {{
-term.content.capitalize() }}{% endblock %} {% block style %}style-entry{%
-endblock %} {% block content %}
-<main class="mt-5 container d-flex justify-content-between">
-  <section class="pesquisa-responsivo col-3">
-    <div class="search-box d-flex justify-content-between align-items-center">
-      <input type="text" class="search-txt" placeholder="Pesquise um termo aqui!" />
-      <i class="bi bi-search" alt="lupa"></i>
-    </div>
-  </section>
-  <section class="palavra-escolhida col-8 d-flex flex-column">
-    <section class="palavra animacao-azul rounded">
-      <div class="position-absolute">
-        <p>
-          {{ term.grammatical_category.capitalize() }} {{
-          term.get_gender_in_full() }}
-        </p>
-        <h1>
-          {% for i, syllable in enumerate(term.syllables) %}{# #}{% if i != 0
-          %}.{% endif %}{# #}{{ syllable.content }}{# #}{% endfor %}
-        </h1>
-      </div>
-    </section>
+{% extends 'base-with-navbar-nav.html' %}
 
-    <section class="significado mt-5">
-      <div class="sig d-flex justify-content-between" id="significado">
-        <ol class="significado-conteudo m-5 lh-lg">
-          {% for definition in term.definitions %} {% if
-          definition.knowledge_areas %}
-          <li class="area">
-            {% for knowledge_area in definition.knowledge_areas %}
-            <span class="border p-1 rounded me-2" style="font-size: 14px; font-family: monospace">{{
-              knowledge_area.content }}
-            </span>
-            {% endfor %}
+{% block title %}Matematês // {{ entry.content.capitalize() }}{% endblock %}
 
-            <div class="mt-2">{{ definition.content }}</div>
-          </li>
-          {% else %}
-          <li>{{ definition.content }}</li>
-          {% endif %} {% endfor %}
-        </ol>
+{% block style %}style-entry{% endblock %}
 
-        {% if term.image %}
-        <div class="representacao p-5 d-flex flex-column justify-content-center">
-          <div class="imagem d-flex justify-content-center fs-1">α</div>
-          <div class="exemplo d-flex align-items-center justify-content-center">
-            <img src={{ url_for('static', filename='img/{}' .format(term.image.path)) }} alt="">
-          </div>
-        </div>
-        {% endif %}
-      </div>
-      {% if term.questions %}
-      <div class="d-none justify-content-between lh-lg position-relative" id="exemplo">
-        <h5 class="titulo-perguntas position-absolute z-2">Questões</h5>
-        <ul class="perguntas lh-lg">
-          {% for question in term.questions %} {% if question.explanation %}
-          <li>
-            {{ question.statement }}<br />R: {{ question.answer }}<br />E: {{
-            question.explanation }}
-          </li>
-          {% else %}
-          <li>{{ question.statement }}<br />R: {{ question.answer }}</li>
-          {% endif %} {% endfor %}
-        </ul>
-      </div>
-      {% endif %}
-    </section>
-    {% if term.questions %}
-    <div class="btn-box">
-      <button type="button" class="btn-exemplo-definicao d-block mt-5 border-0" style="--clr: #1e9bff" id="btn-ex">
-        <span>VEJA EXEMPLOS</span><i></i>
-      </button>
-      <button type="button" class="btn-exemplo-definicao d-none mt-5 border-0" style="--clr: #1e9bff" id="btn-sig">
-        <span>VOLTE PARA DEFINIÇÃO</span><i></i>
-      </button>
-    </div>
-    {% endif %}
-  </section>
+{% block content %}
+    <main class="mt-5 container d-flex justify-content-between">
+        <section class="pesquisa-responsivo col-3">
+            <div class="search-box d-flex justify-content-between align-items-center">
+                <input type="text" class="search-txt" placeholder="Pesquise um termo aqui!"/>
+                <i class="bi bi-search" alt="lupa"></i>
+            </div>
+        </section>
+        <section class="palavra-escolhida col-8 d-flex flex-column">
+            <section class="palavra animacao-azul rounded">
+                <div class="position-absolute">
+                    <p>
+                        {{ entry.get_main_term().grammatical_category.capitalize() }} {{ entry.get_main_term().get_gender_in_full() }}
+                    </p>
+                    <h1>
+                        {%- for term in entry.terms -%}
+                            {%- if not loop.first -%}&nbsp;{%- endif -%}
+                            {%- if term == entry.get_main_term() -%}
+                                <strong>
+                                    {%- for i, syllable in enumerate(term.syllables) -%}
+                                        {%- if i != 0 -%}.{%- endif -%}{{ syllable.content }}
+                                    {%- endfor -%}
+                                </strong>
+                            {%- else -%}
+                                <span>
+                                {%- for i, syllable in enumerate(term.syllables) -%}
+                                    {%- if i != 0 -%}.{%- endif -%}{{ syllable.content }}
+                                {%- endfor -%}
+                                </span>
+                            {%- endif -%}
+                        {%- endfor -%}
+                    </h1>
+                </div>
+            </section>
 
-  <section class="recomendacao col-3">
-    <div class="search-box justify-content-between align-items-center">
-      <input type="text" class="search-txt" placeholder="Pesquise um termo aqui!" />
-      <i class="bi bi-search" alt="lupa"></i>
-    </div>
-    <a href="" class="link-termo-do-dia">
-      <div class="termo-do-dia mt-5">
-        <span></span><span></span><span></span><span></span>
-        <h4 class="d-flex justify-content-center p-3 rounded-top fw-bold">
-          TERMO DO DIA
-        </h4>
-        <div class="elementos">
-          <h2 class="d-flex justify-content-center">Be.ta</h2>
-          <div class="imagem d-flex justify-content-center fs-1 pb-4">β</div>
-          <div class="significado-recomendacao">
-            <p>
-              Trata-se do homem beta, um termo emprestado da biologia, que
-              significa o oposto do macho alfa, o líder de um grupo de animais.
-            </p>
-          </div>
-          <div class="legenda d-flex align-items-center justify-content-center"></div>
-        </div>
-      </div>
-    </a>
-  </section>
-</main>
-<script src="{{ url_for('static', filename='js/btn-exemplos.js') }}"></script>
+            <section class="significado mt-5">
+                <div class="sig d-flex justify-content-between" id="significado">
+                    <ol class="significado-conteudo m-5 lh-lg">
+                        {% for definition in entry.definitions %}
+                            {% if definition.knowledge_area %}
+                                <li class="area">
+                                    <span class="border p-1 rounded me-2"
+                                          style="font-size: 14px; font-family: monospace">{{ definition.knowledge_area.content }}</span>
+
+                                    <div class="mt-2">{{ definition.content }}</div>
+                                </li>
+                            {% else %}
+                                <li>{{ definition.content }}</li>
+                            {% endif %}
+                        {% endfor %}
+                    </ol>
+
+                    {% if entry.image %}
+                        <div class="representacao p-5 d-flex flex-column justify-content-center">
+                            <div class="imagem d-flex justify-content-center fs-1">α</div>
+                            <div class="exemplo d-flex align-items-center justify-content-center">
+                                <img src={{ url_for('static', filename='img/{}' .format(entry.image.path)) }} alt="">
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+                {% if entry.questions %}
+                    <div class="d-none justify-content-between lh-lg position-relative" id="exemplo">
+                        <h5 class="titulo-perguntas position-absolute z-2">Questões</h5>
+                        <ul class="perguntas lh-lg">
+                            {% for question in entry.questions %} {% if question.explanation %}
+                                <li>
+                                    {{ question.statement }}<br/>R: {{ question.answer }}<br/>E: {{ question.explanation }}
+                                </li>
+                            {% else %}
+                                <li>{{ question.statement }}<br/>R: {{ question.answer }}</li>
+                            {% endif %} {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+            </section>
+            {% if entry.questions %}
+                <div class="btn-box">
+                    <button type="button" class="btn-exemplo-definicao d-block mt-5 border-0" style="--clr: #1e9bff"
+                            id="btn-ex">
+                        <span>VEJA EXEMPLOS</span><i></i>
+                    </button>
+                    <button type="button" class="btn-exemplo-definicao d-none mt-5 border-0" style="--clr: #1e9bff"
+                            id="btn-sig">
+                        <span>VOLTE PARA DEFINIÇÃO</span><i></i>
+                    </button>
+                </div>
+            {% endif %}
+        </section>
+
+        <section class="recomendacao col-3">
+            <div class="search-box justify-content-between align-items-center">
+                <input type="text" class="search-txt" placeholder="Pesquise um termo aqui!"/>
+                <i class="bi bi-search" alt="lupa"></i>
+            </div>
+            <a href="" class="link-termo-do-dia">
+                <div class="termo-do-dia mt-5">
+                    <span></span><span></span><span></span><span></span>
+                    <h4 class="d-flex justify-content-center p-3 rounded-top fw-bold">
+                        TERMO DO DIA
+                    </h4>
+                    <div class="elementos">
+                        <h2 class="d-flex justify-content-center">Be.ta</h2>
+                        <div class="imagem d-flex justify-content-center fs-1 pb-4">β</div>
+                        <div class="significado-recomendacao">
+                            <p>
+                                Trata-se do homem beta, um termo emprestado da biologia, que
+                                significa o oposto do macho alfa, o líder de um grupo de animais.
+                            </p>
+                        </div>
+                        <div class="legenda d-flex align-items-center justify-content-center"></div>
+                    </div>
+                </div>
+            </a>
+        </section>
+    </main>
+    <script src="{{ url_for('static', filename='js/btn-exemplos.js') }}"></script>
     <script src="{{ url_for('static', filename='js/handle-search-box-enter-event.js') }}"></script>
 {% endblock %}
