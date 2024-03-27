@@ -9,7 +9,7 @@ entry_blueprint = Blueprint('entry', __name__)
 
 
 @entry_blueprint.route('/entry/<entry_content>')
-def entry_data(entry_content):
+def view_entry(entry_content):
     entry = Entry.get_entry_by_content(entry_content.replace('_', ' '))
     if entry:
         return render_template('entry.html', entry=entry, enumerate=enumerate, format=format,
@@ -44,7 +44,30 @@ def entry_creation():
         else:
             flash('Verbete criado com sucesso.', category='success')
 
-    return render_template('create-entry.html', form=form, user_is_admin=is_user_admin(current_user))
+    return render_template('entry-form.html', form=form, user_is_admin=is_user_admin(current_user))
+
+
+@login_required
+@entry_blueprint.route('/entry_data/<int:entry_id>')
+def entry_data(entry_id):
+    if is_user_admin(current_user):
+        entry = Entry.get_entry_by_id(entry_id)
+        print(entry)
+        print(entry.get_dict_of_properties())
+        return entry.get_dict_of_properties()
+    else:
+        abort(403)
+
+
+@login_required
+@entry_blueprint.route('/edit_entry/<int:entry_id>')
+def edit_entry(entry_id):
+    if is_user_admin(current_user):
+        entry = Entry.get_entry_by_id(entry_id)
+        form = EntryCreationForm()
+        return render_template('entry-form.html', form=form, user_is_admin=is_user_admin(current_user))
+    else:
+        abort(403)
 
 
 @login_required

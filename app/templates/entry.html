@@ -13,31 +13,37 @@
             </div>
         </section>
         <section class="palavra-escolhida col-8 d-flex flex-column">
-            <section class="palavra animacao-azul rounded">
-                <div class="position-absolute">
-                    <p>
-                        {{ entry.get_main_term().grammatical_category.capitalize() }} {{ entry.get_main_term().get_gender_in_full() }}
-                    </p>
-                    <h1>
-                        {%- for term in entry.terms -%}
-                            {%- if not loop.first -%}&nbsp;{%- endif -%}
-                            {%- if term == entry.get_main_term() -%}
-                                <strong>
-                                    {%- for i, syllable in enumerate(term.syllables) -%}
-                                        {%- if i != 0 -%}.{%- endif -%}{{ syllable.content }}
-                                    {%- endfor -%}
-                                </strong>
-                            {%- else -%}
-                                <span>
-                                {%- for i, syllable in enumerate(term.syllables) -%}
-                                    {%- if i != 0 -%}.{%- endif -%}{{ syllable.content }}
-                                {%- endfor -%}
-                                </span>
-                            {%- endif -%}
-                        {%- endfor -%}
-                    </h1>
+            <div class="d-flex gap-5">
+                <section class="palavra animacao-azul rounded w-100">
+                    <div class="position-absolute">
+                        <p>
+                            {{ entry.get_main_term().grammatical_category.capitalize() }} {{ entry.get_main_term().get_gender_in_full() }}
+                        </p>
+                        <h1>
+                            {%- for term in entry.terms -%}
+                                {%- if not loop.first -%}&nbsp;{%- endif -%}
+                                {%- if term == entry.get_main_term() -%}
+                                    <strong>
+                                        {%- for i, syllable in enumerate(term.syllables) -%}
+                                            {%- if i != 0 -%}.{%- endif -%}{{ syllable.content }}
+                                        {%- endfor -%}
+                                    </strong>
+                                {%- else -%}
+                                    <span>
+                                            {%- for i, syllable in enumerate(term.syllables) -%}
+                                                {%- if i != 0 -%}.{%- endif -%}{{ syllable.content }}
+                                            {%- endfor -%}
+                                            </span>
+                                {%- endif -%}
+                            {%- endfor -%}
+                        </h1>
+                    </div>
+                </section>
+                <div class="d-flex flex-column gap-3">
+                    <a href="{{ url_for('entry.edit_entry', entry_id=entry.id) }}" class="btn btn-primary d-flex justify-content-center align-content-center" style="width: 40px; height: 40px"><img src="{{ url_for('static', filename='img/edit.svg') }}" alt=""></a>
+                    <a href="{{ url_for('entry.entry_deletion', entry_content=entry.content) }}" class="btn btn-primary d-flex justify-content-center align-content-center" style="width: 40px; height: 40px"><img src="{{ url_for('static', filename='img/trash.svg') }}" alt=""></a>
                 </div>
-            </section>
+            </div>
 
             <section class="significado mt-5">
                 <div class="sig d-flex justify-content-between" id="significado">

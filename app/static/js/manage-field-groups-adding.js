@@ -17,31 +17,35 @@ nFieldGroupsContainers.forEach(
         btnAddFieldGroup.addEventListener(
             'click',
             () => {
-                const newFieldGroup = getFirstFieldGroup(fieldGroups).cloneNode(true)
-
-                newFieldGroup.querySelectorAll('input').forEach(
-                    (input) => {
-                        input.value = ""
-                    }
-                )
-
-                const btnRemoveDefinitionField = newFieldGroup.querySelector(`button.btn-remove-field-group`)
-                btnRemoveDefinitionField.disabled = false
-                getFirstFieldGroup(fieldGroups).querySelector('button.btn-remove-field-group').disabled = false
-
-                btnRemoveDefinitionField.addEventListener(
-                    'click',
-                    () => {
-                        removeFieldGroup(newFieldGroup, fieldGroups)
-                    }
-                )
-
-                fieldGroups.append(newFieldGroup)
-                sortFieldGroupsIndexes()
+                addFieldGroup(fieldGroups)
             }
         )
     }
 )
+
+function addFieldGroup(fieldGroups) {
+    const newFieldGroup = getFirstFieldGroup(fieldGroups).cloneNode(true)
+
+    newFieldGroup.querySelectorAll('input').forEach(
+        (input) => {
+            input.value = ""
+        }
+    )
+
+    const btnRemoveDefinitionField = newFieldGroup.querySelector(`button.btn-remove-field-group`)
+    btnRemoveDefinitionField.disabled = false
+    getFirstFieldGroup(fieldGroups).querySelector('button.btn-remove-field-group').disabled = false
+
+    btnRemoveDefinitionField.addEventListener(
+        'click',
+        () => {
+            removeFieldGroup(newFieldGroup, fieldGroups)
+        }
+    )
+
+    fieldGroups.append(newFieldGroup)
+    sortFieldGroupsIndexes()
+}
 
 function removeFieldGroup(fieldGroup, fieldGroups) {
     fieldGroups.removeChild(fieldGroup)

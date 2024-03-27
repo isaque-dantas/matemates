@@ -228,6 +228,10 @@ class Entry(db.Model):
         return Entry.query.filter_by(content=content).first()
 
     @staticmethod
+    def get_entry_by_id(entry_id):
+        return Entry.query.get(entry_id)
+
+    @staticmethod
     def search_for_related_entries(search_sentence, gender=None, grammatical_category=None):
         related_entries = Entry.query.with_entities(Entry.id, Entry.content).all()
 
@@ -271,6 +275,63 @@ class Entry(db.Model):
 
     def get_main_term(self):
         return Term.query.filter_by(entry=self, is_main_term=True).first()
+
+    def get_dict_of_properties(self):
+        dict_of_properties = {}
+
+        for i, question in enumerate(self.questions):
+            dict_of_properties.update(
+                {
+                    f'question_statement_{i + 1}': question.statement,
+                    f'question_answer_{i + 1}': question.answer
+                }
+            )
+
+        for i, question in enumerate(self.questions):
+            dict_of_properties.update(
+                {
+                    f'question_statement_{i + 1}': question.statement,
+                    f'question_answer_{i + 1}': question.answer
+                }
+            )
+
+        for i, definition in enumerate(self.definitions):
+            dict_of_properties.update(
+                {
+                    f'definition_content_{i + 1}': definition.content,
+                    f'definition_knowledge_area_{i + 1}': definition.knowledge_area.content
+                }
+            )
+
+        entry_content_with_dots_and_stars = ''
+        for i, term in enumerate(self.terms):
+            if i != 0:
+                entry_content_with_dots_and_stars += ' '
+            if term.is_main_term:
+                entry_content_with_dots_and_stars += '*'
+            for j, syllable in enumerate(term.syllables):
+                if j != 0:
+                    entry_content_with_dots_and_stars += '.'
+                entry_content_with_dots_and_stars += syllable.content
+            if term.is_main_term:
+                entry_content_with_dots_and_stars += '*'
+
+        dict_of_properties.update(
+            {
+                'entry_content': entry_content_with_dots_and_stars,
+                'main_term_grammatical_category': self.get_main_term().grammatical_category,
+                'main_term_gender': self.get_main_term().gender
+            }
+        )
+
+        return dict_of_properties
+
+# content = db.Column(db.String(256), nullable=False, unique=True)
+#
+# image = db.relationship('Image', backref='entry', uselist=False)
+# questions = db.relationship('Question', backref='entry')
+# definitions = db.relationship('Definition', backref='entry')
+# terms = db.relationship('Term', backref='entry')
 
 
 class Term(db.Model):
