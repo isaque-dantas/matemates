@@ -81,7 +81,7 @@ class Entry(db.Model):
     __tablename__ = 'entry'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     content = db.Column(db.String(256), nullable=False, unique=True)
-    is_validated = db.Column(db.Boolean, nullable=False, default=True)
+    is_validated = db.Column(db.Boolean, nullable=False, default=False)
 
     image = db.relationship('Image', backref='entry', uselist=False)
     questions = db.relationship('Question', backref='entry')
@@ -194,15 +194,23 @@ class Entry(db.Model):
 
         db.session.commit()
 
-    def delete_entry(self):
-        entities_lists = [self.definitions, self.syllables, self.questions, self.terms]
+        return entry
 
-        for entities_list in entities_lists:
+    def delete_entry(self):
+        for term in self.terms:
+            for syllable in term.syllables:
+                db.session.delete(syllable)
+            db.session.delete(term)
+
+        for entities_list in [self.definitions, self.questions]:
             for entity in entities_list:
                 db.session.delete(entity)
 
         if self.image:
-            os.remove(self.image.path)
+            try:
+                os.remove(self.image.path)
+            except FileNotFoundError:
+                pass
             db.session.delete(self.image)
 
         db.session.delete(self)
@@ -272,6 +280,10 @@ class Entry(db.Model):
 
     def get_main_term(self):
         return Term.query.filter_by(entry=self, is_main_term=True).first()
+
+    def turn_valid(self):
+        self.is_validated = True
+        db.session.commit()
 
 
 class Term(db.Model):
