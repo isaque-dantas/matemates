@@ -340,9 +340,8 @@ nav{
     margin: 1rem 3rem 3rem 3.75rem;
 }
 /*--*/
-.btn-exemplo-definicao{
+.btn-exemplo-definicao, .btn-confirmacao{
     background: white;
-    color: black;
     letter-spacing: 0.1em;
     font-size: 1em;
     padding: 10px 30px;
@@ -352,19 +351,16 @@ nav{
     border-radius: 30px;
 }
 
-.btn-exemplo-definicao:hover{
+.btn-exemplo-definicao:hover, .btn-confirmacao:hover{
     letter-spacing: 0.2em;
     background: var(--clr);
     color: var(--clr);
     box-shadow: 0 0 35px var(--clr);
 }
 
-.btn-exemplo-definicao:before{
-    content: '';
-    position: absolute;
-    inset: 2px;
-    background: #0e0b1c;
-    border-radius: 30px;
+.btn-exemplo-definicao, .btn-exemplo-definicao:hover {
+    color: #0e0b1c;
+    font-weight: bold;
 }
 
 .btn-exemplo-definicao span{
@@ -527,6 +523,75 @@ nav{
 
 ::-webkit-scrollbar-thumb{
     background: #ffffff;
+}
+
+/* Validação */
+.validacao h4{
+    background: #ffffff;
+    color: #0e0b1c;
+}
+
+.validacao .elementos{
+    padding: 0 20px 15px 20px;
+}
+
+.validacao {
+    width: 100%;
+    color: white;
+    position: relative;
+}
+
+.btn-confirmacao:before{
+    content: '';
+    position: absolute;
+    inset: 2px;
+    background: #0e0b1c;
+    border-radius: 30px;
+}
+
+.btn-confirmacao span{
+    position: relative;
+    z-index: 1;
+}
+
+.btn-confirmacao i{
+    position: absolute;
+    inset: 0;
+    display: block;
+}
+
+.btn-confirmacao i::before{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 70%;
+    width: 20px;
+    height: 4px;
+    background: #0e0b1c;
+    transform: translateX(-50%) skewX(325deg);
+    transition: 0.5s;
+}
+
+.btn-confirmacao:hover i::before{
+    width: 30px;
+    left: 30%;
+}
+
+.btn-confirmacao i::after{
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 30%;
+    width: 20px;
+    height: 4px;
+    background: #0e0b1c;
+    transform: translateX(-50%) skewX(325deg);
+    transition: 0.5s;
+}
+
+.btn-confirmacao:hover i::after{
+    width: 30px;
+    left: 70%;
 }
 
 /*^^ Barra de rolagem da pagina ^^*/
