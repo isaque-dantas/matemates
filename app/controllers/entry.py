@@ -10,7 +10,7 @@ entry_blueprint = Blueprint('entry', __name__)
 
 @entry_blueprint.route('/entry/<entry_content>')
 def entry_data(entry_content):
-    entry = Entry.get_entry_by_content(entry_content)
+    entry = Entry.get_entry_by_content(entry_content.replace('_', ' '))
     if entry:
         return render_template('entry.html', entry=entry, enumerate=enumerate, format=format,
                                user_is_admin=is_user_admin(current_user), is_preview=True)
