@@ -12,8 +12,15 @@ entry_blueprint = Blueprint('entry', __name__)
 def view_entry(entry_content):
     entry = Entry.get_entry_by_content(entry_content.replace('_', ' '))
     if entry:
-        return render_template('entry.html', entry=entry, enumerate=enumerate, format=format,
-                               user_is_admin=is_user_admin(current_user), is_preview=True)
+        if is_user_admin(current_user):
+            return render_template('entry.html', entry=entry, enumerate=enumerate, format=format,
+                                   user_is_admin=is_user_admin(current_user))
+        else:
+            if entry.is_validated:
+                return render_template('entry.html', entry=entry, enumerate=enumerate, format=format,
+                                       user_is_admin=is_user_admin(current_user))
+            else:
+                abort(403)
     else:
         abort(404)
 
@@ -27,22 +34,27 @@ def entry_search(search_query):
                            user_is_admin=is_user_admin(current_user))
 
 
-@entry_blueprint.route('/create_entry', methods=['get', 'post'])
+@login_required
+@entry_blueprint.route('/create_entry', methods=['GET', 'POST'])
 def entry_creation():
-    form = EntryCreationForm()
+    if is_user_admin(current_user):
+        form = EntryCreationForm()
 
-    if form.validate_on_submit():
-        try:
-            print(f'request.files: {dict(request.files)}')
-            print(f'request.form: {dict(request.form)}')
-            form_data = dict(request.form)
-            form_files = dict(request.files)
-            form_data.update(form_files)
-            Entry.register(form_data)
-        except Exception as e:
-            flash(str(e), category='danger')
-        else:
-            flash('Verbete criado com sucesso.', category='success')
+        if form.validate_on_submit():
+            try:
+                print(f'request.files: {dict(request.files)}')
+                print(f'request.form: {dict(request.form)}')
+                form_data = dict(request.form)
+                form_files = dict(request.files)
+                form_data.update(form_files)
+                new_entry = Entry.register(form_data)
+            except Exception as e:
+                flash(str(e), category='danger')
+            else:
+                flash('Verbete criado com sucesso.', category='success')
+                return redirect(url_for('entry.view_entry', entry_content=new_entry.content))
+        elif request.method == 'POST':
+            flash('Verifique se todos os dados foram inseridos corretamente.', category='warning')
 
     return render_template('entry-form.html', form=form, user_is_admin=is_user_admin(current_user))
 
@@ -55,6 +67,7 @@ def entry_data(entry_id):
         print(entry)
         print(entry.get_dict_of_properties())
         return entry.get_dict_of_properties()
+        return render_template('create-entry.html', form=form, user_is_admin=is_user_admin(current_user))
     else:
         abort(403)
 
@@ -66,17 +79,24 @@ def edit_entry(entry_id):
         entry = Entry.get_entry_by_id(entry_id)
         form = EntryCreationForm()
         return render_template('entry-form.html', form=form, user_is_admin=is_user_admin(current_user))
+
+@entry_blueprint.route('/validate_entry/<entry_content>')
+def validate_entry(entry_content):
+    if is_user_admin(current_user):
+        entry = Entry.get_entry_by_content(entry_content)
+        entry.turn_valid()
+        return redirect(url_for('entry.view_entry', entry_content=entry_content))
     else:
         abort(403)
 
 
 @login_required
 @entry_blueprint.route('/delete_entry/<entry_content>')
-def entry_deletion(entry_content):
+def delete_entry(entry_content):
     if is_user_admin(current_user):
         entry = Entry.get_entry_by_content(entry_content)
         entry.delete_entry()
 
-        return redirect(url_for('dashboard.index', user_is_admin=is_user_admin(current_user)))
+        return redirect(url_for('dashboard.index'))
     else:
         abort(403)
