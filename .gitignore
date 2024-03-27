@@ -3,6 +3,7 @@ secret_keys.py
 **/test-zone.py
 *.bak
 *.bkp
+app/__init__.py
 
 # Byte-compiled / optimized / DLL files
 
