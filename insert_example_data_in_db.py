@@ -47,7 +47,7 @@ with app.app_context():
     }
 
     files = FileMultiDict()
-    files.add_file('image', r'app/static/img/entry_illustration/alfa.png')
+    files.add_file('image', r'rafael.jpeg')
 
     dados_angulo_reto.update(dict(files))
 
@@ -68,3 +68,27 @@ with app.app_context():
     dados_calculadora.update(dict(files))
 
     Entry.register(dados_calculadora)
+
+    dados_rafael = {
+        'entry_content': 'ra.fa.el',
+        'main_term_grammatical_category': 'substantivo',
+        'main_term_gender': 'M',
+        'definition_content_1': 'Mega rafa',
+        'definition_knowledge_area_1': 'álgebra',
+        'definition_content_2': 'The teacher',
+        'definition_knowledge_area_2': 'estatística e probabilidade',
+        'definition_content_3': 'The teacher',
+        'definition_knowledge_area_3': 'estatística e probabilidade',
+        'definition_content_4': 'The teacher',
+        'definition_knowledge_area_4': 'estatística e probabilidade',
+        'definition_content_5': 'The teacher',
+        'definition_knowledge_area_5': 'estatística e probabilidade',
+        'image_caption': ''
+    }
+
+    files = FileMultiDict()
+    files.add_file('image', r'rafael.jpeg')
+
+    dados_rafael.update(dict(files))
+
+    Entry.register(dados_rafael)
