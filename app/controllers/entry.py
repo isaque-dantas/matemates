@@ -31,16 +31,18 @@ def entry_search(search_query):
 def entry_creation():
     form = EntryCreationForm()
 
-    try:
-        if form.validate_on_submit():
+    if form.validate_on_submit():
+        try:
             print(f'request.files: {dict(request.files)}')
             print(f'request.form: {dict(request.form)}')
             form_data = dict(request.form)
             form_files = dict(request.files)
             form_data.update(form_files)
             Entry.register(form_data)
-    except Exception as e:
-        flash(str(e), category='danger')
+        except Exception as e:
+            flash(str(e), category='danger')
+        else:
+            flash('Verbete criado com sucesso.', category='success')
 
     return render_template('create-entry.html', form=form, user_is_admin=is_user_admin(current_user))
 

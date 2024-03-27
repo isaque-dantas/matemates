@@ -1,6 +1,6 @@
 {% extends 'base-with-navbar-nav.html' %}
 
-{% block title %}Matematês // Criar termo{% endblock %}
+{% block title %}Matematês // Criar verbete{% endblock %}
 {% block style %}style-create{% endblock %}
 
 {% block content %}
@@ -8,7 +8,7 @@
         <div class="mb-5">
             {% include 'flash_messages.html' %}
         </div>
-        <form action="/create_term" method="POST">
+        <form enctype="multipart/form-data" method="post">
             {{ form.hidden_tag() }}
             <section class="palavra-escolhida container col-8 d-flex flex-column">
                 <section class="palavra animacao-azul rounded">
@@ -99,4 +99,5 @@
     <script src="{{ url_for('static', filename='js/change_image.js') }}"></script>
     <script src="{{ url_for('static', filename='js/manage-field-groups-adding.js') }}"></script>
     <script src="{{ url_for('static', filename='js/change-disabled-property-of-empty-valued-selects.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/fetch-create-term-form.js') }}"></script>
 {% endblock %}
