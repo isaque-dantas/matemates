@@ -81,6 +81,7 @@ class Entry(db.Model):
     __tablename__ = 'entry'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     content = db.Column(db.String(256), nullable=False, unique=True)
+    is_validated = db.Column(db.Boolean, nullable=False, default=True)
 
     image = db.relationship('Image', backref='entry', uselist=False)
     questions = db.relationship('Question', backref='entry')
