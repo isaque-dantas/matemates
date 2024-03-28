@@ -129,11 +129,11 @@ body{
 }
 
 .informacoes {
-    padding: 80px 0 0 0;
+    padding: 80px 30px 0 30px;
 }
 
 .numero-data{
-    padding: 0 80px 0 80px;
+    padding: 0 140px;
 }
 
 .imagem-perfil img{
@@ -282,7 +282,7 @@ button:before{
     .email-senha, .numero-data{
         flex-direction: column;
         width: 100%;
-        padding: 0;
+        padding: 0 !important;
         gap: 1.5rem;
     }
 
@@ -290,6 +290,6 @@ button:before{
         position: static !important;
         flex-direction: column;
         transform: none;
-        margin: 50px 0 0 0  ;
+        margin: 50px 0 0 0;
     }
 }
