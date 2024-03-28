@@ -56,7 +56,39 @@ def entry_creation():
         elif request.method == 'POST':
             flash('Verifique se todos os dados foram inseridos corretamente.', category='warning')
 
-    return render_template('entry-form.html', form=form, user_is_admin=is_user_admin(current_user))
+        return render_template('entry-form.html', form=form, user_is_admin=is_user_admin(current_user), is_edition=False)
+    else:
+        abort(403)
+
+
+@login_required
+@entry_blueprint.route('/edit_entry/<int:entry_id>', methods=['GET', 'POST'])
+def edit_entry(entry_id):
+    if is_user_admin(current_user):
+        form = EntryCreationForm()
+
+        if form.validate_on_submit():
+            try:
+                print(f'request.files: {dict(request.files)}')
+                print(f'request.form: {dict(request.form)}')
+                form_data = dict(request.form)
+                form_files = dict(request.files)
+                form_data.update(form_files)
+
+                entry = Entry.get_entry_by_id(entry_id)
+                entry.update(form_data)
+            except Exception as e:
+                flash(str(e), category='danger')
+            else:
+                flash('Verbete editado com sucesso.', category='success')
+                return redirect(url_for('entry.view_entry', entry_content=entry.get_normalized_content()))
+        elif request.method == 'POST':
+            flash('Verifique se todos os dados foram inseridos corretamente.', category='warning')
+
+        return render_template('entry-form.html', form=form, user_is_admin=is_user_admin(current_user),
+                               is_edition=True)
+    else:
+        abort(403)
 
 
 @login_required
@@ -64,21 +96,10 @@ def entry_creation():
 def entry_data(entry_id):
     if is_user_admin(current_user):
         entry = Entry.get_entry_by_id(entry_id)
-        print(entry)
-        print(entry.get_dict_of_properties())
         return entry.get_dict_of_properties()
-        return render_template('create-entry.html', form=form, user_is_admin=is_user_admin(current_user))
     else:
         abort(403)
 
-
-@login_required
-@entry_blueprint.route('/edit_entry/<int:entry_id>')
-def edit_entry(entry_id):
-    if is_user_admin(current_user):
-        entry = Entry.get_entry_by_id(entry_id)
-        form = EntryCreationForm()
-        return render_template('entry-form.html', form=form, user_is_admin=is_user_admin(current_user))
 
 @entry_blueprint.route('/validate_entry/<entry_content>')
 def validate_entry(entry_content):
