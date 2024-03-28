@@ -1,63 +1,3 @@
-/*-------Geral-------*/
-
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body{
-    min-height: 100vh;
-    background: #0e0b1c;
-    color: white;
-}
-
-
-
-/*-------Fundo com bolinhas-------*/
-
-.bolhas {
-    position: relative;
-    width: 100%;
-    height: 100vh;
-    overflow-x: hidden;
-}
-
-.fundo-bolhas{
-    position: absolute;
-    display: flex;
-}
-
-.fundo-bolhas span {
-    z-index: -1;
-    width: 15px;
-    height: 15px;
-    background: white;
-    margin: 0 4px;
-    border-radius: 50%;
-    box-shadow: 0 0 0 5px #ffffff44,
-    0 0 25px #ffffff,
-    0 0 50px #ffffff;
-    animation: animarbolhas calc(200s / var(--i)) linear infinite;
-}
-
-@keyframes animarbolhas {
-    0% {
-        transform: translateY(-10vh) scale(0);
-    }
-    100% {
-        transform: translateY(98vh) scale(0.3);
-    }
-}
-
-
-.fundo-bolhas span:nth-of-type(even) {
-    background: #8400ff;
-    box-shadow: 0 0 0 5px #8400ff44,
-    0 0 25px #8400ff,
-    0 0 50px #8400ff;
-}
-
 /*-------header-------*/
 
 .logo{
@@ -81,7 +21,7 @@ nav{
     display: none;
 }
 
-.link-nav, .btn-nav{
+/* .link-nav, .btn-nav{
     color: white;
     text-decoration: none;
     position: relative;
@@ -100,7 +40,7 @@ nav{
 
 .link-nav:hover::after{
     width: 100%;
-}
+} */
 
 .btn-nav{
     position: relative;
@@ -505,16 +445,6 @@ nav{
     border: solid 2px #ffffff;
 }
 
-/*----Barra de rolagem da pagina----*/
-
-::-webkit-scrollbar {
-    width: 3px;
-    background: #ffffff2e;
-}
-
-::-webkit-scrollbar-thumb{
-    background: #ffffff;
-}
 
 /*^^ Barra de rolagem da pagina ^^*/
 

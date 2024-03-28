@@ -1,0 +1,29 @@
+/* importando fonte poppins */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+
+nav {
+    font-family: "Poppins", sans-serif;
+
+}
+
+:root {
+    /* Cores */
+    --sidebar-color: #FFF;
+    --primary-color: #695CFE;
+    --primary-color-light: #F6F5FF;
+    --toggle-color: #DDD;
+    --text-color: #707070;
+
+    /* transições */
+    --tran-02: all 0.2s ease;
+    --tran-03: all 0.3s ease;
+    --tran-04: all 0.4s ease;
+    --tran-05: all 0.5s ease;
+}
+
+/* navBar */
+.image-text img {
+    width: 40px;
+    border-radius: 6px;
+}

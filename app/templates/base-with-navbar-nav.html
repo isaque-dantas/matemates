@@ -1,16 +1,17 @@
 {% extends 'base.html' %}
 
-{% block edit_term_button %}
-    {% if user_is_admin %}
-        <a href="" class="btn-nav"><span></span><span></span><span></span><span></span>EDITAR</a>
-    {% endif %}
-{% endblock %}
-
-{% block navbar_nav_xl %}
-    <a href="" class="link-nav">VERBETES</a>
+{% block sidebar %}
+    <header>
+        <div class="image-text">
+            <span class="image">
+                <img src="{{url_for('static', filename='img/LOGO.png')}}" alt="">
+            </span>
+        </div>
+    </header>
+    <!-- <a href="" class="link-nav">VERBETES</a>
     <a href="" class="link-nav">PERFIL</a>
     <a href="" class="link-nav">HOME</a>
-    <a href="" class="link-nav">MENU</a>
+    <a href="" class="link-nav">MENU</a> -->
 {% endblock %}
 
 {% block navbar_nav %}

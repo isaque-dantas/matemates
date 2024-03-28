@@ -30,6 +30,8 @@
       rel="stylesheet"
       href="../static/css/{% block style %}{% endblock %}.css"
     />
+    <link rel="stylesheet" href="{{url_for('static', filename='css/style-navbar.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/base.css')}}">
 
     <!--FONTES-->
   </head>
@@ -44,20 +46,7 @@
             class="container d-flex justify-content-between pt-2 align-items-center"
           >
             <a href="/dashboard"><img src="../static/img/LOGO.png" alt="" class="logo" /></a>
-            <nav class="d-flex justify-content-between align-items-center">
-              {% block navbar_nav_xl %}{% endblock %} {% block edit_term_button
-              %}{% endblock %}
-              <div class="dropdown">
-                <i
-                  class="bi bi-three-dots dropdown-toggle fs-1"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                ></i>
-                <ul class="dropdown-menu">
-                  {% block navbar_nav %}{% endblock %}
-                </ul>
-              </div>
-            </nav>
+            {% block sidebar %}{% endblock %}
           </div>
         </header>
         {% block content %}{% endblock %}
