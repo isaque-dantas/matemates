@@ -46,6 +46,10 @@ nav{
 
 /*----Main----*/
 
+.login-main {
+    position: absolute;
+}
+
 .geral {
     left: 50%;
     top: 50%;

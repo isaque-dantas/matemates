@@ -24,7 +24,7 @@ nav {
 
 :root {
     /* Cores */
-    --sidebar-color: #FFF;
+    --sidebar-color: #0e0b1c;
     --primary-color: #695CFE;
     --primary-color-light: #F6F5FF;
     --toggle-color: #DDD;
@@ -45,10 +45,11 @@ nav {
     left: 0;
     height: 100%;
     width: 250px;
-    background: none;
+    background: var(--sidebar-color);
     z-index: 10000;
     padding: 10px 14px;
     transition: var(--tran-05);
+    
 }
 
 .sidebar.close {
@@ -270,8 +271,13 @@ body.light .switch::before {
 
 main {
     position: relative;
+    left: 120px;
     width: calc(100% - 88px);
     transition: var(--tran-05);
+}
+
+.sidebar.close ~ main {
+    left: 0;
 }
 
 /*-------Fundo com bolinhas-------*/
