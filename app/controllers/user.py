@@ -57,6 +57,10 @@ def register():
     return render_template('register.html', form=form)
 
 
+@user_blueprint.route('/perfil', methods=['GET', 'POST'])
+def perfil():
+    return render_template('perfil.html')
+
 @user_blueprint.route('/logout')
 def logout():
     logout_user()
