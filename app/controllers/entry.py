@@ -1,7 +1,9 @@
 from flask import render_template, Blueprint, abort, flash, request, url_for, redirect
 from flask_login import current_user, login_required
 
+from app.controllers import get_form_data_from_request
 from app.controllers.user import is_user_admin
+
 from app.models.tables import Entry
 from app.models.entry_forms import EntryCreationForm
 
@@ -71,9 +73,7 @@ def edit_entry(entry_id):
             try:
                 print(f'request.files: {dict(request.files)}')
                 print(f'request.form: {dict(request.form)}')
-                form_data = dict(request.form)
-                form_files = dict(request.files)
-                form_data.update(form_files)
+                form_data = get_form_data_from_request(request)
 
                 entry = Entry.get_entry_by_id(entry_id)
                 entry.update(form_data)

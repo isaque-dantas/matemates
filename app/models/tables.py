@@ -1,4 +1,5 @@
 from flask_login import UserMixin
+
 from app.models import db
 from pymysql.err import IntegrityError
 
@@ -9,7 +10,6 @@ import unicodedata
 from operator import itemgetter
 import re
 import os
-from pymysql.err import IntegrityError
 
 
 def normalize_string(query_string: str) -> str:
@@ -17,6 +17,10 @@ def normalize_string(query_string: str) -> str:
     return ''.join(
         [char for char in normalized if not unicodedata.combining(char)]
     ).casefold()
+
+
+def get_extension_from_filename(filename):
+    return filename.split('.')[-1]
 
 
 class User(db.Model, UserMixin):
@@ -29,7 +33,8 @@ class User(db.Model, UserMixin):
         'username': 24,
         'password': 8,
         'password_hash': 256,
-        'phone_number': 32
+        'phone_number': 32,
+        'profile_image_path': 128
     }
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -41,26 +46,68 @@ class User(db.Model, UserMixin):
     phone_number = db.Column(db.String(MAX_LENGTH['phone_number']))
     birth_date = db.Column(db.Date, nullable=False)
     role = db.Column(db.Enum('admin', 'normal'), nullable=False)
+    profile_image_path = db.Column(db.String(MAX_LENGTH['profile_image_path']), nullable=True)
 
     @staticmethod
     def register(form_data):
-        print(form_data)
         password_hash = generate_password_hash(form_data['password'])
-
-        new_user = User(
+        user = User(
             first_name=form_data['first_name'],
             last_name=form_data['last_name'],
             username=form_data['username'],
             password_hash=password_hash,
-            email=form_data['email'],
-            phone_number=form_data['phone_number'],
-            birth_date=form_data['birth_date']
+            email=form_data['email']
         )
 
-        new_user.role = 'admin'
+        if form_data['phone_number']:
+            user.phone_number = form_data['phone_number']
 
-        db.session.add(new_user)
+        user.raise_if_form_data_is_invalid(form_data)
+
+        if form_data['phone_number']:
+            user.phone_number = form_data['phone_number']
+
+        if form_data['birth_date']:
+            user.birth_date = form_data['birth_date']
+
+        image_file = form_data['image']
+        if image_file.filename and image_file:
+            filename = f'{user.username}.{get_extension_from_filename(image_file.filename)}'
+            image_file.save(os.path.join('app/static/img/user_profile_picture/', filename))
+            image_file.close()
+            user.profile_image_path = filename
+
+        user.role = 'admin'
+
+        db.session.add(user)
         db.session.commit()
+
+    def raise_if_form_data_is_invalid(self, form_data):
+        if re.match(r'^[\w\-_]+$', form_data['username']) is None:
+            raise ValueError('O nome de usuário deve conter apenas letras, números, hífens (-) ou underlines (_).')
+
+        if re.match(r'^[\w\-.]+@([\w\-]+.)+[\w\-]{2,}$', form_data['email']) is None:
+            raise ValueError('O e-mail informado não é válido.')
+
+        if not self.email_has_integrity() and not self.username_has_integrity():
+            raise IntegrityError('O email e o nome de usuário já foram cadastrados.')
+        elif not self.email_has_integrity():
+            raise IntegrityError('Esse email já foi cadastrado.')
+        elif not self.username_has_integrity():
+            raise IntegrityError('Esse nome de usuário já foi cadastrado.')
+
+    def email_has_integrity(self):
+        user_with_same_email = User.query.filter_by(email=self.email).first()
+        return user_with_same_email is None
+
+    def username_has_integrity(self):
+        user_with_same_username = User.query.filter_by(username=self.username).first()
+        return user_with_same_username is None
+
+    @staticmethod
+    def raise_if_form_data_is_invalid(form_data):
+        if '/' in form_data['username']:
+            raise ValueError('O nome de usuário não pode conter caracteres \'/\'.')
 
     @staticmethod
     def get_by_email(email):
@@ -127,8 +174,8 @@ class Entry(db.Model):
 
     @staticmethod
     def raise_if_form_data_is_invalid(form_data):
-        entry_content = form_data['entry_content'].replace('*', '').replace('.', '')
-        if not Entry.has_integrity(entry_content):
+        entry_content = form_data['entry_content']
+        if not Entry.has_integrity(entry_content.replace('*', '').replace('.', '')):
             raise IntegrityError('Esse verbete já foi inserido. Tente novamente com outro.')
 
         if ' ' in entry_content and entry_content.count('*') != 2:
@@ -174,7 +221,7 @@ class Entry(db.Model):
     def register_image(self, form_data):
         image_file = form_data['image']
         if image_file.filename and image_file:
-            filename = secure_filename(image_file.filename)
+            filename = f'{self.get_normalized_content()}.{get_extension_from_filename(image_file.filename)}'
             image_file.save(os.path.join('app/static/img/entry_illustration/', filename))
 
             image = Image(

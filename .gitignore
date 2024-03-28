@@ -4,6 +4,10 @@ secret_keys.py
 *.bak
 *.bkp
 app/__init__.py
+alfa.png
+rafael.jpeg
+calculadora.jpg
+foto_perfil_sem_fundo_low_size.png
 
 # Byte-compiled / optimized / DLL files
 
