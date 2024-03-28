@@ -2,30 +2,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
 
-
-/*-------Geral-------*/
-
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body{
-    min-height: 100vh;
-    background: #0e0b1c;
-    color: white;
-    transition: var(--tran-02);
-}
-
-/* sidebar */
 nav {
     font-family: "Poppins", sans-serif;
 }
 
 :root {
     /* Cores */
-    --sidebar-color: #0e0b1c;
+    --sidebar-color: #FFF;
     --primary-color: #695CFE;
     --primary-color-light: #F6F5FF;
     --toggle-color: #DDD;
@@ -37,8 +20,6 @@ nav {
     --tran-04: all 0.4s ease;
     --tran-05: all 0.5s ease;
 }
-
-/* ======= light mode ======= */
 
 
 /* ======= sideBar ======= */
@@ -269,68 +250,4 @@ nav {
 
 body.light .switch::before {
     left: 5px;
-}
-
-main {
-    position: relative;
-    left: 100px;
-    width: calc(100% - 50px);
-    transition: var(--tran-03);
-}
-
-.sidebar.close ~ main {
-    left: 50px;
-}
-/*-------Fundo com bolinhas-------*/
-
-.bolhas {
-    position: relative;
-    width: 100%;
-    height: 100vh;
-    overflow-x: hidden;
-}
-
-.fundo-bolhas{
-    position: absolute;
-    display: flex;
-}
-
-.fundo-bolhas span {
-    z-index: -1;
-    width: 15px;
-    height: 15px;
-    background: white;
-    margin: 0 4px;
-    border-radius: 50%;
-    box-shadow: 0 0 0 5px #ffffff44,
-    0 0 25px #ffffff,
-    0 0 50px #ffffff;
-    animation: animarbolhas calc(200s / var(--i)) linear infinite;
-}
-
-@keyframes animarbolhas {
-    0% {
-        transform: translateY(-10vh) scale(0);
-    }
-    100% {
-        transform: translateY(98vh) scale(0.3);
-    }
-}
-
-.fundo-bolhas span:nth-of-type(even) {
-    background: #8400ff;
-    box-shadow: 0 0 0 5px #8400ff44,
-    0 0 25px #8400ff,
-    0 0 50px #8400ff;
-}
-
-/*----Barra de rolagem da pagina----*/
-
-::-webkit-scrollbar {
-    width: 3px;
-    background: #ffffff2e;
-}
-
-::-webkit-scrollbar-thumb{
-    background: #ffffff;
 }

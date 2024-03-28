@@ -47,7 +47,7 @@ nav{
 /*----Main----*/
 
 .login-main {
-    position: absolute;
+    position: static;
 }
 
 .geral {
