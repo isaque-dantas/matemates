@@ -50,8 +50,6 @@ class User(db.Model, UserMixin):
 
     @staticmethod
     def register(form_data):
-        User.raise_if_form_data_is_invalid(form_data)
-
         password_hash = generate_password_hash(form_data['password'])
         user = User(
             first_name=form_data['first_name'],
@@ -60,6 +58,11 @@ class User(db.Model, UserMixin):
             password_hash=password_hash,
             email=form_data['email']
         )
+
+        if form_data['phone_number']:
+            user.phone_number = form_data['phone_number']
+
+        user.raise_if_form_data_is_invalid(form_data)
 
         if form_data['phone_number']:
             user.phone_number = form_data['phone_number']
@@ -78,6 +81,28 @@ class User(db.Model, UserMixin):
 
         db.session.add(user)
         db.session.commit()
+
+    def raise_if_form_data_is_invalid(self, form_data):
+        if re.match(r'^[\w\-_]+$', form_data['username']) is None:
+            raise ValueError('O nome de usuário deve conter apenas letras, números, hífens (-) ou underlines (_).')
+
+        if re.match(r'^[\w\-.]+@([\w\-]+.)+[\w\-]{2,}$', form_data['email']) is None:
+            raise ValueError('O e-mail informado não é válido.')
+
+        if not self.email_has_integrity() and not self.username_has_integrity():
+            raise IntegrityError('O email e o nome de usuário já foram cadastrados.')
+        elif not self.email_has_integrity():
+            raise IntegrityError('Esse email já foi cadastrado.')
+        elif not self.username_has_integrity():
+            raise IntegrityError('Esse nome de usuário já foi cadastrado.')
+
+    def email_has_integrity(self):
+        user_with_same_email = User.query.filter_by(email=self.email).first()
+        return user_with_same_email is None
+
+    def username_has_integrity(self):
+        user_with_same_username = User.query.filter_by(username=self.username).first()
+        return user_with_same_username is None
 
     @staticmethod
     def raise_if_form_data_is_invalid(form_data):
