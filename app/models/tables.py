@@ -139,6 +139,13 @@ class User(db.Model, UserMixin):
     def get_parsed_birth_date(self):
         return self.birth_date.strftime('%Y-%m-%d')
 
+    def delete_user(self):
+        if self.profile_image_path:
+            os.remove(os.path.join('app/static/img/user_profile_picture/', self.profile_image_path))
+
+        db.session.delete(self)
+        db.session.commit()
+
     # id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     # first_name = db.Column(db.String(MAX_LENGTH['first_name']), nullable=False)
     # last_name = db.Column(db.String(MAX_LENGTH['last_name']), nullable=False)
@@ -149,6 +156,7 @@ class User(db.Model, UserMixin):
     # birth_date = db.Column(db.Date, nullable=False)
     # role = db.Column(db.Enum('admin', 'normal'), nullable=False)
     # profile_image_path = db.Column(db.String(MAX_LENGTH['profile_image_path']), nullable=True)
+
 
 class Entry(db.Model):
     __tablename__ = 'entry'

@@ -6,7 +6,7 @@ from app.models.tables import KnowledgeArea
 dashboard_blueprint = Blueprint('dashboard', __name__)
 
 
-@login_required
 @dashboard_blueprint.route('/dashboard')
+@login_required
 def index():
     return render_template("dashboard-index.html", knowledge_areas=KnowledgeArea.get_all(), list=list)

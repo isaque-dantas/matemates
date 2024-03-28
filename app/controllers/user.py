@@ -65,18 +65,29 @@ def register():
 
 
 @user_blueprint.route('/perfil/', methods=['GET', 'POST'])
+@login_required
 def perfil():
     return render_template('perfil.html', user=current_user)
 
 
 @user_blueprint.route('/logout')
+@login_required
 def logout():
     logout_user()
 
     return redirect(url_for('user.login'))
 
 
-@login_required
 @user_blueprint.route('/user_data/')
+@login_required
 def user_data():
     return current_user.get_dict_of_properties()
+
+
+@user_blueprint.route('/delete_current_user/')
+@login_required
+def delete_current_user():
+    user = User.get_by_id(current_user.id)
+    logout_user()
+    user.delete_user()
+    return redirect(url_for('user.login'))
