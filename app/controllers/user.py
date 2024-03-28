@@ -64,13 +64,9 @@ def register():
     return render_template('register.html', form=form)
 
 
-@user_blueprint.route('/perfil/<username>', methods=['GET', 'POST'])
-def perfil(username):
-    if current_user.username == username:
-        print(current_user.get_parsed_name())
-        return render_template('perfil.html', user=current_user)
-    else:
-        abort(403)
+@user_blueprint.route('/perfil/', methods=['GET', 'POST'])
+def perfil():
+    return render_template('perfil.html', user=current_user)
 
 
 @user_blueprint.route('/logout')
@@ -81,9 +77,6 @@ def logout():
 
 
 @login_required
-@user_blueprint.route('/user_data/<username>')
-def user_data(username):
-    if current_user.username == username:
-        return current_user.get_dict_of_properties()
-    else:
-        abort(403)
+@user_blueprint.route('/user_data/')
+def user_data():
+    return current_user.get_dict_of_properties()

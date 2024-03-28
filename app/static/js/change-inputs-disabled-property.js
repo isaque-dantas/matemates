@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
 })
 
 async function getUserData() {
-    const response = await fetch(`/user_data/${getUsernameFromURL()}`)
+    const response = await fetch(`/user_data/`)
 
     if (!response.ok) {
         console.error(response.statusText)
@@ -47,8 +47,4 @@ async function updateDocumentData(userDataPromise) {
         const formField = document.querySelector(`#${formFieldID}`)
         formField.value = userData[formFieldID]
     }
-}
-
-function getUsernameFromURL() {
-    return location.href.split('/').at(-1)
 }
