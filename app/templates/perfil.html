@@ -1,87 +1,95 @@
 {% extends 'base-with-navbar-nav.html' %} {% block title %}Perfil{% endblock %}
 {% block style %}style-perfil{% endblock %} {% block content %}
-<main class="geral">
-    <div class="">
-        <div class="icon-usuario-nome position-absolute d-flex flex-column gap-4 col-3">
-            <div class="icon rounded-circle d-flex justify-content-center">
-                <label for="get-file" class="imagem-perfil rounded-circle z-2 fs-6 mb-3" style="cursor: pointer"><img
-                        src="../static/img/perfil.png" alt="" class="preview-image"></label>
-            </div>
-            <div class="nome">
-                <label for="" class="mb-2">Nome</label>
-                <div class="form animacao-azul">
-                    <div class="position-absolute">
-                        <input type="text" class="form-control" disabled placeholder="Pedro Cabral Severino">
+    <main class="geral">
+        <div class="">
+            <div class="icon-usuario-nome position-absolute d-flex flex-column gap-4 col-3">
+                <div class="icon rounded-circle d-flex justify-content-center">
+                    <label for="get-file" class="imagem-perfil rounded-circle z-2 fs-6 mb-3"
+                           style="cursor: pointer"><img
+                            src="../static/img/perfil.png" alt="" class="preview-image"></label>
+                </div>
+                <div class="nome">
+                    <label for="" class="mb-2">Nome</label>
+                    <div class="form animacao-azul">
+                        <div class="position-absolute">
+                            <input id="name" type="text" class="form-control enable-on-edit" disabled
+                                   value="{{ user.get_parsed_name() }}">
+                        </div>
+                    </div>
+                </div>
+                <div class="usuario">
+                    <label for="" class="mb-2">Usuário</label>
+                    <div class="form animacao-azul">
+                        <div class="position-absolute">
+                            <input id="username" type="text" class="form-control enable-on-edit" disabled
+                                   value={{ user.username }}>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="usuario">
-                <label for="" class="mb-2">Usuário</label>
-                <div class="form animacao-azul">
-                    <div class="position-absolute">
-                        <input type="text" class="form-control" disabled placeholder="Ayumi-chan">
+
+            <div class="informacoes">
+                <div class="email-senha d-flex container justify-content-around mt-5">
+                    <div class="email col-3">
+                        <label for="" class="mb-2">Email</label>
+                        <div class="form animacao-azul">
+                            <div class="position-absolute">
+                                <input id="email" type="text" class="form-control enable-on-edit" disabled
+                                       value={{ user.email }}>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="senha col-3">
+                        <label for="" class="mb-2">Senha</label>
+                        <div class="form animacao-azul">
+                            <div class="position-relative">
+                                <input id="password" type="password" class="form-control enable-on-edit" disabled
+                                       value="senha errada">
+                                <i class="eye eye-open bi bi-eye-slash position-absolute d-none"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="numero-data d-flex container justify-content-between mt-5">
+                    <div class="numero col-3">
+                        <label for="" class="mb-2">Numero</label>
+                        <div class="form animacao-azul">
+                            <div class="position-absolute">
+                                <input id="phone_number" type="text" class="form-control enable-on-edit" disabled
+                                       value={{ user.phone_number }}>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="data col-3">
+                        <label for="" class="mb-2">Data</label>
+                        <div class="form animacao-azul">
+                            <div class="position-absolute">
+                                <input id="birth_date" type="date" class="form-control enable-on-edit" disabled
+                                value="{{ user.get_parsed_birth_date() }}">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
+
         </div>
-
-        <div class="informacoes">
-            <div class="email-senha d-flex justify-content-around mt-5">
-                <div class="email col-3">
-                    <label for="" class="mb-2">Email</label>
-                    <div class="form animacao-azul">
-                        <div class="position-absolute">
-                            <input type="text" class="form-control" disabled placeholder="usuario@email.com">
-                        </div>
-                    </div>
-                </div>
-                <div class="senha col-3">
-                    <label for="" class="mb-2">Senha</label>
-                    <div class="form animacao-azul">
-                        <div class="position-relative">
-                            <input type="password" class="form-control" disabled placeholder="******">
-                            <i class="eye eye-open bi bi-eye-slash position-absolute d-none"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="numero-data d-flex justify-content-between mt-5">
-                <div class="numero col-3">
-                    <label for="" class="mb-2">Numero</label>
-                    <div class="form animacao-azul">
-                        <div class="position-absolute">
-                            <input type="text" class="form-control" disabled placeholder="(12) 3456 7890">
-                        </div>
-                    </div>
-                </div>
-                <div class="data col-3">
-                    <label for="" class="mb-2">Data</label>
-                    <div class="form animacao-azul">
-                        <div class="position-absolute">
-                            <input type="date" class="form-control" disabled>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div id="hide-when-editing" class="buttons position-absolute d-flex gap-5">
+            <button id="edit-button" type="button" class="button border-0 " style="--clr: #1e9bff">
+                <span>EDITAR</span><i></i>
+            </button>
+            <button type="button" class="button border-0 " style="--clr: #ff3460">
+                <span>EXCLUIR</span><i></i>
+            </button>
         </div>
-    </div>
-    <div class="buttons position-absolute d-flex gap-5">
-        <button type="button" class="button border-0 " style="--clr: #1e9bff">
-            <span>EDITAR</span><i></i>
-        </button>
-        <button type="button" class="button border-0 " style="--clr: #ff3460">
-            <span>EXCLUIR</span><i></i>
-        </button>
-    </div>
-
-    <div class="buttons position-absolute d-flex gap-5 d-none">
-        <button type="button" class="button border-0 " style="--clr: #ff3460">
-            <span>VOLTAR</span><i></i>
-        </button>
-        <button type="button" class="button border-0 " style="--clr: #1e9bff">
-            <span>CONFIRMAR</span><i></i>
-        </button>
-    </div>
-</main>
+        <div id="show-when-editing" class="buttons position-absolute d-flex gap-5 d-none">
+            <button id="reset-user-data-button" type="button" class="button border-0 " style="--clr: #ff3460">
+                <span>VOLTAR</span><i></i>
+            </button>
+            <button type="button" class="button border-0 " style="--clr: #1e9bff">
+                <span>CONFIRMAR</span><i></i>
+            </button>
+        </div>
+    </main>
+    <script src="{{ url_for('static', filename='js/change-inputs-disabled-property.js') }}"></script>
 {% endblock %}

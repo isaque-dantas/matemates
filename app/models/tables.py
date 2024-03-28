@@ -123,6 +123,32 @@ class User(db.Model, UserMixin):
     def is_admin(self):
         return self.role == 'admin'
 
+    def get_dict_of_properties(self):
+        return {
+            'name': self.get_parsed_name(),
+            'email': self.email,
+            'username': self.username,
+            'phone_number': self.phone_number,
+            'password': 'senha errada',
+            'birth_date': self.get_parsed_birth_date()
+        }
+
+    def get_parsed_name(self):
+        return str(self.first_name + ' ' + self.last_name)
+
+    def get_parsed_birth_date(self):
+        return self.birth_date.strftime('%Y-%m-%d')
+
+    # id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    # first_name = db.Column(db.String(MAX_LENGTH['first_name']), nullable=False)
+    # last_name = db.Column(db.String(MAX_LENGTH['last_name']), nullable=False)
+    # email = db.Column(db.String(MAX_LENGTH['email']), nullable=False, unique=True)
+    # password_hash = db.Column(db.String(MAX_LENGTH['password_hash']), nullable=False)
+    # username = db.Column(db.String(MAX_LENGTH['username']), nullable=False, unique=True)
+    # phone_number = db.Column(db.String(MAX_LENGTH['phone_number']))
+    # birth_date = db.Column(db.Date, nullable=False)
+    # role = db.Column(db.Enum('admin', 'normal'), nullable=False)
+    # profile_image_path = db.Column(db.String(MAX_LENGTH['profile_image_path']), nullable=True)
 
 class Entry(db.Model):
     __tablename__ = 'entry'
