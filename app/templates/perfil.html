@@ -66,21 +66,23 @@
                         <div class="form animacao-azul">
                             <div class="position-absolute">
                                 <input id="birth_date" type="date" class="form-control enable-on-edit" disabled
-                                value="{{ user.get_parsed_birth_date() }}">
+                                       value="{{ user.get_parsed_birth_date() }}">
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
+
         <div id="hide-when-editing" class="buttons position-absolute d-flex gap-5">
             <button id="edit-button" type="button" class="button border-0 " style="--clr: #1e9bff">
                 <span>EDITAR</span><i></i>
             </button>
-            <button type="button" class="button border-0 " style="--clr: #ff3460">
-                <span>EXCLUIR</span><i></i>
-            </button>
+            <a href="{{ url_for('user.delete_current_user') }}">
+                <button type="button" class="button border-0 " style="--clr: #ff3460">
+                    <span>EXCLUIR</span><i></i>
+                </button>
+            </a>
         </div>
         <div id="show-when-editing" class="buttons position-absolute d-flex gap-5 d-none">
             <button id="reset-user-data-button" type="button" class="button border-0 " style="--clr: #ff3460">

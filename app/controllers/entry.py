@@ -36,8 +36,8 @@ def entry_search(search_query):
                            user_is_admin=is_user_admin(current_user))
 
 
-@login_required
 @entry_blueprint.route('/create_entry', methods=['GET', 'POST'])
+@login_required
 def entry_creation():
     if is_user_admin(current_user):
         form = EntryCreationForm()
@@ -63,8 +63,8 @@ def entry_creation():
         abort(403)
 
 
-@login_required
 @entry_blueprint.route('/edit_entry/<int:entry_id>', methods=['GET', 'POST'])
+@login_required
 def edit_entry(entry_id):
     if is_user_admin(current_user):
         form = EntryCreationForm()
@@ -91,8 +91,8 @@ def edit_entry(entry_id):
         abort(403)
 
 
-@login_required
 @entry_blueprint.route('/entry_data/<int:entry_id>')
+@login_required
 def entry_data(entry_id):
     if is_user_admin(current_user):
         entry = Entry.get_entry_by_id(entry_id)
@@ -111,8 +111,8 @@ def validate_entry(entry_content):
         abort(403)
 
 
-@login_required
 @entry_blueprint.route('/delete_entry/<entry_content>')
+@login_required
 def delete_entry(entry_content):
     if is_user_admin(current_user):
         entry = Entry.get_entry_by_content(entry_content)
