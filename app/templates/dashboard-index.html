@@ -58,7 +58,7 @@
                             <h4 class="topic-title p-3 fw-bold">{{ knowledge_area.content.capitalize() }}</h4>
                             <div class="verbetes-box d-flex gap-5 p-4">
                                 {% for entry in related_entries*4 %}
-                                    <a href="{{ url_for('entry.view_entry', entry_content=entry.content.replace(' ', '_')) }}" class="link-verbete verbete p-3">
+                                    <a href="{{ url_for('entry.view_entry', entry_content=entry.get_normalized_content()) }}" class="link-verbete verbete p-3">
                                         <h2 class="d-flex justify-content-center">
                                             {%- for term in entry.terms -%}
                                                 {% set is_first_term = loop.first %}
