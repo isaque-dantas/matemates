@@ -24,7 +24,7 @@
             <div class="verbetes row">
                 {% for entry in entries %}
                     <div class="col-3 mt-5">
-                        <a href="{{ url_for('entry.entry_data', entry_content=entry.content) }}"
+                        <a href="{{ url_for('entry.view_entry', entry_content=entry.get_normalized_content()) }}"
                            class="card text-decoration-none border-0 ">
                             <div class="card-body p-3">
                                 <h6 class="card-subtitle text-body-secondary">{{ entry.get_main_term().grammatical_category }} {{ entry.get_main_term().get_gender_in_full() }}</h6>

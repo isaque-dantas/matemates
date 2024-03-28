@@ -1,4 +1,5 @@
 from flask_login import UserMixin
+
 from app.models import db
 from pymysql.err import IntegrityError
 
@@ -9,7 +10,6 @@ import unicodedata
 from operator import itemgetter
 import re
 import os
-from pymysql.err import IntegrityError
 
 
 def normalize_string(query_string: str) -> str:
@@ -17,6 +17,10 @@ def normalize_string(query_string: str) -> str:
     return ''.join(
         [char for char in normalized if not unicodedata.combining(char)]
     ).casefold()
+
+
+def get_extension_from_filename(filename):
+    return filename.split('.')[-1]
 
 
 class User(db.Model, UserMixin):
@@ -29,7 +33,8 @@ class User(db.Model, UserMixin):
         'username': 24,
         'password': 8,
         'password_hash': 256,
-        'phone_number': 32
+        'phone_number': 32,
+        'profile_image_path': 128
     }
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -41,26 +46,68 @@ class User(db.Model, UserMixin):
     phone_number = db.Column(db.String(MAX_LENGTH['phone_number']))
     birth_date = db.Column(db.Date, nullable=False)
     role = db.Column(db.Enum('admin', 'normal'), nullable=False)
+    profile_image_path = db.Column(db.String(MAX_LENGTH['profile_image_path']), nullable=True)
 
     @staticmethod
     def register(form_data):
-        print(form_data)
         password_hash = generate_password_hash(form_data['password'])
-
-        new_user = User(
+        user = User(
             first_name=form_data['first_name'],
             last_name=form_data['last_name'],
             username=form_data['username'],
             password_hash=password_hash,
-            email=form_data['email'],
-            phone_number=form_data['phone_number'],
-            birth_date=form_data['birth_date']
+            email=form_data['email']
         )
 
-        new_user.role = 'admin'
+        if form_data['phone_number']:
+            user.phone_number = form_data['phone_number']
 
-        db.session.add(new_user)
+        user.raise_if_form_data_is_invalid(form_data)
+
+        if form_data['phone_number']:
+            user.phone_number = form_data['phone_number']
+
+        if form_data['birth_date']:
+            user.birth_date = form_data['birth_date']
+
+        image_file = form_data['image']
+        if image_file.filename and image_file:
+            filename = f'{user.username}.{get_extension_from_filename(image_file.filename)}'
+            image_file.save(os.path.join('app/static/img/user_profile_picture/', filename))
+            image_file.close()
+            user.profile_image_path = filename
+
+        user.role = 'admin'
+
+        db.session.add(user)
         db.session.commit()
+
+    def raise_if_form_data_is_invalid(self, form_data):
+        if re.match(r'^[\w\-_]+$', form_data['username']) is None:
+            raise ValueError('O nome de usuário deve conter apenas letras, números, hífens (-) ou underlines (_).')
+
+        if re.match(r'^[\w\-.]+@([\w\-]+.)+[\w\-]{2,}$', form_data['email']) is None:
+            raise ValueError('O e-mail informado não é válido.')
+
+        if not self.email_has_integrity() and not self.username_has_integrity():
+            raise IntegrityError('O email e o nome de usuário já foram cadastrados.')
+        elif not self.email_has_integrity():
+            raise IntegrityError('Esse email já foi cadastrado.')
+        elif not self.username_has_integrity():
+            raise IntegrityError('Esse nome de usuário já foi cadastrado.')
+
+    def email_has_integrity(self):
+        user_with_same_email = User.query.filter_by(email=self.email).first()
+        return user_with_same_email is None
+
+    def username_has_integrity(self):
+        user_with_same_username = User.query.filter_by(username=self.username).first()
+        return user_with_same_username is None
+
+    @staticmethod
+    def raise_if_form_data_is_invalid(form_data):
+        if '/' in form_data['username']:
+            raise ValueError('O nome de usuário não pode conter caracteres \'/\'.')
 
     @staticmethod
     def get_by_email(email):
@@ -81,6 +128,7 @@ class Entry(db.Model):
     __tablename__ = 'entry'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     content = db.Column(db.String(256), nullable=False, unique=True)
+    is_validated = db.Column(db.Boolean, nullable=False, default=False)
 
     image = db.relationship('Image', backref='entry', uselist=False)
     questions = db.relationship('Question', backref='entry')
@@ -95,27 +143,63 @@ class Entry(db.Model):
             content=entry_content.replace('*', '').replace('.', '')
         )
 
-        if not entry.has_integrity():
+        Entry.raise_if_form_data_is_invalid(form_data)
+        entry_content_with_dots_and_asterisks = Entry.normalize_entry_content_asterisks(entry_content)
+
+        db.session.add(entry)
+
+        entry.register_terms_and_syllables(entry_content_with_dots_and_asterisks, form_data)
+        entry.register_image(form_data)
+        entry.register_n_attributes(form_data)
+
+        return entry
+
+    def update(self, form_data: dict):
+        try:
+            Entry.raise_if_form_data_is_invalid(form_data)
+        except IntegrityError:
+            pass
+        entry_content_with_dots_and_asterisks = form_data['entry_content'].casefold()
+        entry_content_with_dots_and_asterisks = Entry.normalize_entry_content_asterisks(
+            entry_content_with_dots_and_asterisks
+        )
+        self.content = entry_content_with_dots_and_asterisks.replace('*', '').replace('.', '')
+
+        self.delete_n_properties()
+        self.delete_image()
+
+        self.register_terms_and_syllables(entry_content_with_dots_and_asterisks, form_data)
+        self.register_image(form_data)
+        self.register_n_attributes(form_data)
+
+    @staticmethod
+    def raise_if_form_data_is_invalid(form_data):
+        entry_content = form_data['entry_content']
+        if not Entry.has_integrity(entry_content.replace('*', '').replace('.', '')):
             raise IntegrityError('Esse verbete já foi inserido. Tente novamente com outro.')
 
         if ' ' in entry_content and entry_content.count('*') != 2:
             raise ValueError(
-                'Você precisa definir o termo principal, e apenas um termo principal. Ponha-o entre asteriscos (\'*\').')
-        elif ' ' not in entry_content and entry_content.count('*') != 2:
+                'Você precisa definir o termo principal, e apenas um termo principal. Ponha-o entre asteriscos (\'*\').'
+            )
+
+    @staticmethod
+    def normalize_entry_content_asterisks(entry_content):
+        if ' ' not in entry_content and entry_content.count('*') != 2:
             entry_content = entry_content.replace('*', '')
             entry_content = '*' + entry_content + '*'
+        return entry_content
 
-        db.session.add(entry)
-
-        terms_contents = entry_content.split()
+    def register_terms_and_syllables(self, entry_content_with_dots_and_asterisks, form_data):
+        terms_contents = entry_content_with_dots_and_asterisks.split()
         for i, term_content in enumerate(terms_contents):
             term = Term(
                 content=term_content.replace('.', '').replace('*', ''),
                 order=i,
-                entry=entry
+                entry=self
             )
 
-            if term_content[0] == '*' and term_content[-1] == '*':
+            if Term.is_term_content_of_main_term(term_content):
                 term.is_main_term = True
                 term.gender = form_data['main_term_gender']
                 term.grammatical_category = form_data['main_term_grammatical_category']
@@ -132,21 +216,26 @@ class Entry(db.Model):
 
                 db.session.add(syllable)
 
+        db.session.commit()
+
+    def register_image(self, form_data):
         image_file = form_data['image']
         if image_file.filename and image_file:
-            filename = secure_filename(image_file.filename)
+            filename = f'{self.get_normalized_content()}.{get_extension_from_filename(image_file.filename)}'
             image_file.save(os.path.join('app/static/img/entry_illustration/', filename))
 
             image = Image(
                 path=filename,
                 caption=form_data['image_caption'] if form_data['image_caption'] else None,
-                entry=entry
+                entry=self
             )
 
             image_file.close()
 
             db.session.add(image)
+            db.session.commit()
 
+    def register_n_attributes(self, form_data):
         n_attributes = {
             'definition': [],
             'question': []
@@ -174,7 +263,7 @@ class Entry(db.Model):
                 definition = Definition(
                     content=definition_data['content'],
                     order=definition_data['order'],
-                    entry=entry,
+                    entry=self,
                     knowledge_area=KnowledgeArea.query.filter_by(content=definition_data['knowledge_area']).first()
                 )
 
@@ -186,7 +275,7 @@ class Entry(db.Model):
                     statement=question['statement'],
                     answer=question['answer'],
                     order=question['order'],
-                    entry=entry
+                    entry=self
                 )
 
                 db.session.add(question)
@@ -194,21 +283,38 @@ class Entry(db.Model):
         db.session.commit()
 
     def delete_entry(self):
-        entities_lists = [self.definitions, self.syllables, self.questions, self.terms]
-
-        for entities_list in entities_lists:
-            for entity in entities_list:
-                db.session.delete(entity)
-
-        if self.image:
-            os.remove(self.image.path)
-            db.session.delete(self.image)
-
+        self.delete_n_properties()
+        self.delete_image()
         db.session.delete(self)
         db.session.commit()
 
-    def has_integrity(self):
-        entry_with_same_content = Entry.query.filter_by(content=self.content).first()
+    def delete_n_properties(self):
+        self.delete_terms()
+
+        for entities_list in [self.definitions, self.questions]:
+            for entity in entities_list:
+                db.session.delete(entity)
+
+    def delete_terms(self):
+        for term in self.terms:
+            for syllable in term.syllables:
+                db.session.delete(syllable)
+            db.session.delete(term)
+
+    def delete_image(self):
+        if self.image:
+            try:
+                os.remove(self.image.path)
+            except FileNotFoundError:
+                pass
+            db.session.delete(self.image)
+
+    def get_normalized_content(self):
+        return normalize_string(self.content).replace(' ', '_')
+
+    @staticmethod
+    def has_integrity(entry_content):
+        entry_with_same_content = Entry.query.filter_by(content=entry_content).first()
         return entry_with_same_content is None
 
     @staticmethod
@@ -226,6 +332,10 @@ class Entry(db.Model):
     @staticmethod
     def get_entry_by_content(content):
         return Entry.query.filter_by(content=content).first()
+
+    @staticmethod
+    def get_entry_by_id(entry_id):
+        return Entry.query.get(entry_id)
 
     @staticmethod
     def search_for_related_entries(search_sentence, gender=None, grammatical_category=None):
@@ -272,6 +382,56 @@ class Entry(db.Model):
     def get_main_term(self):
         return Term.query.filter_by(entry=self, is_main_term=True).first()
 
+    def get_dict_of_properties(self):
+        n_properties = {}
+
+        for i, question in enumerate(self.questions):
+            n_properties.update(
+                {
+                    f'question_statement_{i + 1}': question.statement,
+                    f'question_answer_{i + 1}': question.answer
+                }
+            )
+
+        for i, definition in enumerate(self.definitions):
+            n_properties.update(
+                {
+                    f'definition_content_{i + 1}': definition.content,
+                    f'definition_knowledge_area_{i + 1}': definition.knowledge_area.content
+                }
+            )
+
+        entry_content_with_dots_and_asterisks = ''
+        for i, term in enumerate(self.terms):
+            if i != 0:
+                entry_content_with_dots_and_asterisks += ' '
+            if term.is_main_term:
+                entry_content_with_dots_and_asterisks += '*'
+            for j, syllable in enumerate(term.syllables):
+                if j != 0:
+                    entry_content_with_dots_and_asterisks += '.'
+                entry_content_with_dots_and_asterisks += syllable.content
+            if term.is_main_term:
+                entry_content_with_dots_and_asterisks += '*'
+
+        fixed_properties = {
+            'entry_content': entry_content_with_dots_and_asterisks,
+            'main_term_grammatical_category': self.get_main_term().grammatical_category,
+            'main_term_gender': self.get_main_term().gender
+        }
+
+        return {
+            'n_properties': n_properties,
+            'fixed_properties': fixed_properties
+        }
+
+    def turn_valid(self):
+        self.is_validated = True
+        db.session.commit()
+
+    def get_term_by_content(self, term_content):
+        return Term.query.filter_by(entry=self, content=term_content).first()
+
 
 class Term(db.Model):
     __tablename__ = 'term'
@@ -303,6 +463,10 @@ class Term(db.Model):
         }
 
         return gender_in_full[abbreviation]
+
+    @staticmethod
+    def is_term_content_of_main_term(term_content):
+        return term_content[0] == '*' and term_content[-1] == '*'
 
 
 class Image(db.Model):

@@ -19,6 +19,11 @@ with app.app_context():
         'role': 'admin'
     }
 
+    files = FileMultiDict()
+    files.add_file('image', r'foto_perfil_sem_fundo_low_size.png')
+
+    dados_usuario_admin.update(dict(files))
+
     User.register(dados_usuario_admin)
 
     knowledge_areas = [
@@ -47,14 +52,14 @@ with app.app_context():
     }
 
     files = FileMultiDict()
-    files.add_file('image', r'app/static/img/entry_illustration/alfa.png')
+    files.add_file('image', r'rafael.jpeg')
 
     dados_angulo_reto.update(dict(files))
 
     Entry.register(dados_angulo_reto)
 
     dados_calculadora = {
-        'entry_content': '*cal.cu.la.do.ra*',
+        'entry_content': 'cal.cu.la.do.ra',
         'main_term_grammatical_category': 'substantivo',
         'main_term_gender': 'F',
         'definition_content_1': 'Dispositivo eletrônico usado para facilitar cálculos matemáticos.',
@@ -63,76 +68,32 @@ with app.app_context():
     }
 
     files = FileMultiDict()
-    files.add_file('image', r'app/static/img/entry_illustration/calculadora.jpg')
+    files.add_file('image', r'calculadora.jpg')
 
     dados_calculadora.update(dict(files))
 
     Entry.register(dados_calculadora)
 
-    # isaque = User(
-    #     first_name='Isaque',
-    #     last_name='Dantas',
-    #     username='isaque-dantas',
-    #     password_hash=generate_password_hash('123456'),
-    #     email='isaque@email.com',
-    #     phone_number='912344321',
-    #     birth_date=date(year=2007, month=3, day=14),
-    #     role='normal'
-    # )
-    #
-    # db.session.add(isaque)
-    #
-    # cos = Term(
-    #     content='cosseno',
-    #     gender='M',
-    #     grammatical_category='substantivo'
-    # )
-    #
-    # cos_definition = Definition(
-    #     content='Razão entre o cateto adjacente e a hipotenusa de determinado ângulo em um triângulo retângulo.',
-    #     order=0
-    # )
-    #
-    # cos_image = Image(path='alfa.png', term=cos)
-    #
-    # trigonometry = KnowledgeArea(content='trigonometria', subject='matemática')
-    # geometry = KnowledgeArea(content='geometria', subject='matemática')
-    #
-    # cos_definition.knowledge_area = trigonometry
-    # cos.definitions.append(cos_definition)
-    #
-    # db.session.add_all([
-    #     Syllable(content='cos', order=0, term=cos),
-    #     Syllable(content='se', order=1, term=cos),
-    #     Syllable(content='no', order=2, term=cos),
-    #     cos, cos_definition, cos_image, geometry, trigonometry,
-    #     KnowledgeArea(content='álgebra', subject='matemática'),
-    #     KnowledgeArea(content='cálculo', subject='matemática'),
-    #     KnowledgeArea(content='estatística e probabilidade', subject='matemática'),
-    #     KnowledgeArea(content='matemática discreta', subject='matemática')
-    # ])
-    #
-    # calculator = Term(
-    #     content='calculadora',
-    #     gender='F',
-    #     grammatical_category='substantivo'
-    # )
-    #
-    # calculator_definition = Definition(
-    #     content='Aparelho eletrônico usado para fazer cálculos matemáticos.',
-    #     order=0
-    # )
-    #
-    # calculator_image = Image(path='alfa.png', term=calculator)
-    # calculator.definitions.append(calculator_definition)
-    #
-    # db.session.add_all([
-    #     Syllable(content='cal', order=0, term=calculator),
-    #     Syllable(content='cu', order=1, term=calculator),
-    #     Syllable(content='la', order=2, term=calculator),
-    #     Syllable(content='do', order=3, term=calculator),
-    #     Syllable(content='ra', order=4, term=calculator),
-    #     calculator, calculator_definition, calculator_image
-    # ])
-    #
-    # db.session.commit()
+    dados_rafael = {
+        'entry_content': 'ra.fa.el',
+        'main_term_grammatical_category': 'substantivo',
+        'main_term_gender': 'M',
+        'definition_content_1': 'Mega rafa',
+        'definition_knowledge_area_1': 'álgebra',
+        'definition_content_2': 'The teacher',
+        'definition_knowledge_area_2': 'estatística e probabilidade',
+        'definition_content_3': 'The teacher',
+        'definition_knowledge_area_3': 'estatística e probabilidade',
+        'definition_content_4': 'The teacher',
+        'definition_knowledge_area_4': 'estatística e probabilidade',
+        'definition_content_5': 'The teacher',
+        'definition_knowledge_area_5': 'estatística e probabilidade',
+        'image_caption': ''
+    }
+
+    files = FileMultiDict()
+    files.add_file('image', r'calculadora.jpg')
+
+    dados_rafael.update(dict(files))
+
+    Entry.register(dados_rafael)
