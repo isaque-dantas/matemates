@@ -1,6 +1,8 @@
 from flask import render_template, Blueprint, redirect, url_for, flash, request
 from flask_login import AnonymousUserMixin, login_required, login_user, logout_user, current_user
 
+from app.controllers import get_form_data_from_request
+
 from app.models.tables import User
 from app.models.user_forms import LoginForm, RegisterForm
 
@@ -44,15 +46,20 @@ def register():
     form = RegisterForm()
 
     if form.validate_on_submit():
-        User.register(dict(form.data))
-        # try:
-        # except Exception as e:
-        #     flash(message=str(e), category='danger')
-        # else:
-        return redirect(url_for('user.login'))
+        try:
+            print(f'request.files: {dict(request.files)}')
+            print(f'request.form: {dict(request.form)}')
+            form_data = get_form_data_from_request(request)
 
-    # if request.method == 'POST':
-    #     return redirect(url_for('user.register'))
+            User.register(form_data)
+        except Exception as e:
+            flash(str(e), category='danger')
+        else:
+            flash('Usuário criado com sucesso.', category='success')
+            return redirect(url_for('user.login'))
+
+    elif request.method == 'POST':
+        flash('Verifique se todos os dados foram inseridos corretamente.', category='warning')
 
     return render_template('register.html', form=form)
 
