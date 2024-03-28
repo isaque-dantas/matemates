@@ -19,6 +19,11 @@ with app.app_context():
         'role': 'admin'
     }
 
+    files = FileMultiDict()
+    files.add_file('image', r'foto_perfil_sem_fundo_low_size.png')
+
+    dados_usuario_admin.update(dict(files))
+
     User.register(dados_usuario_admin)
 
     knowledge_areas = [
@@ -54,7 +59,7 @@ with app.app_context():
     Entry.register(dados_angulo_reto)
 
     dados_calculadora = {
-        'entry_content': '*cal.cu.la.do.ra*',
+        'entry_content': 'cal.cu.la.do.ra',
         'main_term_grammatical_category': 'substantivo',
         'main_term_gender': 'F',
         'definition_content_1': 'Dispositivo eletrônico usado para facilitar cálculos matemáticos.',
@@ -63,7 +68,7 @@ with app.app_context():
     }
 
     files = FileMultiDict()
-    files.add_file('image', r'app/static/img/entry_illustration/calculadora.jpg')
+    files.add_file('image', r'calculadora.jpg')
 
     dados_calculadora.update(dict(files))
 
@@ -87,7 +92,7 @@ with app.app_context():
     }
 
     files = FileMultiDict()
-    files.add_file('image', r'rafael.jpeg')
+    files.add_file('image', r'calculadora.jpg')
 
     dados_rafael.update(dict(files))
 

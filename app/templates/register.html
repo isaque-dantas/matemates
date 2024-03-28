@@ -5,7 +5,7 @@
 
 {% block content %}
     <main class="container my-5">
-        <form action="/register" method="post">
+        <form enctype="multipart/form-data" method="post">
             {{ form.hidden_tag() }}
             <div class="row pt-5 mt-5">
                 <div class="col-6 offset-3">{% include 'flash_messages.html' %}</div>
@@ -38,9 +38,13 @@
                         {{ form.phone_number.label(class="form-label mb-1") }}
                         {{ form.phone_number(class="form-control") }}
                     </div>
-                    <div>
+                    <div class="mb-4">
                         {{ form.birth_date.label(class="form-label mb-1") }}
                         {{ form.birth_date(class="form-control") }}
+                    </div>
+                    <div>
+                        {{ form.image.label(class="form-label mb-1") }}
+                        {{ form.image(class="form-control") }}
                     </div>
                 </div>
                 <div class="col-6 offset-3">
@@ -48,6 +52,6 @@
                 </div>
             </div>
         </form>
-        </div>
+        <script src="{{ url_for('static', filename='js/fetch-form-with-file.js') }}"></script>
     </main>
 {% endblock %}

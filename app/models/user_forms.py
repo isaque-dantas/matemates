@@ -1,4 +1,5 @@
 from flask_wtf import FlaskForm
+from flask_wtf.file import FileField, FileAllowed
 from wtforms import StringField, SubmitField, EmailField, PasswordField, DateField
 from wtforms.validators import DataRequired, Length
 
@@ -37,6 +38,10 @@ class RegisterForm(FlaskForm):
 
     phone_number = StringField('Telefone')
     birth_date = DateField('Data de nascimento')
+
+    image = FileField('Foto de perfil', validators=[
+        FileAllowed(['jpg', 'png', 'jpeg'], 'Apenas arquivos \'jpg\', \'png\' ou \'jpeg\' são permitidos.'),
+    ])
 
     submit = SubmitField('Confirmar')
 
