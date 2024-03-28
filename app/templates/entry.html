@@ -42,10 +42,17 @@
                         </h1>
                     </div>
                 </section>
-                <div class="d-flex flex-column gap-3">
-                    <a href="{{ url_for('entry.edit_entry', entry_id=entry.id) }}" class="btn btn-primary d-flex justify-content-center align-content-center" style="width: 40px; height: 40px"><img src="{{ url_for('static', filename='img/edit.svg') }}" alt=""></a>
-                    <a href="{{ url_for('entry.entry_deletion', entry_content=entry.content) }}" class="btn btn-primary d-flex justify-content-center align-content-center" style="width: 40px; height: 40px"><img src="{{ url_for('static', filename='img/trash.svg') }}" alt=""></a>
-                </div>
+                {% if user_is_admin %}
+                    <div class="d-flex flex-column gap-3">
+                        <a href="{{ url_for('entry.edit_entry', entry_id=entry.id) }}"
+                           class="btn btn-primary d-flex justify-content-center align-content-center"
+                           style="width: 40px; height: 40px"><img src="{{ url_for('static', filename='img/edit.svg') }}"
+                                                                  alt=""></a>
+                        <a href="{{ url_for('entry.delete_entry', entry_content=entry.get_normalized_content()) }}"
+                           class="btn btn-primary d-flex justify-content-center align-content-center"
+                           style="width: 40px; height: 40px"><img src="{{ url_for('static', filename='img/trash.svg') }}" alt=""></a>
+                    </div>
+                {% endif %}
             </div>
 
             <section class="significado mt-5">
@@ -134,12 +141,14 @@
                         Aceitar verbete?
                     </h4>
                     <div class="elementos d-flex flex-column">
-                        <a href="{{ url_for('entry.validate_entry', entry_content=entry.content) }}" type="button"
+                        <a href="{{ url_for('entry.validate_entry', entry_content=entry.get_normalized_content()) }}"
+                           type="button"
                            class="btn-confirmacao mt-5 border-0 text-center text-decoration-none"
                            style="--clr: #00ff18">
                             <span>ACEITAR</span><i></i>
                         </a>
-                        <a href="{{ url_for('entry.delete_entry', entry_content=entry.content) }}" type="button"
+                        <a href="{{ url_for('entry.delete_entry', entry_content=entry.get_normalized_content()) }}"
+                           type="button"
                            class="btn-confirmacao mt-5 border-0 text-center text-decoration-none"
                            style="--clr: #ff0037">
                             <span>NEGAR</span><i></i>
