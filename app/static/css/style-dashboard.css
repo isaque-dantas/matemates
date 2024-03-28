@@ -1,6 +1,6 @@
 /*-------header-------*/
 
-.logo{
+/* .logo{
     height: 45px;
 }
 
@@ -19,7 +19,7 @@ nav{
 
 .dropdown{
     display: none;
-}
+} */
 
 /* .link-nav, .btn-nav{
     color: white;
@@ -42,7 +42,7 @@ nav{
     width: 100%;
 } */
 
-.btn-nav{
+/* .btn-nav{
     position: relative;
     overflow: hidden;
     padding: 4px 10px 4px 10px;
@@ -127,7 +127,7 @@ nav{
     100% {
       bottom: 100%;
     }
-}
+} */
 
 /*-------main-------*/
 

@@ -1,17 +1,74 @@
 {% extends 'base.html' %}
 
 {% block sidebar %}
-    <header>
-        <div class="image-text">
-            <span class="image">
-                <img src="{{url_for('static', filename='img/LOGO.png')}}" alt="">
-            </span>
+    <nav class="sidebar close">
+        <header>
+            <div class="image-text">
+                <span class="image">
+                    <img src="{{url_for('static', filename='img/isaque.png')}}" alt="foto de usuário">
+                </span>
+
+                <div class="text header-text">
+                    <span class="name">Isaque</span>
+                    <span class="profession">Estudante</span>
+                </div>
+            </div>
+
+            <i class="bi bi-chevron-right toggle"></i>
+        </header>
+
+        <div class="menu-bar">
+            <div class="menu">
+                <ul class="menu-links">
+                    <li class="nav-link">
+                        <a href="#">
+                            <i class="bi bi-house icon"></i>
+                            <span class="text nav-text">Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-link">
+                        <a href="#">
+                            <i class="bi bi-person icon"></i>
+                            <span class="text nav-text">Perfil</span>
+                        </a>
+                    </li>
+                    <li class="nav-link">
+                        <a href="#">
+                            <i class="bi bi-heart icon"></i>
+                            <span class="text nav-text">Favoritos</span>
+                        </a>
+                    </li>
+                    <li class="nav-link">
+                        <a href="#">
+                            <i class="bi bi-columns-gap icon"></i>
+                            <span class="text nav-text">Animações</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="bottom-content">
+                <li class="logout">
+                    <a href="#">
+                        <i class="bi bi-box-arrow-left icon"></i>
+                        <span class="text nav-text">Logout</span>
+                    </a>
+                </li>
+
+                <li class="mode">
+                    <div class="moon-sun">
+                        <i class="bi bi-moon icon"></i>
+                        <i class="bi bi-sun icon"></i>
+                    </div>
+                    <span class="mode-text text">Light mode</span>
+
+                    <div class="toggle-switch">
+                        <span class="switch"></span>
+                    </div>
+                </li>
+            </div>
         </div>
-    </header>
-    <!-- <a href="" class="link-nav">VERBETES</a>
-    <a href="" class="link-nav">PERFIL</a>
-    <a href="" class="link-nav">HOME</a>
-    <a href="" class="link-nav">MENU</a> -->
+    </nav>
 {% endblock %}
 
 {% block navbar_nav %}

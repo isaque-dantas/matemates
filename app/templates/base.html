@@ -30,28 +30,21 @@
       rel="stylesheet"
       href="../static/css/{% block style %}{% endblock %}.css"
     />
-    <link rel="stylesheet" href="{{url_for('static', filename='css/style-navbar.css')}}">
     <link rel="stylesheet" href="{{url_for('static', filename='css/base.css')}}">
 
     <!--FONTES-->
   </head>
 
-  <body>
+  <body> 
     <div class="bolhas">
       <div class="fundo-bolhas">
       </div>
       <section class="p-3">
-        <header>
-          <div
-            class="container d-flex justify-content-between pt-2 align-items-center"
-          >
-            <a href="/dashboard"><img src="../static/img/LOGO.png" alt="" class="logo" /></a>
-            {% block sidebar %}{% endblock %}
-          </div>
-        </header>
+        {% block sidebar %}{% endblock %}
         {% block content %}{% endblock %}
       </section>
     </div>
     <script src="{{url_for('static', filename='js/bolhas-hotfix.js')}}"></script>
+    <script src="{{url_for('static', filename='js/sidebar.js')}}"></script>
   </body>
 </html>
