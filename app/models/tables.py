@@ -96,27 +96,63 @@ class Entry(db.Model):
             content=entry_content.replace('*', '').replace('.', '')
         )
 
-        if not entry.has_integrity():
+        Entry.raise_if_form_data_is_invalid(form_data)
+        entry_content_with_dots_and_asterisks = Entry.normalize_entry_content_asterisks(entry_content)
+
+        db.session.add(entry)
+
+        entry.register_terms_and_syllables(entry_content_with_dots_and_asterisks, form_data)
+        entry.register_image(form_data)
+        entry.register_n_attributes(form_data)
+
+        return entry
+
+    def update(self, form_data: dict):
+        try:
+            Entry.raise_if_form_data_is_invalid(form_data)
+        except IntegrityError:
+            pass
+        entry_content_with_dots_and_asterisks = form_data['entry_content'].casefold()
+        entry_content_with_dots_and_asterisks = Entry.normalize_entry_content_asterisks(
+            entry_content_with_dots_and_asterisks
+        )
+        self.content = entry_content_with_dots_and_asterisks.replace('*', '').replace('.', '')
+
+        self.delete_n_properties()
+        self.delete_image()
+
+        self.register_terms_and_syllables(entry_content_with_dots_and_asterisks, form_data)
+        self.register_image(form_data)
+        self.register_n_attributes(form_data)
+
+    @staticmethod
+    def raise_if_form_data_is_invalid(form_data):
+        entry_content = form_data['entry_content'].replace('*', '').replace('.', '')
+        if not Entry.has_integrity(entry_content):
             raise IntegrityError('Esse verbete já foi inserido. Tente novamente com outro.')
 
         if ' ' in entry_content and entry_content.count('*') != 2:
             raise ValueError(
-                'Você precisa definir o termo principal, e apenas um termo principal. Ponha-o entre asteriscos (\'*\').')
-        elif ' ' not in entry_content and entry_content.count('*') != 2:
+                'Você precisa definir o termo principal, e apenas um termo principal. Ponha-o entre asteriscos (\'*\').'
+            )
+
+    @staticmethod
+    def normalize_entry_content_asterisks(entry_content):
+        if ' ' not in entry_content and entry_content.count('*') != 2:
             entry_content = entry_content.replace('*', '')
             entry_content = '*' + entry_content + '*'
+        return entry_content
 
-        db.session.add(entry)
-
-        terms_contents = entry_content.split()
+    def register_terms_and_syllables(self, entry_content_with_dots_and_asterisks, form_data):
+        terms_contents = entry_content_with_dots_and_asterisks.split()
         for i, term_content in enumerate(terms_contents):
             term = Term(
                 content=term_content.replace('.', '').replace('*', ''),
                 order=i,
-                entry=entry
+                entry=self
             )
 
-            if term_content[0] == '*' and term_content[-1] == '*':
+            if Term.is_term_content_of_main_term(term_content):
                 term.is_main_term = True
                 term.gender = form_data['main_term_gender']
                 term.grammatical_category = form_data['main_term_grammatical_category']
@@ -133,6 +169,9 @@ class Entry(db.Model):
 
                 db.session.add(syllable)
 
+        db.session.commit()
+
+    def register_image(self, form_data):
         image_file = form_data['image']
         if image_file.filename and image_file:
             filename = secure_filename(image_file.filename)
@@ -141,13 +180,15 @@ class Entry(db.Model):
             image = Image(
                 path=filename,
                 caption=form_data['image_caption'] if form_data['image_caption'] else None,
-                entry=entry
+                entry=self
             )
 
             image_file.close()
 
             db.session.add(image)
+            db.session.commit()
 
+    def register_n_attributes(self, form_data):
         n_attributes = {
             'definition': [],
             'question': []
@@ -175,7 +216,7 @@ class Entry(db.Model):
                 definition = Definition(
                     content=definition_data['content'],
                     order=definition_data['order'],
-                    entry=entry,
+                    entry=self,
                     knowledge_area=KnowledgeArea.query.filter_by(content=definition_data['knowledge_area']).first()
                 )
 
@@ -187,25 +228,33 @@ class Entry(db.Model):
                     statement=question['statement'],
                     answer=question['answer'],
                     order=question['order'],
-                    entry=entry
+                    entry=self
                 )
 
                 db.session.add(question)
 
         db.session.commit()
 
-        return entry
-
     def delete_entry(self):
-        for term in self.terms:
-            for syllable in term.syllables:
-                db.session.delete(syllable)
-            db.session.delete(term)
+        self.delete_n_properties()
+        self.delete_image()
+        db.session.delete(self)
+        db.session.commit()
+
+    def delete_n_properties(self):
+        self.delete_terms()
 
         for entities_list in [self.definitions, self.questions]:
             for entity in entities_list:
                 db.session.delete(entity)
 
+    def delete_terms(self):
+        for term in self.terms:
+            for syllable in term.syllables:
+                db.session.delete(syllable)
+            db.session.delete(term)
+
+    def delete_image(self):
         if self.image:
             try:
                 os.remove(self.image.path)
@@ -213,11 +262,12 @@ class Entry(db.Model):
                 pass
             db.session.delete(self.image)
 
-        db.session.delete(self)
-        db.session.commit()
+    def get_normalized_content(self):
+        return normalize_string(self.content).replace(' ', '_')
 
-    def has_integrity(self):
-        entry_with_same_content = Entry.query.filter_by(content=self.content).first()
+    @staticmethod
+    def has_integrity(entry_content):
+        entry_with_same_content = Entry.query.filter_by(content=entry_content).first()
         return entry_with_same_content is None
 
     @staticmethod
@@ -286,18 +336,10 @@ class Entry(db.Model):
         return Term.query.filter_by(entry=self, is_main_term=True).first()
 
     def get_dict_of_properties(self):
-        dict_of_properties = {}
+        n_properties = {}
 
         for i, question in enumerate(self.questions):
-            dict_of_properties.update(
-                {
-                    f'question_statement_{i + 1}': question.statement,
-                    f'question_answer_{i + 1}': question.answer
-                }
-            )
-
-        for i, question in enumerate(self.questions):
-            dict_of_properties.update(
+            n_properties.update(
                 {
                     f'question_statement_{i + 1}': question.statement,
                     f'question_answer_{i + 1}': question.answer
@@ -305,39 +347,43 @@ class Entry(db.Model):
             )
 
         for i, definition in enumerate(self.definitions):
-            dict_of_properties.update(
+            n_properties.update(
                 {
                     f'definition_content_{i + 1}': definition.content,
                     f'definition_knowledge_area_{i + 1}': definition.knowledge_area.content
                 }
             )
 
-        entry_content_with_dots_and_stars = ''
+        entry_content_with_dots_and_asterisks = ''
         for i, term in enumerate(self.terms):
             if i != 0:
-                entry_content_with_dots_and_stars += ' '
+                entry_content_with_dots_and_asterisks += ' '
             if term.is_main_term:
-                entry_content_with_dots_and_stars += '*'
+                entry_content_with_dots_and_asterisks += '*'
             for j, syllable in enumerate(term.syllables):
                 if j != 0:
-                    entry_content_with_dots_and_stars += '.'
-                entry_content_with_dots_and_stars += syllable.content
+                    entry_content_with_dots_and_asterisks += '.'
+                entry_content_with_dots_and_asterisks += syllable.content
             if term.is_main_term:
-                entry_content_with_dots_and_stars += '*'
+                entry_content_with_dots_and_asterisks += '*'
 
-        dict_of_properties.update(
-            {
-                'entry_content': entry_content_with_dots_and_stars,
-                'main_term_grammatical_category': self.get_main_term().grammatical_category,
-                'main_term_gender': self.get_main_term().gender
-            }
-        )
+        fixed_properties = {
+            'entry_content': entry_content_with_dots_and_asterisks,
+            'main_term_grammatical_category': self.get_main_term().grammatical_category,
+            'main_term_gender': self.get_main_term().gender
+        }
 
-        return dict_of_properties
+        return {
+            'n_properties': n_properties,
+            'fixed_properties': fixed_properties
+        }
 
     def turn_valid(self):
         self.is_validated = True
         db.session.commit()
+
+    def get_term_by_content(self, term_content):
+        return Term.query.filter_by(entry=self, content=term_content).first()
 
 
 class Term(db.Model):
@@ -370,6 +416,10 @@ class Term(db.Model):
         }
 
         return gender_in_full[abbreviation]
+
+    @staticmethod
+    def is_term_content_of_main_term(term_content):
+        return term_content[0] == '*' and term_content[-1] == '*'
 
 
 class Image(db.Model):
