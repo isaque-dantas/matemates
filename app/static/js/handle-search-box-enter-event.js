@@ -1,4 +1,6 @@
-const searchInputs = document.querySelectorAll('.search-box > input.search-txt')
+const searchInputs = document.querySelectorAll(
+  ".search-box > input.search-txt"
+);
 
 // document.addEventListener(
 //     'keypress',
@@ -7,15 +9,10 @@ const searchInputs = document.querySelectorAll('.search-box > input.search-txt')
 //     }
 // )
 
-searchInputs.forEach(
-    (searchInput) => {
-        searchInput.addEventListener(
-            'keypress',
-            (event) => {
-                if (event.key === 'Enter') {
-                    location.href=`/search/${searchInput.value}`
-                }
-            }
-        )
+searchInputs.forEach((searchInput) => {
+  searchInput.addEventListener("keypress", (event) => {
+    if (event.key === "Enter") {
+      location.href = `/search/${searchInput.value}`;
     }
-)
+  });
+});

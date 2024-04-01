@@ -5,15 +5,13 @@ const modeSwitch = document.querySelector(".toggle-switch");
 const modeText = document.querySelector(".mode-text");
 const moonIcon = document.querySelector(".bi-moon");
 const sunIcon = document.querySelector(".bi-sun");
-const animationsToggle = document.querySelector(".bi-columns-gap");
-const closeButton = document.querySelector(".options-close");
-const animationMenu = document.querySelector(".animations-menu");
-const animationContainer = document.querySelector(".options-container");
 
+// close sidebar
 toggle.addEventListener("click", () => {
   sidebar.classList.toggle("close");
 });
 
+// change theme when the button is clicked
 modeSwitch.addEventListener("click", () => {
   body.classList.toggle("light");
 
@@ -28,10 +26,3 @@ modeSwitch.addEventListener("click", () => {
   }
 });
 
-animationsToggle.addEventListener("click", () => {
-  animationContainer.style.right = "0%";
-});
-
-closeButton.addEventListener("click", () => {
-  animationContainer.style.right = "-100%";
-});
