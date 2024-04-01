@@ -1,57 +1,81 @@
 {% extends 'base-with-navbar-nav.html' %}
 
 {% block title %}Cadastro{% endblock %}
-{% block style %}style-entry{% endblock %}
+{% block style %}style-register{% endblock %}
 
 {% block content %}
-    <main class="container my-5">
-        <form enctype="multipart/form-data" method="post">
-            {{ form.hidden_tag() }}
-            <div class="row pt-5 mt-5">
-                <div class="col-6 offset-3">{% include 'flash_messages.html' %}</div>
-                <div class="col-6 offset-3"><h1 class="fs-3 fw-bold mb-5">Cadastre-se agora</h1></div>
-
-                <div class="col-3 offset-3">
-                    <div class="mb-4">
-                        {{ form.first_name.label(class="form-label mb-1") }}
+<main class="geral">
+    <div class="">
+        <div class="icon-usuario-nome position-absolute d-flex flex-column gap-4 col-3">
+            <div class="icon rounded-circle d-flex justify-content-center">
+                <label for="get-file" class="imagem-perfil rounded-circle z-2 fs-6 mb-3" style="cursor: pointer"><img
+                        src="../static/img/perfil.png" alt="" class="preview-image"></label>
+            </div>
+            <div class="nome">
+                {{ form.first_name.label(class="form-label mb-2") }}
+                <div class="form animacao-azul">
+                    <div class="position-absolute">
                         {{ form.first_name(class="form-control") }}
                     </div>
-                    <div class="mb-4">
-                        {{ form.last_name.label(class="form-label mb-1") }}
-                        {{ form.last_name(class="form-control") }}
-                    </div>
-                    <div class="mb-4">
-                        {{ form.password.label(class="form-label mb-1") }}
-                        {{ form.password(class="form-control") }}
-                    </div>
-                    <div class="mb-4">
-                        {{ form.username.label(class="form-label mb-1") }}
+                </div>
+            </div>
+            <div class="usuario">
+                {{ form.username.label(class="form-label mb-2") }}
+                <div class="form animacao-azul">
+                    <div class="position-absolute">
                         {{ form.username(class="form-control") }}
                     </div>
                 </div>
-                <div class="col-3">
-                    <div class="mb-4">
-                        {{ form.email.label(class="form-label mb-1") }}
-                        {{ form.email(class="form-control") }}
-                    </div>
-                    <div class="mb-4">
-                        {{ form.phone_number.label(class="form-label mb-1") }}
-                        {{ form.phone_number(class="form-control") }}
-                    </div>
-                    <div class="mb-4">
-                        {{ form.birth_date.label(class="form-label mb-1") }}
-                        {{ form.birth_date(class="form-control") }}
-                    </div>
-                    <div>
-                        {{ form.image.label(class="form-label mb-1") }}
-                        {{ form.image(class="form-control") }}
+            </div>
+        </div>
+
+        <div class="informacoes">
+            <div class="email-senha d-flex justify-content-around mt-5">
+                <div class="email col-3">
+                    {{ form.email.label(class="form-label mb-2") }}
+                    <div class="form animacao-azul">
+                        <div class="position-absolute">
+                            {{ form.email(class="form-control") }}
+                        </div>
                     </div>
                 </div>
-                <div class="col-6 offset-3">
-                    {{ form.submit(class="btn btn-outline-light border-2 fs-5 px-5 py-2 mt-5") }}
+                <div class="senha col-3">
+                    {{ form.password.label(class="form-label mb-2") }}
+                    <div class="form animacao-azul">
+                        <div class="position-absolute">
+                            {{ form.password(class="form-control") }}
+                            <i class="eye eye-open bi bi-eye-slash position-absolute"></i>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </form>
-        <script src="{{ url_for('static', filename='js/fetch-form-with-file.js') }}"></script>
-    </main>
+
+            <div class="numero-data d-flex justify-content-between mt-5">
+                <div class="numero col-3">
+                    {{ form.phone_number.label(class="form-label mb-2") }}
+                    <div class="form animacao-azul">
+                        <div class="position-absolute">
+                            {{ form.phone_number(class="form-control") }}
+                        </div>
+                    </div>
+                </div>
+                <div class="data col-3">
+                    {{ form.birth_date.label(class="form-label mb-2") }}
+                    <div class="form animacao-azul">
+                        <div class="position-absolute">
+                            {{ form.birth_date(class="form-control") }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="buttons position-absolute d-flex gap-5">
+        <button type="button" class="button border-0 " style="--clr: #1e9bff">
+            <span>CONFIRMAR</span><i></i>
+        </button>
+    </div>
+</main>
+<script src="{{ url_for('static', filename='js/change-inputs-disabled-property.js') }}"></script>
 {% endblock %}

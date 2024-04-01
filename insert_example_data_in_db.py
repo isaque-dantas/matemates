@@ -14,7 +14,7 @@ with app.app_context():
         'last_name': 'Dantas',
         'password': '12345',
         'email': 'isaque@gmail.com',
-        'phone_number': '1234567890',
+        'phone_number': '1234567890',   
         'birth_date': date(2007, 3, 14),
         'role': 'admin'
     }
