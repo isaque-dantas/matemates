@@ -8,7 +8,7 @@
         <div class="container mb-5">
             {% include 'flash_messages.html' %}
         </div>
-        <form enctype="multipart/form-data" method="post">
+        <form action="{{ url_for(endpoint) }}" enctype="multipart/form-data" method="post">
             {{ form.hidden_tag() }}
             <section class="palavra-escolhida container col-8 d-flex flex-column">
                 <section class="palavra animacao-azul rounded">

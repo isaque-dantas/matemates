@@ -5,7 +5,7 @@
 
 {% block content %}
     <main class="container my-5">
-        <form enctype="multipart/form-data" method="post">
+        <form action="{{ url_for('user.register') }}" enctype="multipart/form-data" method="post">
             {{ form.hidden_tag() }}
             <div class="row pt-5 mt-5">
                 <div class="col-6 offset-3">{% include 'flash_messages.html' %}</div>

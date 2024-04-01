@@ -59,9 +59,6 @@ class User(db.Model, UserMixin):
             email=form_data['email']
         )
 
-        if form_data['phone_number']:
-            user.phone_number = form_data['phone_number']
-
         user.raise_if_form_data_is_invalid(form_data)
 
         if form_data['phone_number']:
@@ -70,16 +67,28 @@ class User(db.Model, UserMixin):
         if form_data['birth_date']:
             user.birth_date = form_data['birth_date']
 
-        image_file = form_data['image']
-        if image_file.filename and image_file:
-            filename = f'{user.username}.{get_extension_from_filename(image_file.filename)}'
-            image_file.save(os.path.join('app/static/img/user_profile_picture/', filename))
-            image_file.close()
-            user.profile_image_path = filename
-
+        user.register_image(form_data)
         user.role = 'admin'
 
         db.session.add(user)
+        db.session.commit()
+
+    def update(self, form_data):
+        self.raise_if_form_data_is_invalid(form_data)
+
+        self.first_name = form_data['first_name']
+        self.last_name = form_data['last_name']
+        self.username = form_data['username']
+        self.email = form_data['email']
+
+        if form_data['phone_number']:
+            self.phone_number = form_data['phone_number']
+        if form_data['birth_date']:
+            self.birth_date = form_data['birth_date']
+
+        if form_data['image']:
+            self.register_image(form_data)
+
         db.session.commit()
 
     def raise_if_form_data_is_invalid(self, form_data):
@@ -98,16 +107,19 @@ class User(db.Model, UserMixin):
 
     def email_has_integrity(self):
         user_with_same_email = User.query.filter_by(email=self.email).first()
-        return user_with_same_email is None
+        return user_with_same_email is None or user_with_same_email == self
 
     def username_has_integrity(self):
         user_with_same_username = User.query.filter_by(username=self.username).first()
-        return user_with_same_username is None
+        return user_with_same_username is None or user_with_same_username == self
 
-    @staticmethod
-    def raise_if_form_data_is_invalid(form_data):
-        if '/' in form_data['username']:
-            raise ValueError('O nome de usuário não pode conter caracteres \'/\'.')
+    def register_image(self, form_data):
+        image_file = form_data['image']
+        if image_file.filename and image_file:
+            filename = f'{self.username}.{get_extension_from_filename(image_file.filename)}'
+            image_file.save(os.path.join('app/static/img/user_profile_picture/', filename))
+            image_file.close()
+            self.profile_image_path = filename
 
     @staticmethod
     def get_by_email(email):
@@ -146,18 +158,6 @@ class User(db.Model, UserMixin):
         db.session.delete(self)
         db.session.commit()
 
-    # id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    # first_name = db.Column(db.String(MAX_LENGTH['first_name']), nullable=False)
-    # last_name = db.Column(db.String(MAX_LENGTH['last_name']), nullable=False)
-    # email = db.Column(db.String(MAX_LENGTH['email']), nullable=False, unique=True)
-    # password_hash = db.Column(db.String(MAX_LENGTH['password_hash']), nullable=False)
-    # username = db.Column(db.String(MAX_LENGTH['username']), nullable=False, unique=True)
-    # phone_number = db.Column(db.String(MAX_LENGTH['phone_number']))
-    # birth_date = db.Column(db.Date, nullable=False)
-    # role = db.Column(db.Enum('admin', 'normal'), nullable=False)
-    # profile_image_path = db.Column(db.String(MAX_LENGTH['profile_image_path']), nullable=True)
-
-
 class Entry(db.Model):
     __tablename__ = 'entry'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -177,7 +177,7 @@ class Entry(db.Model):
             content=entry_content.replace('*', '').replace('.', '')
         )
 
-        Entry.raise_if_form_data_is_invalid(form_data)
+        entry.raise_if_form_data_is_invalid(form_data)
         entry_content_with_dots_and_asterisks = Entry.normalize_entry_content_asterisks(entry_content)
 
         db.session.add(entry)
@@ -189,14 +189,13 @@ class Entry(db.Model):
         return entry
 
     def update(self, form_data: dict):
-        try:
-            Entry.raise_if_form_data_is_invalid(form_data)
-        except IntegrityError:
-            pass
+        self.raise_if_form_data_is_invalid(form_data)
+
         entry_content_with_dots_and_asterisks = form_data['entry_content'].casefold()
         entry_content_with_dots_and_asterisks = Entry.normalize_entry_content_asterisks(
             entry_content_with_dots_and_asterisks
         )
+
         self.content = entry_content_with_dots_and_asterisks.replace('*', '').replace('.', '')
 
         self.delete_n_properties()
@@ -206,10 +205,9 @@ class Entry(db.Model):
         self.register_image(form_data)
         self.register_n_attributes(form_data)
 
-    @staticmethod
-    def raise_if_form_data_is_invalid(form_data):
+    def raise_if_form_data_is_invalid(self, form_data):
         entry_content = form_data['entry_content']
-        if not Entry.has_integrity(entry_content.replace('*', '').replace('.', '')):
+        if not self.has_integrity(entry_content.replace('*', '').replace('.', '')):
             raise IntegrityError('Esse verbete já foi inserido. Tente novamente com outro.')
 
         if ' ' in entry_content and entry_content.count('*') != 2:
@@ -346,10 +344,9 @@ class Entry(db.Model):
     def get_normalized_content(self):
         return normalize_string(self.content).replace(' ', '_')
 
-    @staticmethod
-    def has_integrity(entry_content):
+    def has_integrity(self, entry_content):
         entry_with_same_content = Entry.query.filter_by(content=entry_content).first()
-        return entry_with_same_content is None
+        return entry_with_same_content is None or entry_with_same_content == self
 
     @staticmethod
     def get_index_from_key(key: str):
