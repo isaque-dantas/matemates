@@ -20,7 +20,7 @@ with app.app_context():
     }
 
     files = FileMultiDict()
-    files.add_file('image', r'foto_perfil_sem_fundo_low_size.png')
+    files.add_file('image', r'isq_dantas.png')
 
     dados_usuario_admin.update(dict(files))
 
@@ -52,7 +52,7 @@ with app.app_context():
     }
 
     files = FileMultiDict()
-    files.add_file('image', r'rafael.jpeg')
+    files.add_file('image', r'angulo_reto.jpeg')
 
     dados_angulo_reto.update(dict(files))
 

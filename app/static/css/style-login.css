@@ -1,89 +1,102 @@
 /*----Main----*/
 
 .login-main {
-    position: static;
+  position: static;
 }
 
 .geral {
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .forms-login {
-    min-width: 600px;
+  min-width: 600px;
 }
 /*--*/
-.animacao-azul::before, .animacao-azul::after{
-    content: " ";
-    position: absolute;
-    z-index: -1;
-    width: calc(100% + 5px);
-    height: calc(100% + 5px);
-    background: linear-gradient(90deg, #00b7ff, #0d00ff, #00b7ff);
-    border-radius: 0.375rem;
-    background-size: 300%;
-    animation: animacao-azul 5s linear infinite;
+.animacao-azul::before,
+.animacao-azul::after {
+  content: " ";
+  position: absolute;
+  z-index: -1;
+  width: calc(100% + 5px);
+  height: calc(100% + 5px);
+  background: linear-gradient(90deg, #00b7ff, #0d00ff, #00b7ff);
+  border-radius: 0.375rem;
+  background-size: 300%;
+  animation: animacao-azul 5s linear infinite;
 }
 
-.form::after{
-    filter: blur(15px);
+.animacao-azul.animation-off::before,
+.animacao-azul.animation-off::after {
+  animation: none;
+  background: none;
 }
 
-@keyframes animacao-azul{
-    0% {
-        background-position: 0;
-    }
-    100% {
-        background-position: 150%;
-    }
+.for m::after {
+  filter: blur(15px);
 }
+
+@keyframes animacao-azul {
+  0% {
+    background-position: 0;
+  }
+  100% {
+    background-position: 150%;
+  }
+}
+
+.animation-off {
+  animation: none;
+  background: none;
+}
+
 /*--*/
-.form{
-    background: #0e0b1ca7;
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 35px;
-    border-radius: 0.375rem;
+.form {
+  background: #0e0b1ca7;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 35px;
+  border-radius: 0.375rem;
 }
 
-.form div{
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 100%;
+.form div {
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
 }
 
 .form-control {
-    background: #0e0b1c;
-    border: none;
-    outline: none;
+  background: #0e0b1c;
+  border: none;
+  outline: none;
 }
 
 .form-control:focus {
-    background: #0e0b1c;
+  background: #0e0b1c;
 }
 /*--*/
-.eye-closed, .eye-open {
-    transform: translate(-50%, -50%);
-    left: 97%;
-    top: 50%;
-    cursor: pointer;
+.eye-closed,
+.eye-open {
+  transform: translate(-50%, -50%);
+  left: 97%;
+  top: 50%;
+  cursor: pointer;
 }
 
 .btn {
-    transition: 0.3s ease-in-out;
-    border-radius: 40px;
+  transition: 0.3s ease-in-out;
+  border-radius: 40px;
 }
 
 .btn:hover {
-    background: transparent;
-    box-shadow: 0 0 20px #0040ff51,
-    0 0 30px #ffffff6a;
-    letter-spacing: 0.1em;
-    color: white;
+  background: transparent;
+  box-shadow: 0 0 20px #0040ff51, 0 0 30px #ffffff6a;
+  letter-spacing: 0.1em;
+  color: white;
 }
 
 /* ^^ Main ^^ */
@@ -91,36 +104,18 @@
 /*^^ Barra de rolagem da pagina ^^*/
 
 @media only screen and (max-device-width: 1199px) {
-    .link-nav{
-        display: none;
-    }
 
-    nav{
-        width: auto;
-    }
+  .geral {
+    width: 100%;
+  }
 
-    .dropdown{
-        display: block;
-    }
+  .forms-login {
+    min-width: auto;
+    padding: 10vw;
+  }
 
-    .dropdown-toggle::after{
-        content: none;
-    }
-
-    .logo{
-        height: 40px;
-    }
-
-    .geral {
-        width: 100%;
-    }
-
-    .forms-login {
-        min-width: auto;
-        padding: 10vw;
-    }
-
-    .eye-closed, .eye-open {
-        left: 95%;
-    }
+  .eye-closed,
+  .eye-open {
+    left: 95%;
+  }
 }

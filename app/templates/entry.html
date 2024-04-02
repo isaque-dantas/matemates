@@ -17,7 +17,7 @@
         </section>
         <section class="palavra-escolhida col-8 d-flex flex-column">
             <div class="d-flex gap-5">
-                <section class="palavra animacao-azul rounded w-100">
+                <section class="palavra rounded w-100 animacao-azul-superior">
                     <div class="position-absolute">
                         <p>
                             {{ entry.get_main_term().grammatical_category.capitalize() }} {{ entry.get_main_term().get_gender_in_full() }}
@@ -55,7 +55,7 @@
                 {% endif %}
             </div>
 
-            <section class="significado mt-5">
+            <section class="significado animated mt-5">
                 <div class="sig d-flex justify-content-between" id="significado">
                     <ol class="significado-conteudo m-5 lh-lg">
                         {% for definition in entry.definitions %}

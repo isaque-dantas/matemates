@@ -6,10 +6,12 @@ const modeText = document.querySelector(".mode-text");
 const moonIcon = document.querySelector(".bi-moon");
 const sunIcon = document.querySelector(".bi-sun");
 
+// close sidebar
 toggle.addEventListener("click", () => {
   sidebar.classList.toggle("close");
 });
 
+// change theme when the button is clicked
 modeSwitch.addEventListener("click", () => {
   body.classList.toggle("light");
 
@@ -23,3 +25,4 @@ modeSwitch.addEventListener("click", () => {
     sunIcon.classList.toggle("d-none");
   }
 });
+
