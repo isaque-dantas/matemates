@@ -39,6 +39,7 @@ nav {
 /* ======= light mode ======= */
 
 /* ======= sideBar ======= */
+/*
 .sidebar {
   position: fixed;
   top: 0;
@@ -60,6 +61,7 @@ nav {
 }
 
 /* ======= Resuable css ======= */
+/*
 .sidebar .text {
   font-size: 16px;
   font-weight: 500;
@@ -282,7 +284,148 @@ body.light .switch::before,
   background-color: green;
 }
 
+/*------- slide bar do luquinhas / gpt / youtube -------*/
+.side-bar {
+  height: 100%;
+  width: 250px;
+  background: var(--body-color);
+  position: fixed;
+  top: 0;
+  left: 0;
+  padding: 40px 0 40px 1%;
+  box-shadow: 0 0 10px var(--primary-color);
+  overflow: hidden;
+  transition: .3s;
+}
+
+.side-bar:hover {
+  width: 250px;
+}
+
+.nav-btn {
+  width: 100%;
+  padding: 0 0 0 10px;
+}
+
+.nav-btn i {
+  font-size: 24px;
+}
+
+.menu-bar{
+  padding: 40px 0;
+}
+
+.image-text {
+  max-width: 40px;
+  max-height: 40px;
+  border-radius: 6px;
+}
+
+.name-text {
+  padding: 0 0 0 40px;
+}
+
+/*---- ul ----*/
+ul{
+  padding: 0;
+  margin: 0;
+}
+
+ul li.nav-link a {
+  color: white;
+  text-decoration: none;
+  font-size: 20px;  
+  padding: 20px 12px;
+  display: flex;
+  align-items: center;
+}
+
+ul li.nav-link a .nav-text {
+  margin: 0 0 0 40px;
+  font-size: 17px;
+}
+
+ul li.nav-link, ul li.nav-link a {
+  transition: .3s ease-in-out;
+}
+
+ul li.nav-link:hover, ul li.nav-link a:hover {
+  background: var(--clr);
+}
+
+/*---- MODE ----*/
+.mode {
+  position: relative;
+  border-radius: 6px;
+  padding: 20px 12px;
+}
+
+.mode .moon-sun {
+  height: 50px;
+  width: 60px;
+  display: flex;
+  align-items: center;
+}
+
+.mode i {
+  position: absolute;
+  transition: var(--tran-03);
+}
+
+.mode .bi-moon {
+  display: none;
+}
+
+.animations-menu .toggle-switch-animations,
+.mode .toggle-switch {
+  position: absolute;
+  right: 0;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-width: 60px;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.animations-menu .toggle-switch-animations {
+  height: fit-content;
+  background: none;
+}
+
+.animations-menu .toggle-switch-animations .switch-animations,
+.mode .toggle-switch .switch {
+  position: relative;
+  height: 22px;
+  width: 44px;
+  border-radius: 25px;
+  background: var(--toggle-color);
+}
+
+.switch-animations::before,
+.switch::before {
+  content: "";
+  position: absolute;
+  height: 15px;
+  width: 15px;
+  border-radius: 50%;
+  top: 50%;
+  left: 24px;
+  transform: translateY(-50%);
+  background: var(--body-color);
+  transition: var(--tran-03);
+}
+
+body.light .switch::before,
+.switch-animations.animation-off::before {
+  left: 5px;
+  background-color: green;
+}
 /*-------Fundo com bolinhas-------*/
+
+
 
 .bolhas {
   position: relative;
