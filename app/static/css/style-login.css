@@ -104,25 +104,6 @@
 /*^^ Barra de rolagem da pagina ^^*/
 
 @media only screen and (max-device-width: 1199px) {
-  .link-nav {
-    display: none;
-  }
-
-  nav {
-    width: auto;
-  }
-
-  .dropdown {
-    display: block;
-  }
-
-  .dropdown-toggle::after {
-    content: none;
-  }
-
-  .logo {
-    height: 40px;
-  }
 
   .geral {
     width: 100%;
