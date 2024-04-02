@@ -129,8 +129,8 @@ nav {
 /*-------main-------*/
 
 /*--*/
-.animacao-azul::before,
-.animacao-azul::after {
+.animacao-azul-superior::before,
+.animacao-azul-superior::after {
   content: " ";
   position: absolute;
   z-index: -1;
@@ -140,6 +140,11 @@ nav {
   border-radius: 10px;
   background-size: 300%;
   animation: animacao-azul 5s linear infinite;
+}
+
+.animacao-azul-superior.animation-off::after,
+.animacao-azul-superior.animation-off::before {
+  animation: none;
 }
 
 .palavra::after {

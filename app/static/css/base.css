@@ -272,9 +272,12 @@ nav {
   transition: var(--tran-03);
 }
 
-body.light .switch::before {
+body.light .switch::before,
+.switch-animations.animation-off::before {
   left: 5px;
+  background-color: green;
 }
+
 
 main {
   position: relative;
