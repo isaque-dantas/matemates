@@ -12,17 +12,12 @@ class RegisterForm(FlaskForm):
                                DataRequired(),
                                Length(2, User.MAX_LENGTH['username'])
                            ])
-    first_name = StringField('Primeiro nome',
-                             validators=[
-                                 DataRequired(),
-                                 Length(2, User.MAX_LENGTH['first_name'])
-                             ])
 
-    last_name = StringField('Sobrenome',
-                            validators=[
-                                DataRequired(),
-                                Length(2, User.MAX_LENGTH['last_name'])
-                            ])
+    name = StringField('Nome e sobrenome',
+                       validators=[
+                           DataRequired(),
+                           Length(2, User.MAX_LENGTH['name'])
+                       ])
 
     password = PasswordField('Senha',
                              validators=[

@@ -10,8 +10,7 @@ with app.app_context():
 
     dados_usuario_admin = {
         'username': 'isq_dantas',
-        'first_name': 'Isaque',
-        'last_name': 'Dantas',
+        'name': 'Isaque Dantas',
         'password': '12345',
         'email': 'isaque@gmail.com',
         'phone_number': '1234567890',   

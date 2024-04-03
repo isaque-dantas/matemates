@@ -67,7 +67,28 @@ def register():
 @user_blueprint.route('/perfil/', methods=['GET', 'POST'])
 @login_required
 def perfil():
-    return render_template('perfil.html', user=current_user)
+    form = RegisterForm()
+    form_data = get_form_data_from_request(request)
+    print(f'form_data: {form_data}')
+
+    if form.validate_on_submit():
+        try:
+            print(f'request.files: {dict(request.files)}')
+            print(f'request.form: {dict(request.form)}')
+            form_data = get_form_data_from_request(request)
+
+            User.update_user(current_user, form_data)
+            print('ended update')
+        except Exception as e:
+            flash(str(e), category='danger')
+        else:
+            flash('Perfil editado com sucesso.', category='success')
+            return render_template('perfil.html', user=current_user, form=form)
+    elif request.method == 'POST':
+        flash('Verifique se todos os dados foram inseridos corretamente.', category='warning')
+        return render_template('perfil.html', user=current_user, form=form)
+    else:
+        return render_template('perfil.html', user=current_user, form=form)
 
 
 @user_blueprint.route('/logout')
@@ -82,28 +103,6 @@ def logout():
 @login_required
 def user_data():
     return current_user.get_dict_of_properties()
-
-
-@user_blueprint.route('/edit_current_user/', methods=['POST'])
-@login_required
-def edit_current_user():
-    form = RegisterForm()
-    if form.validate_on_submit():
-        try:
-            print(f'request.files: {dict(request.files)}')
-            print(f'request.form: {dict(request.form)}')
-            form_data = get_form_data_from_request(request)
-
-            User.update(form_data)
-        except Exception as e:
-            flash(str(e), category='danger')
-        else:
-            flash('Perfil editado com sucesso.', category='success')
-            return redirect(url_for('user.perfil'))
-    elif request.method == 'POST':
-        flash('Verifique se todos os dados foram inseridos corretamente.', category='warning')
-    else:
-        return redirect(url_for('user.perfil'))
 
 
 @user_blueprint.route('/delete_current_user/')
