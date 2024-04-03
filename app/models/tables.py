@@ -83,7 +83,6 @@ class User(db.Model, UserMixin):
         print('started update')
         self.raise_if_form_data_is_invalid(form_data)
         print('raise success')
-
         first_and_last_name = User.get_first_and_last_name_from_name(form_data['name'])
         self.first_name = first_and_last_name['first_name']
         self.last_name = first_and_last_name['last_name']
