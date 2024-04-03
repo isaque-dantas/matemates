@@ -58,7 +58,8 @@ def entry_creation():
         elif request.method == 'POST':
             flash('Verifique se todos os dados foram inseridos corretamente.', category='warning')
 
-        return render_template('entry-form.html', form=form, user_is_admin=is_user_admin(current_user), is_edition=False)
+        return render_template('entry-form.html', form=form, user_is_admin=is_user_admin(current_user),
+                               is_edition=False, endpoint='entry_creation')
     else:
         abort(403)
 
@@ -86,7 +87,7 @@ def edit_entry(entry_id):
             flash('Verifique se todos os dados foram inseridos corretamente.', category='warning')
 
         return render_template('entry-form.html', form=form, user_is_admin=is_user_admin(current_user),
-                               is_edition=True)
+                               is_edition=True, endpoint='edit_entry')
     else:
         abort(403)
 

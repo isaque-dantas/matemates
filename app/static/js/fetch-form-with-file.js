@@ -4,7 +4,7 @@ form.addEventListener(
     'submit',
     () => {
         const formData = new FormData(form)
-        sendFormDataTo(formData, location.href)
+        sendFormDataTo(formData, form.action)
         console.log('')
     }
 )
