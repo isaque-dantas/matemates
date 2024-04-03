@@ -67,7 +67,28 @@ def register():
 @user_blueprint.route('/perfil/', methods=['GET', 'POST'])
 @login_required
 def perfil():
-    return render_template('perfil.html', user=current_user)
+    form = RegisterForm()
+    form_data = get_form_data_from_request(request)
+    print(f'form_data: {form_data}')
+
+    if form.validate_on_submit():
+        try:
+            print(f'request.files: {dict(request.files)}')
+            print(f'request.form: {dict(request.form)}')
+            form_data = get_form_data_from_request(request)
+
+            User.update_user(current_user, form_data)
+            print('ended update')
+        except Exception as e:
+            flash(str(e), category='danger')
+        else:
+            flash('Perfil editado com sucesso.', category='success')
+            return render_template('perfil.html', user=current_user, form=form)
+    elif request.method == 'POST':
+        flash('Verifique se todos os dados foram inseridos corretamente.', category='warning')
+        return render_template('perfil.html', user=current_user, form=form)
+    else:
+        return render_template('perfil.html', user=current_user, form=form)
 
 
 @user_blueprint.route('/logout')
@@ -94,7 +115,8 @@ def edit_current_user():
             print(f'request.form: {dict(request.form)}')
             form_data = get_form_data_from_request(request)
 
-            User.update(form_data)
+            User.update(current_user, form_data)
+            print('ended update')
         except Exception as e:
             flash(str(e), category='danger')
         else:
@@ -102,6 +124,8 @@ def edit_current_user():
             return redirect(url_for('user.perfil'))
     elif request.method == 'POST':
         flash('Verifique se todos os dados foram inseridos corretamente.', category='warning')
+
+        return redirect(url_for('user.perfil'))
     else:
         return redirect(url_for('user.perfil'))
 

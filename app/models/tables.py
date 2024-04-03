@@ -27,8 +27,9 @@ class User(db.Model, UserMixin):
     __tablename__ = 'user'
 
     MAX_LENGTH = {
-        'first_name': 32,
-        'last_name': 32,
+        'name': 128,
+        'first_name': 64,
+        'last_name': 64,
         'email': 128,
         'username': 24,
         'password': 8,
@@ -51,9 +52,14 @@ class User(db.Model, UserMixin):
     @staticmethod
     def register(form_data):
         password_hash = generate_password_hash(form_data['password'])
+
+        first_and_last_name = User.get_first_and_last_name_from_name(form_data['name'])
+        first_name = first_and_last_name['first_name']
+        last_name = first_and_last_name['last_name']
+
         user = User(
-            first_name=form_data['first_name'],
-            last_name=form_data['last_name'],
+            first_name=first_name,
+            last_name=last_name,
             username=form_data['username'],
             password_hash=password_hash,
             email=form_data['email']
@@ -73,11 +79,14 @@ class User(db.Model, UserMixin):
         db.session.add(user)
         db.session.commit()
 
-    def update(self, form_data):
+    def update_user(self, form_data):
+        print('started update')
         self.raise_if_form_data_is_invalid(form_data)
+        print('raise success')
 
-        self.first_name = form_data['first_name']
-        self.last_name = form_data['last_name']
+        first_and_last_name = User.get_first_and_last_name_from_name(form_data['name'])
+        self.first_name = first_and_last_name['first_name']
+        self.last_name = first_and_last_name['last_name']
         self.username = form_data['username']
         self.email = form_data['email']
 
@@ -92,6 +101,12 @@ class User(db.Model, UserMixin):
         db.session.commit()
 
     def raise_if_form_data_is_invalid(self, form_data):
+        if re.match(r'^[\w ]+$', form_data['name']) is None:
+            raise ValueError('Seu nome deve conter apenas letras.')
+
+        if len(form_data['name'].split()) != 2:
+            raise ValueError('Insira seu primeiro e último nome, nem mais e nem menos.')
+
         if re.match(r'^[\w\-_]+$', form_data['username']) is None:
             raise ValueError('O nome de usuário deve conter apenas letras, números, hífens (-) ou underlines (_).')
 
@@ -120,6 +135,13 @@ class User(db.Model, UserMixin):
             image_file.save(os.path.join('app/static/img/user_profile_picture/', filename))
             image_file.close()
             self.profile_image_path = filename
+
+    @staticmethod
+    def get_first_and_last_name_from_name(name):
+        return {
+            'first_name': name.split()[0],
+            'last_name': name.split()[1]
+        }
 
     @staticmethod
     def get_by_email(email):
