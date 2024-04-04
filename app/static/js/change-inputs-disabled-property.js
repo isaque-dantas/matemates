@@ -7,20 +7,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const showWhenEditing = document.querySelector('.buttons#show-when-editing')
     const hideWhenEditing = document.querySelector('.buttons#hide-when-editing')
 
-    editButton.addEventListener('click', () => {
-        enableOnEditFormFields.forEach((enableOnEditFormField) => {
-            enableOnEditFormField.disabled = false
+    updateDocumentData(userDataPromise)
+    disableFormFields(enableOnEditFormFields)
 
-            showWhenEditing.classList.remove('d-none')
-            hideWhenEditing.classList.add('d-none')
-        })
+    editButton.addEventListener('click', () => {
+        enableFormFields(enableOnEditFormFields)
+
+        showWhenEditing.classList.remove('d-none')
+        hideWhenEditing.classList.add('d-none')
     })
 
     resetUserDataButton.addEventListener('click', () => {
-        enableOnEditFormFields.forEach((enableOnEditFormField) => {
-            enableOnEditFormField.disabled = true
-        })
-
+        disableFormFields(enableOnEditFormFields)
         updateDocumentData(userDataPromise)
 
         showWhenEditing.classList.add('d-none')
@@ -41,10 +39,22 @@ async function getUserData() {
 async function updateDocumentData(userDataPromise) {
     const userData = await userDataPromise
 
-    console.log(userData)
-
     for (const formFieldID in userData) {
         const formField = document.querySelector(`#${formFieldID}`)
-        formField.value = userData[formFieldID]
+        if (formField !== null) {
+            formField.value = userData[formFieldID]
+        }
     }
+}
+
+function enableFormFields(formFields) {
+    formFields.forEach((formField) => {
+        formField.disabled = false
+    })
+}
+
+function disableFormFields(formFields) {
+    formFields.forEach((formField) => {
+        formField.disabled = true
+    })
 }
