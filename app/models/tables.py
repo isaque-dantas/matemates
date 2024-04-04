@@ -113,19 +113,19 @@ class User(db.Model, UserMixin):
         if re.match(r'^[\w\-.]+@([\w\-]+.)+[\w\-]{2,}$', form_data['email']) is None:
             raise ValueError('O e-mail informado não é válido.')
 
-        if not self.email_has_integrity() and not self.username_has_integrity():
+        if not self.email_has_integrity(form_data) and not self.username_has_integrity(form_data):
             raise IntegrityError('O email e o nome de usuário já foram cadastrados.')
-        elif not self.email_has_integrity():
+        elif not self.email_has_integrity(form_data):
             raise IntegrityError('Esse email já foi cadastrado.')
-        elif not self.username_has_integrity():
+        elif not self.username_has_integrity(form_data):
             raise IntegrityError('Esse nome de usuário já foi cadastrado.')
 
-    def email_has_integrity(self):
-        user_with_same_email = User.query.filter_by(email=self.email).first()
+    def email_has_integrity(self, form_data):
+        user_with_same_email = User.query.filter_by(email=form_data['email']).first()
         return user_with_same_email is None or user_with_same_email == self
 
-    def username_has_integrity(self):
-        user_with_same_username = User.query.filter_by(username=self.username).first()
+    def username_has_integrity(self, form_data):
+        user_with_same_username = User.query.filter_by(username=form_data['username']).first()
         return user_with_same_username is None or user_with_same_username == self
 
     def register_image(self, form_data):
