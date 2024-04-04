@@ -22,24 +22,7 @@
                         <p>
                             {{ entry.get_main_term().grammatical_category.capitalize() }} {{ entry.get_main_term().get_gender_in_full() }}
                         </p>
-                        <h1>
-                            {%- for term in entry.terms -%}
-                                {%- if not loop.first -%}&nbsp;{%- endif -%}
-                                {%- if term == entry.get_main_term() -%}
-                                    <strong>
-                                        {%- for i, syllable in enumerate(term.syllables) -%}
-                                            {%- if i != 0 -%}.{%- endif -%}{{ syllable.content }}
-                                        {%- endfor -%}
-                                    </strong>
-                                {%- else -%}
-                                    <span>
-                                            {%- for i, syllable in enumerate(term.syllables) -%}
-                                                {%- if i != 0 -%}.{%- endif -%}{{ syllable.content }}
-                                            {%- endfor -%}
-                                            </span>
-                                {%- endif -%}
-                            {%- endfor -%}
-                        </h1>
+                        <h1>{% include 'entry-content-parsed.html' %}</h1>
                     </div>
                 </section>
                 {% if user_is_admin %}
