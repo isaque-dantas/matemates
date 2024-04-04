@@ -1,0 +1,147 @@
+{% extends 'base-with-navbar-nav.html' %}
+
+{% block title %}Cadastro{% endblock %}
+{% block style %}style-register{% endblock %}
+
+{% block content %}
+    <main class="geral">
+        <form action="{{ url_for(endpoint) }}" enctype="multipart/form-data" method="POST">
+            <div class="">
+                {{ form.hidden_tag() }}
+                <div class="icon-usuario-nome position-absolute d-flex flex-column gap-4 col-3">
+                    <div class="icon rounded-circle d-flex justify-content-center">
+                        <label for="get-file" class="imagem-perfil rounded-circle z-2 fs-6 mb-3"
+                               style="cursor: pointer">
+                            {% if is_registering %}
+                                <img src="../static/img/perfil.png" alt="" class="preview-image">
+                            {% else %}
+                                <img src="{{ url_for('static', filename='img/user_profile_picture/' + user.profile_image_path) }}"
+                                     alt="" class="preview-image">
+                            {% endif %}
+                        </label>
+                        {{ form.image(class="d-none enable-on-edit", id="get-file") }}
+                    </div>
+                    <div>{% include 'flash_messages.html' %}</div>
+                    <div class="nome">
+                        {{ form.name.label(class="form-label mb-1") }}
+                        <div class="form animacao-azul">
+                            <div class="position-absolute">
+                                {{ form.name(class="form-control enable-on-edit") }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="usuario">
+                        {{ form.username.label(class="form-label mb-2") }}
+                        <div class="form animacao-azul">
+                            <div class="position-absolute">
+                                {{ form.username(class="form-control enable-on-edit") }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="informacoes">
+                    <div class="email-senha d-flex justify-content-around mt-5">
+                        <div class="email col-3">
+                            {{ form.email.label(class="form-label mb-2") }}
+                            <div class="form animacao-azul">
+                                <div class="position-absolute">
+                                    {{ form.email(class="form-control enable-on-edit") }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="senha col-3">
+                            {{ form.password.label(class="form-label mb-2") }}
+                            <div class="form animacao-azul">
+                                <div class="position-absolute">
+                                    {% if is_registering %}
+                                        {{ form.password(class="form-control enable-on-edit") }}
+                                        <i class="eye eye-open bi bi-eye-slash position-absolute"></i>
+                                    {% else %}
+                                        <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
+                                                data-bs-target="#changePassword">batata
+                                        </button>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal fade" id="changePassword" tabindex="-1"
+                         aria-labelledby="changePasswordLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Modal
+                                        title</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    ...
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Close
+                                    </button>
+                                    <button type="button" class="btn btn-primary">Save changes
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="numero-data d-flex justify-content-between mt-5">
+                        <div class="numero col-3">
+                            {{ form.phone_number.label(class="form-label mb-2") }}
+                            <div class="form animacao-azul">
+                                <div class="position-absolute">
+                                    {{ form.phone_number(class="form-control enable-on-edit") }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="data col-3">
+                            {{ form.birth_date.label(class="form-label mb-2") }}
+                            <div class="form animacao-azul">
+                                <div class="position-absolute">
+                                    {{ form.birth_date(class="form-control enable-on-edit") }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% if is_registering %}
+                <div class="buttons position-absolute d-flex gap-5">
+                    <button type="submit" class="button border-0 " style="--clr: #1e9bff">
+                        <span>CONFIRMAR</span><i></i>
+                    </button>
+                </div>
+            {% else %}
+                <div id="hide-when-editing" class="buttons position-absolute d-flex gap-5">
+                    <button id="edit-button" type="button" class="button border-0 " style="--clr: #1e9bff">
+                        <span>EDITAR</span><i></i>
+                    </button>
+                    <a href="{{ url_for('user.delete_current_user') }}">
+                        <button type="button" class="button border-0 " style="--clr: #ff3460">
+                            <span>EXCLUIR</span><i></i>
+                        </button>
+                    </a>
+                </div>
+                <div id="show-when-editing" class="buttons position-absolute d-flex gap-5 d-none">
+                    <button id="reset-user-data-button" type="button" class="button border-0 " style="--clr: #ff3460">
+                        <span>VOLTAR</span><i></i>
+                    </button>
+                    <button type="submit" class="button border-0 " style="--clr: #1e9bff">
+                        <span>CONFIRMAR</span><i></i>
+                    </button>
+                </div>
+            {% endif %}
+        </form>
+    </main>
+    {% if not is_registering %}
+        <script src="{{ url_for('static', filename='js/change-inputs-disabled-property.js') }}"></script>
+    {% endif %}
+
+    <script src="{{ url_for('static', filename='js/fetch-form-with-file.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/change_image.js') }}"></script>
+{% endblock %}
