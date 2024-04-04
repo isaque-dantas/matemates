@@ -1,15 +1,10 @@
 const body = document.querySelector("body");
 const sidebar = document.querySelector(".sidebar");
-const toggle = document.querySelector(".toggle");
 const modeSwitch = document.querySelector(".toggle-switch");
 const modeText = document.querySelector(".mode-text");
 const moonIcon = document.querySelector(".bi-moon");
 const sunIcon = document.querySelector(".bi-sun");
-
-// close sidebar
-toggle.addEventListener("click", () => {
-  sidebar.classList.toggle("close");
-});
+const generalNav = document.querySelector(".div-geral-nav");
 
 // change theme when the button is clicked
 modeSwitch.addEventListener("click", () => {
@@ -26,3 +21,16 @@ modeSwitch.addEventListener("click", () => {
   }
 });
 
+sidebar.addEventListener("mouseover", () => {
+  sidebar.classList.remove("close");
+
+  var sidebarText = document.querySelector(".text");
+
+  setTimeout(function () {
+  }, 20);
+
+});
+
+sidebar.addEventListener("mouseout", () => {
+  sidebar.classList.add("close");
+});
