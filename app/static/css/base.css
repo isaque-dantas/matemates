@@ -47,6 +47,7 @@ nav {
   height: 100%;
   width: 250px;
   background: var(--body-color);
+  box-shadow: 10px 0 4px var(--primary-color);
   z-index: 100;
   padding: 10px 14px;
   transition: var(--tran-05);
@@ -61,18 +62,18 @@ nav {
 }
 
 /* ======= Resuable css ======= */
-/*
-.sidebar .text {
+.sidebar .text,
+.sidebar .header-text {
   font-size: 16px;
   font-weight: 500;
   color: var(--text-color);
-  transition: var(--tran-04);
+  transition: opacity 0.5s ease;
   white-space: nowrap;
 }
 
 .sidebar.close .text,
-.sidebar.close .image-text .header-text {
-  display: none;
+.sidebar.close .header-text {
+  opacity: 0;
 }
 
 .sidebar .image {
