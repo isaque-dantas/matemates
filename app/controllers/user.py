@@ -109,3 +109,12 @@ def delete_current_user():
     logout_user()
     user.delete_user()
     return redirect(url_for('user.login'))
+
+@user_blueprint.route('/invite_to_be_admin/<email>')
+@login_required
+def invite_to_be_admin(email):
+    if is_user_admin(current_user):
+        user_to_invite = User.get_by_email(email)
+        current_user.invite(user_to_invite)
+    else:
+        abort(403)
