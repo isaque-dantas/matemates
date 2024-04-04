@@ -1,20 +1,20 @@
+import os
+import re
+import smtplib
+import ssl
+from jinja2 import Template
+
+import unicodedata
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from operator import itemgetter
+
 from flask_login import UserMixin
+from pymysql.err import IntegrityError
+from werkzeug.security import generate_password_hash, check_password_hash
 
 from app.models import db
 from app.secret_keys import EMAIL_PASSWORD
-from pymysql.err import IntegrityError
-
-from werkzeug.security import generate_password_hash, check_password_hash
-from werkzeug.utils import secure_filename
-
-import unicodedata
-from operator import itemgetter
-import re
-import os
-
-import smtplib, ssl
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
 
 
 def normalize_string(query_string: str) -> str:
@@ -53,8 +53,10 @@ class User(db.Model, UserMixin):
     birth_date = db.Column(db.Date, nullable=False)
     role = db.Column(db.Enum('admin', 'normal'), nullable=False, default='normal')
     profile_image_path = db.Column(db.String(MAX_LENGTH['profile_image_path']), nullable=True)
-    was_invited_to_be_admin = db.Column(db.Boolean, nullable=False, default=False)
+    invitation_is_pending = db.Column(db.Boolean, nullable=False, default=False)
 
+    invited_emails = db.relationship('InvitedEmail', backref='user')
+    
     @staticmethod
     def register(form_data):
         password_hash = generate_password_hash(form_data['password'])
@@ -185,35 +187,24 @@ class User(db.Model, UserMixin):
 
         db.session.delete(self)
         db.session.commit()
-    
-    def invite(self, user_to_invite):
-        user_to_invite.was_invited_to_be_admin = True
+
+    @staticmethod
+    def invite(email):
+        user_to_invite = User.get_by_email(email)
+        if user_to_invite:
+            user_to_invite.invitation_is_pending = True
 
         sender_email = "matemates.nao.responda@gmail.com"
-        receiver_email = user_to_invite.email
-        password = EMAIL_PASSWORD
+        receiver_email = email
 
         message = MIMEMultipart("alternative")
         message["Subject"] = "Convite para ser administrador do Matematês"
         message["From"] = sender_email
         message["To"] = receiver_email
 
-        text = """\
-        Hi,
-        How are you?
-        Real Python has many great tutorials:
-        www.realpython.com"""
-        html = """\
-        <html>
-        <body>
-            <p>Hi,<br>
-            How are you?<br>
-            <a href="http://www.realpython.com">Real Python</a> 
-            has many great tutorials.
-            </p>
-        </body>
-        </html>
-        """
+        text = ('Você recebeu um convite para ser administrador(a)'
+                'do Matematês. Contate: isaque.dantas@escolar.ifrn.edu.br')
+        html = Template('../templates/invite-to-be-admin.html').render(email=receiver_email)
 
         part1 = MIMEText(text, "plain")
         part2 = MIMEText(html, "html")
@@ -223,9 +214,21 @@ class User(db.Model, UserMixin):
 
         context = ssl.create_default_context()
         with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
-            server.login(sender_email, password)
-            server.sendmail
-        
+            server.login(sender_email, EMAIL_PASSWORD)
+            server.sendmail(
+                sender_email, receiver_email, message.as_string()
+            )
+
+    def accept_invite_to_be_admin(self):
+        self.invitation_is_pending = False
+        self.role = 'admin'
+
+
+class InvitedEmail(db.Model):
+    __tablename__ = 'invited_email'
+    id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True)
+    email = db.Column(db.String(128), nullable=False)
+    user_who_invited_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
 
 class Entry(db.Model):

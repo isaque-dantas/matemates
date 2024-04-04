@@ -110,11 +110,22 @@ def delete_current_user():
     user.delete_user()
     return redirect(url_for('user.login'))
 
+
 @user_blueprint.route('/invite_to_be_admin/<email>')
 @login_required
 def invite_to_be_admin(email):
     if is_user_admin(current_user):
-        user_to_invite = User.get_by_email(email)
-        current_user.invite(user_to_invite)
+        current_user.invite(email)
     else:
         abort(403)
+
+
+@user_blueprint.route('/accept_invite/<email>')
+@login_required
+def accept_invite(email):
+    user = User.get_by_email(email)
+    if user is None:
+        flash('Cadastre-se para continuar.', category='info')
+        return redirect(url_for('user.register'))
+    else:
+        user.accept_invite_to_be_admin()
