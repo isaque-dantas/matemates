@@ -59,20 +59,7 @@
                             <div class="verbetes-box d-flex gap-5 p-4">
                                 {% for entry in related_entries*4 %}
                                     <a href="{{ url_for('entry.view_entry', entry_content=entry.get_normalized_content()) }}" class="link-verbete verbete p-3">
-                                        <h2 class="d-flex justify-content-center">
-                                            {%- for term in entry.terms -%}
-                                                {% set is_first_term = loop.first %}
-                                                {%- for syllable in term.syllables -%}
-                                                    {%- if loop.first and is_first_term -%}
-                                                        {{ syllable.content.capitalize() }}
-                                                    {%- elif loop.first -%}
-                                                        &nbsp;{{ syllable.content }}
-                                                    {%- else -%}
-                                                        .{{ syllable.content }}
-                                                    {%- endif -%}
-                                                {%- endfor -%}
-                                            {%- endfor -%}
-                                        </h2>
+                                        <h2 class="d-flex justify-content-center">{% include 'entry-content-parsed.html' %}</h2>
                                         <div class="significado-recomendacao">
                                             <p>{{ entry.get_definition_with_knowledge_area(knowledge_area).content }}</p>
                                         </div>
