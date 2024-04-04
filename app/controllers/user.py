@@ -61,7 +61,7 @@ def register():
     elif request.method == 'POST':
         flash('Verifique se todos os dados foram inseridos corretamente.', category='warning')
 
-    return render_template('register.html', form=form)
+    return render_template('user-form.html', form=form, is_registering=True, endpoint='user.register')
 
 
 @user_blueprint.route('/perfil/', methods=['GET', 'POST'])
@@ -71,11 +71,11 @@ def perfil():
     form_data = get_form_data_from_request(request)
     print(f'form_data: {form_data}')
 
-    if form.validate_on_submit():
+    form_data = get_form_data_from_request(request)
+    if form_data:
         try:
             print(f'request.files: {dict(request.files)}')
             print(f'request.form: {dict(request.form)}')
-            form_data = get_form_data_from_request(request)
 
             User.update_user(current_user, form_data)
             print('ended update')
@@ -83,12 +83,9 @@ def perfil():
             flash(str(e), category='danger')
         else:
             flash('Perfil editado com sucesso.', category='success')
-            return render_template('perfil.html', user=current_user, form=form)
     elif request.method == 'POST':
         flash('Verifique se todos os dados foram inseridos corretamente.', category='warning')
-        return render_template('perfil.html', user=current_user, form=form)
-    else:
-        return render_template('perfil.html', user=current_user, form=form)
+    return render_template('user-form.html', user=current_user, form=form, is_registering=False, endpoint='user.perfil')
 
 
 @user_blueprint.route('/logout')
