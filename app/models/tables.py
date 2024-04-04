@@ -1,6 +1,7 @@
 from flask_login import UserMixin
 
 from app.models import db
+from app.secret_keys import EMAIL_PASSWORD
 from pymysql.err import IntegrityError
 
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -10,6 +11,10 @@ import unicodedata
 from operator import itemgetter
 import re
 import os
+
+import smtplib, ssl
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 
 def normalize_string(query_string: str) -> str:
@@ -46,8 +51,9 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(MAX_LENGTH['username']), nullable=False, unique=True)
     phone_number = db.Column(db.String(MAX_LENGTH['phone_number']))
     birth_date = db.Column(db.Date, nullable=False)
-    role = db.Column(db.Enum('admin', 'normal'), nullable=False)
+    role = db.Column(db.Enum('admin', 'normal'), nullable=False, default='normal')
     profile_image_path = db.Column(db.String(MAX_LENGTH['profile_image_path']), nullable=True)
+    was_invited_to_be_admin = db.Column(db.Boolean, nullable=False, default=False)
 
     @staticmethod
     def register(form_data):
@@ -179,6 +185,47 @@ class User(db.Model, UserMixin):
 
         db.session.delete(self)
         db.session.commit()
+    
+    def invite(self, user_to_invite):
+        user_to_invite.was_invited_to_be_admin = True
+
+        sender_email = "matemates.nao.responda@gmail.com"
+        receiver_email = user_to_invite.email
+        password = EMAIL_PASSWORD
+
+        message = MIMEMultipart("alternative")
+        message["Subject"] = "Convite para ser administrador do Matematês"
+        message["From"] = sender_email
+        message["To"] = receiver_email
+
+        text = """\
+        Hi,
+        How are you?
+        Real Python has many great tutorials:
+        www.realpython.com"""
+        html = """\
+        <html>
+        <body>
+            <p>Hi,<br>
+            How are you?<br>
+            <a href="http://www.realpython.com">Real Python</a> 
+            has many great tutorials.
+            </p>
+        </body>
+        </html>
+        """
+
+        part1 = MIMEText(text, "plain")
+        part2 = MIMEText(html, "html")
+
+        message.attach(part1)
+        message.attach(part2)
+
+        context = ssl.create_default_context()
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
+            server.login(sender_email, password)
+            server.sendmail
+        
 
 
 class Entry(db.Model):
