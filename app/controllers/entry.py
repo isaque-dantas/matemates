@@ -59,7 +59,7 @@ def entry_creation():
             flash('Verifique se todos os dados foram inseridos corretamente.', category='warning')
 
         return render_template('entry-form.html', form=form, user_is_admin=is_user_admin(current_user),
-                               is_edition=False, endpoint='entry.entry_creation')
+                               is_edition=False, endpoint=url_for('entry.entry_creation'))
     else:
         abort(403)
 
@@ -69,6 +69,7 @@ def entry_creation():
 def edit_entry(entry_id):
     if is_user_admin(current_user):
         form = EntryCreationForm()
+        entry = Entry.get_entry_by_id(entry_id)
 
         if form.validate_on_submit():
             try:
@@ -76,7 +77,6 @@ def edit_entry(entry_id):
                 print(f'request.form: {dict(request.form)}')
                 form_data = get_form_data_from_request(request)
 
-                entry = Entry.get_entry_by_id(entry_id)
                 entry.update(form_data)
             except Exception as e:
                 flash(str(e), category='danger')
@@ -87,7 +87,7 @@ def edit_entry(entry_id):
             flash('Verifique se todos os dados foram inseridos corretamente.', category='warning')
 
         return render_template('entry-form.html', form=form, user_is_admin=is_user_admin(current_user),
-                               is_edition=True, endpoint='entry.edit_entry')
+                               is_edition=True, endpoint=url_for('entry.edit_entry', entry_id=entry.id))
     else:
         abort(403)
 
