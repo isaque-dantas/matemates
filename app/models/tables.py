@@ -569,6 +569,9 @@ class Term(db.Model):
     def is_term_content_of_main_term(term_content):
         return term_content[0] == '*' and term_content[-1] == '*'
 
+    def get_parsed_syllables(self):
+        syllables_contents = [syllable.content for syllable in self.syllables]
+        return '.'.join(syllables_contents)
 
 class Image(db.Model):
     __tablename__ = 'image'
