@@ -28,7 +28,7 @@ for image_url in images_urls:
 
 def download_images():
     for url in images_urls:
-        filename = images_urls[url].split('/')[-1]
+        filename = get_filename_from_url(images_urls[url])
         if not os.path.isfile(filename):
             data = requests.get(images_urls[url]).content
             file = open(filename, 'wb')
