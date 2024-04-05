@@ -22,16 +22,18 @@ modeSwitch.addEventListener("click", () => {
   }
 });
 
-generalNav.addEventListener("mouseover", () => {
+function removeClose() {
   sidebar.classList.remove("close");
-});
+}
 
-navLinks.forEach((element) => {
-  element.addEventListener("mouseover", () => {
-    sidebar.classList.remove("close");
-  });
-});
-
-generalNav.addEventListener("mouseout", () => {
+function addClose() {
   sidebar.classList.add("close");
-});
+}
+
+function OpenCloseSidebar() {
+  generalNav.addEventListener("mouseover", removeClose);
+
+  generalNav.addEventListener("mouseout", addClose);
+
+  console.log("adicionamo os evento");
+}
