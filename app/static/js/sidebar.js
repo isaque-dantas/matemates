@@ -5,6 +5,7 @@ const modeText = document.querySelector(".mode-text");
 const moonIcon = document.querySelector(".bi-moon");
 const sunIcon = document.querySelector(".bi-sun");
 const generalNav = document.querySelector(".div-geral-nav");
+const navLinks = document.querySelectorAll(".nav-links");
 
 // change theme when the button is clicked
 modeSwitch.addEventListener("click", () => {
@@ -21,17 +22,22 @@ modeSwitch.addEventListener("click", () => {
   }
 });
 
-
-sidebar.addEventListener("mouseover", () => {
-
+generalNav.addEventListener("mouseover", () => {
   setTimeout(function () {
     sidebar.classList.remove("close");
   }, 350);
 });
 
-sidebar.addEventListener("mouseout", () => {
+navLinks.forEach((element) => {
+  element.addEventListener("mouseover", () => {
+    setTimeout(function () {
+      sidebar.classList.remove("close");
+    }, 300);
+  });
+});
 
+generalNav.addEventListener("mouseout", () => {
   setTimeout(function () {
     sidebar.classList.add("close");
-  }, 100);
+  }, 200);
 });
