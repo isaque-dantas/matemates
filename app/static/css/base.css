@@ -37,7 +37,7 @@ nav {
   box-shadow: -3px 0 10px var(--sidebar-primary-color);
   z-index: 100;
   padding: 10px 14px;
-  transition: var(--tran-else-05);
+  transition: var(--tran-else-02);
   overflow: hidden;
 }
 

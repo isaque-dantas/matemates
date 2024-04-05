@@ -1,4 +1,5 @@
 const animationsToggle = document.querySelector(".bi-columns-gap");
+const animationsToggleDiv = document.querySelector(".animations-div");
 const closeButton = document.querySelector(".options-close");
 const animationContainer = document.querySelector(".options-container");
 const AnimationsSwitchToggler = document.querySelectorAll(".switch-animations");
@@ -7,6 +8,7 @@ const blueAnimation = Object.values(
   document.querySelectorAll(".animacao-azul")
 );
 const grandBlueAnimation = document.querySelector(".animacao-azul-superior");
+const animationsTogglers = [animationsToggle, animationsToggleDiv]
 
 AnimationsSwitchToggler.forEach((button) => {
   if (localStorage.getItem(button.id) === "true") {
@@ -40,10 +42,13 @@ if (localStorage.getItem("noBorderAnimation") === "true") {
     }
   });
 }
+
 // shows the animations optiosn when the button is clicked
-animationsToggle.addEventListener("click", () => {
-  animationContainer.style.right = "0%";
-  localStorage.setItem("opennedMenu", "true");
+animationsTogglers.forEach(element => {
+  element.addEventListener("click", () => {
+    animationContainer.style.right = "0%";
+    localStorage.setItem("opennedMenu", "true");
+  });
 });
 
 closeButton.addEventListener("click", () => {
