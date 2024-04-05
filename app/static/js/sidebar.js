@@ -23,21 +23,15 @@ modeSwitch.addEventListener("click", () => {
 });
 
 generalNav.addEventListener("mouseover", () => {
-  setTimeout(function () {
-    sidebar.classList.remove("close");
-  }, 350);
+  sidebar.classList.remove("close");
 });
 
 navLinks.forEach((element) => {
   element.addEventListener("mouseover", () => {
-    setTimeout(function () {
-      sidebar.classList.remove("close");
-    }, 300);
+    sidebar.classList.remove("close");
   });
 });
 
 generalNav.addEventListener("mouseout", () => {
-  setTimeout(function () {
-    sidebar.classList.add("close");
-  }, 200);
+  sidebar.classList.add("close");
 });
