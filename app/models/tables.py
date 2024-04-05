@@ -1,7 +1,7 @@
 from flask_login import UserMixin
 
 from app.models import db
-from app.secret_keys import EMAIL_PASSWORD
+# from app.secret_keys import EMAIL_PASSWORD
 from pymysql.err import IntegrityError
 
 from werkzeug.security import generate_password_hash, check_password_hash
