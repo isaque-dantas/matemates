@@ -21,16 +21,17 @@ modeSwitch.addEventListener("click", () => {
   }
 });
 
-sidebar.addEventListener("mouseover", () => {
-  sidebar.classList.remove("close");
 
-  var sidebarText = document.querySelector(".text");
+sidebar.addEventListener("mouseover", () => {
 
   setTimeout(function () {
-  }, 20);
-
+    sidebar.classList.remove("close");
+  }, 500);
 });
 
 sidebar.addEventListener("mouseout", () => {
-  sidebar.classList.add("close");
+
+  setTimeout(function () {
+    sidebar.classList.add("close");
+  }, 500);
 });
