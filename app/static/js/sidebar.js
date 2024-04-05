@@ -26,12 +26,12 @@ sidebar.addEventListener("mouseover", () => {
 
   setTimeout(function () {
     sidebar.classList.remove("close");
-  }, 500);
+  }, 350);
 });
 
 sidebar.addEventListener("mouseout", () => {
 
   setTimeout(function () {
     sidebar.classList.add("close");
-  }, 500);
+  }, 100);
 });
