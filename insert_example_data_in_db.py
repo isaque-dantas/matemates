@@ -2,24 +2,58 @@ from app import app
 from app.models.tables import Entry, KnowledgeArea, User
 from app.models import db
 from werkzeug.datastructures import FileMultiDict
+
 from datetime import date
+import os
+
+import requests
+
+
+def get_filename_from_url(url):
+    return url.split('/')[-1]
+
+
+images_urls = {
+    'calculadora': 'https://static.vecteezy.com/system/resources/previews/000/355/501/large_2x/vector-calculator-icon.jpg',
+    'rafael': 'http://www.thefamouspeople.com/profiles/thumbs/raphael-3.jpg',
+    'seno': 'https://www.neurochispas.com/wp-content/uploads/2021/05/funciones-seno-con-varias-amplitudes.png'
+}
+
+images_filenames = {}
+for image_url in images_urls:
+    images_filenames.update(
+        {image_url: get_filename_from_url(images_urls[image_url])}
+    )
+
+
+def download_images():
+    for url in images_urls:
+        filename = images_urls[url].split('/')[-1]
+        if not os.path.isfile(filename):
+            data = requests.get(images_urls[url]).content
+            file = open(filename, 'wb')
+            file.write(data)
+            file.close()
+
 
 with app.app_context():
     db.drop_all()
     db.create_all()
+
+    download_images()
 
     dados_usuario_admin = {
         'username': 'isq_dantas',
         'name': 'Isaque Dantas',
         'password': '12345',
         'email': 'isaque@gmail.com',
-        'phone_number': '1234567890',   
+        'phone_number': '1234567890',
         'birth_date': date(2007, 3, 14),
         'role': 'admin'
     }
 
     files = FileMultiDict()
-    files.add_file('image', r'isq_dantas.png')
+    files.add_file('image', images_filenames['rafael'])
 
     dados_usuario_admin.update(dict(files))
 
@@ -51,7 +85,7 @@ with app.app_context():
     }
 
     files = FileMultiDict()
-    files.add_file('image', r'angulo_reto.jpeg')
+    files.add_file('image', images_filenames['calculadora'])
 
     dados_angulo_reto.update(dict(files))
 
@@ -67,7 +101,7 @@ with app.app_context():
     }
 
     files = FileMultiDict()
-    files.add_file('image', r'calculadora.jpg')
+    files.add_file('image', images_filenames['calculadora'])
 
     dados_calculadora.update(dict(files))
 
@@ -91,7 +125,7 @@ with app.app_context():
     }
 
     files = FileMultiDict()
-    files.add_file('image', r'calculadora.jpg')
+    files.add_file('image', images_filenames['seno'])
 
     dados_rafael.update(dict(files))
 
