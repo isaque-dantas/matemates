@@ -50,8 +50,6 @@ async function updateInvitationFeedback(response) {
             invitationFeedback.classList.add(`text-${response.category}`)
         }
     })
-
-    if (invitationFeedbackClasses.contains('d-none')) {
-        invitationFeedback.classList.remove('d-none')
-    }
+    invitationFeedback.style.opacity = 1
+    setTimeout(() => {invitationFeedback.style.opacity = 0}, 7500)
 }
