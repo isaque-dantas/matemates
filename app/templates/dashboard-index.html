@@ -42,6 +42,29 @@
             </div>
         </section>
 
+        <section class="container my-5">
+            {% if user.invitation_is_pending %}
+                <div>
+                    <p class="fw-medium text-primary">Você foi convidado(a) para ser administrador(a) do Matematês.</p>
+                    <a href="{{ url_for('user.accept_invite', email=user.email) }}"
+                       class="btn btn-outline-primary px-4 py-2 fw-bold">Aceitar convite</a>
+                </div>
+            {% endif %}
+            {% if user.is_admin() %}
+                <div class="d-flex flex-column">
+                    <p id="invitation-feedback" class="fw-bold text-primary d-none">O convite foi enviado com sucesso!</p>
+                    <div class="d-flex gap-4 align-items-end">
+                        <div class="d-flex flex-column gap-2">
+                            <label for="input-email-to-invite">Convide alguém para ser administrador(a)</label>
+                            <input id="input-email-to-invite" type="text" placeholder="Ex.: pedro@gmail.com"
+                                   class="form-control">
+                        </div>
+                        <button id="send-invitation-btn" class="btn btn-outline-primary fw-bold">Enviar convite</button>
+                    </div>
+                </div>
+            {% endif %}
+        </section>
+
         <section class="geral my-5">
             {% for knowledge_area in knowledge_areas %}
                 {% if loop.first %}
@@ -58,7 +81,8 @@
                             <h4 class="topic-title p-3 fw-bold">{{ knowledge_area.content.capitalize() }}</h4>
                             <div class="verbetes-box d-flex gap-5 p-4">
                                 {% for entry in related_entries*4 %}
-                                    <a href="{{ url_for('entry.view_entry', entry_content=entry.get_normalized_content()) }}" class="link-verbete verbete p-3">
+                                    <a href="{{ url_for('entry.view_entry', entry_content=entry.get_normalized_content()) }}"
+                                       class="link-verbete verbete p-3">
                                         <h2 class="d-flex justify-content-center">
                                             {%- for term in entry.terms -%}
                                                 {% set is_first_term = loop.first %}
@@ -105,4 +129,5 @@
         </section>
     </main>
     <script src="{{ url_for('static', filename='js/handle-search-box-enter-event.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/send-invitation-to-be-admin.js') }}"></script>
 {% endblock %}
