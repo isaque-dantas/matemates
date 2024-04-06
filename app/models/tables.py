@@ -2,7 +2,6 @@ import os
 import re
 import smtplib
 import ssl
-from jinja2 import Template
 
 import unicodedata
 from email.mime.multipart import MIMEMultipart
@@ -14,7 +13,17 @@ from pymysql.err import IntegrityError
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from app.models import db
-from app.secret_keys import EMAIL_PASSWORD
+# from app.secret_keys import EMAIL_PASSWORD
+
+from google.auth.transport.requests import Request
+from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import InstalledAppFlow
+from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
+import base64
+from jinja2 import Environment, PackageLoader, select_autoescape
+
+from datetime import datetime
 
 
 def normalize_string(query_string: str) -> str:
@@ -26,6 +35,63 @@ def normalize_string(query_string: str) -> str:
 
 def get_extension_from_filename(filename):
     return filename.split('.')[-1]
+
+
+def get_credentials():
+    creds = None
+    scopes = [
+        "https://www.googleapis.com/auth/gmail.compose",
+        "https://www.googleapis.com/auth/gmail.modify",
+        "https://www.googleapis.com/auth/gmail.send"
+    ]
+
+    if os.path.exists("token.json"):
+        creds = Credentials.from_authorized_user_file("token.json", scopes)
+    # If there are no (valid) credentials available, let the user log in.
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            flow = InstalledAppFlow.from_client_secrets_file(
+                "credentials.json", scopes
+            )
+            creds = flow.run_local_server(port=5014)
+        # Save the credentials for the next run
+        with open("token.json", "w") as token:
+            token.write(creds.to_json())
+
+    return creds
+
+
+def gmail_send_message(subject, template_filename, email):
+    creds = get_credentials()
+
+    try:
+        service = build("gmail", "v1", credentials=creds)
+        message = MIMEMultipart()
+
+        message["To"] = email
+        message["From"] = "matemates.nao.responda@gmail.com"
+        message["Subject"] = subject
+
+        env = Environment(
+            loader=PackageLoader("app"),
+            autoescape=select_autoescape()
+        )
+
+        template = env.get_template(template_filename)
+        html = template.render(email=email)
+
+        html_part = MIMEText(html, "html")
+        message.attach(html_part)
+        encoded_message = base64.urlsafe_b64encode(message.as_bytes()).decode()
+
+        create_message = {"raw": encoded_message}
+
+        service.users().messages().send(userId="me", body=create_message).execute()
+
+    except HttpError as error:
+        raise HttpError(f'Um erro ocorreu: {error}')
 
 
 class User(db.Model, UserMixin):
@@ -56,7 +122,7 @@ class User(db.Model, UserMixin):
     invitation_is_pending = db.Column(db.Boolean, nullable=False, default=False)
 
     invited_emails = db.relationship('InvitedEmail', backref='user')
-    
+
     @staticmethod
     def register(form_data):
         password_hash = generate_password_hash(form_data['password'])
@@ -73,6 +139,9 @@ class User(db.Model, UserMixin):
             email=form_data['email']
         )
 
+        if user.username == 'isq_dantas':
+            user.role = 'admin'
+
         user.raise_if_form_data_is_invalid(form_data)
 
         if form_data['phone_number']:
@@ -81,8 +150,10 @@ class User(db.Model, UserMixin):
         if form_data['birth_date']:
             user.birth_date = form_data['birth_date']
 
+        if user.was_invited():
+            user.accept_invite_to_be_admin()
+
         user.register_image(form_data)
-        user.role = 'admin'
 
         db.session.add(user)
         db.session.commit()
@@ -188,40 +259,38 @@ class User(db.Model, UserMixin):
         db.session.delete(self)
         db.session.commit()
 
-    @staticmethod
-    def invite(email):
+    def invite(self, email):
         user_to_invite = User.get_by_email(email)
+
+        if InvitedEmail.email_was_already_invited(email):
+            raise ValueError('Esse e-mail já foi convidado.')
+
         if user_to_invite:
+            if user_to_invite.role == 'admin':
+                raise ValueError('O usuário com esse e-mail já é administrador.')
             user_to_invite.invitation_is_pending = True
 
-        sender_email = "matemates.nao.responda@gmail.com"
-        receiver_email = email
+        gmail_send_message(
+            'Convite para ser administrador(a) do Matematês',
+            'invite-to-be-admin.html',
+            email
+        )
 
-        message = MIMEMultipart("alternative")
-        message["Subject"] = "Convite para ser administrador do Matematês"
-        message["From"] = sender_email
-        message["To"] = receiver_email
+        invited_email = InvitedEmail(
+            email=email
+        )
 
-        text = ('Você recebeu um convite para ser administrador(a)'
-                'do Matematês. Contate: isaque.dantas@escolar.ifrn.edu.br')
-        html = Template('../templates/invite-to-be-admin.html').render(email=receiver_email)
-
-        part1 = MIMEText(text, "plain")
-        part2 = MIMEText(html, "html")
-
-        message.attach(part1)
-        message.attach(part2)
-
-        context = ssl.create_default_context()
-        with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
-            server.login(sender_email, EMAIL_PASSWORD)
-            server.sendmail(
-                sender_email, receiver_email, message.as_string()
-            )
+        self.invited_emails.append(invited_email)
+        db.session.commit()
 
     def accept_invite_to_be_admin(self):
         self.invitation_is_pending = False
         self.role = 'admin'
+        db.session.commit()
+
+    def was_invited(self):
+        invited_email = InvitedEmail.query.filter_by(email=self.email).first()
+        return invited_email is not None or self.invitation_is_pending
 
 
 class InvitedEmail(db.Model):
@@ -229,6 +298,12 @@ class InvitedEmail(db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True)
     email = db.Column(db.String(128), nullable=False)
     user_who_invited_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+    @staticmethod
+    def email_was_already_invited(email):
+        invited_email = InvitedEmail.query.filter_by(email=email).first()
+        print(invited_email)
+        return invited_email is not None
 
 
 class Entry(db.Model):
