@@ -6,6 +6,8 @@ from app.controllers import get_form_data_from_request
 from app.models.tables import User
 from app.models.user_forms import LoginForm, RegisterForm
 
+from googleapiclient.errors import HttpError
+
 user_blueprint = Blueprint('user', __name__)
 
 
@@ -110,11 +112,39 @@ def delete_current_user():
     user.delete_user()
     return redirect(url_for('user.login'))
 
+
 @user_blueprint.route('/invite_to_be_admin/<email>')
 @login_required
 def invite_to_be_admin(email):
     if is_user_admin(current_user):
-        user_to_invite = User.get_by_email(email)
-        current_user.invite(user_to_invite)
+        try:
+            current_user.invite(email)
+        except Exception as e:
+            return {
+                'message': str(e),
+                'category': 'danger' if isinstance(e, HttpError) else 'info'
+            }
+        else:
+            return {
+                'message': 'Convite enviado com sucesso.',
+                'category': 'success'
+            }
     else:
         abort(403)
+
+
+@user_blueprint.route('/accept_invite/<email>')
+def accept_invite(email):
+    user = User.get_by_email(email)
+    if user is None:
+        flash('Cadastre-se para continuar.', category='info')
+        return redirect(url_for('user.register'))
+    else:
+        if is_current_user_logged_in():
+            if current_user.email == email:
+                user.accept_invite_to_be_admin()
+                return redirect(url_for('dashboard.index'))
+            else:
+                abort(403)
+        else:
+            return redirect(url_for('user.login'))

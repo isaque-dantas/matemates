@@ -47,9 +47,8 @@ with app.app_context():
         'name': 'Isaque Dantas',
         'password': '12345',
         'email': 'isaque@gmail.com',
-        'phone_number': '1234567890',
-        'birth_date': date(2007, 3, 14),
-        'role': 'admin'
+        'phone_number': '1234567890',   
+        'birth_date': date(2007, 3, 14)
     }
 
     files = FileMultiDict()
@@ -58,6 +57,22 @@ with app.app_context():
     dados_usuario_admin.update(dict(files))
 
     User.register(dados_usuario_admin)
+
+    dados_usuario_comum = {
+        'username': 'd_lula_13',
+        'name': 'Davi Lucas',
+        'password': '12345',
+        'email': 'vicisaque413@gmail.com',
+        'phone_number': '1234567890',
+        'birth_date': date(2007, 3, 16)
+    }
+
+    files = FileMultiDict()
+    files.add_file('image', r'isq_dantas.png')
+
+    dados_usuario_comum.update(dict(files))
+
+    User.register(dados_usuario_comum)
 
     knowledge_areas = [
         {'content': 'álgebra', 'subject': 'matemática'},

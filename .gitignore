@@ -4,7 +4,8 @@ secret_keys.py
 *.bak
 *.bkp
 app/__init__.py
-alfa.png
+credentials.json
+token.json
 
 # Byte-compiled / optimized / DLL files
 

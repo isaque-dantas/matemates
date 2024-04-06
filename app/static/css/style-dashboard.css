@@ -151,3 +151,8 @@
         height: 170px;
     }
 }
+
+#invitation-feedback {
+    opacity: 0;
+    transition: opacity ease-in-out .15s;
+}

@@ -42,6 +42,29 @@
             </div>
         </section>
 
+        <section class="container my-5">
+            {% if user.invitation_is_pending %}
+                <div>
+                    <p class="fw-medium text-primary">Você foi convidado(a) para ser administrador(a) do Matematês.</p>
+                    <a href="{{ url_for('user.accept_invite', email=user.email) }}"
+                       class="btn btn-outline-primary px-4 py-2 fw-bold">Aceitar convite</a>
+                </div>
+            {% endif %}
+            {% if user.is_admin() %}
+                <div class="d-flex flex-column">
+                    <p id="invitation-feedback" class="fw-bold text-primary">O convite foi enviado com sucesso!</p>
+                    <div class="d-flex gap-4 align-items-end">
+                        <div class="d-flex flex-column gap-2">
+                            <label for="input-email-to-invite">Convide alguém para ser administrador(a)</label>
+                            <input id="input-email-to-invite" type="text" placeholder="Ex.: pedro@gmail.com"
+                                   class="form-control">
+                        </div>
+                        <button id="send-invitation-btn" class="btn btn-outline-primary fw-bold">Enviar convite</button>
+                    </div>
+                </div>
+            {% endif %}
+        </section>
+
         <section class="geral my-5">
             {% for knowledge_area in knowledge_areas %}
                 {% if loop.first %}
@@ -92,4 +115,5 @@
         </section>
     </main>
     <script src="{{ url_for('static', filename='js/handle-search-box-enter-event.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/send-invitation-to-be-admin.js') }}"></script>
 {% endblock %}
