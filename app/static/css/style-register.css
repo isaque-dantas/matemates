@@ -113,6 +113,7 @@ body{
 
 .form-control:focus {
     background: #0e0b1c;
+    box-shadow: none;
 }
 
 .form-control:disabled {
@@ -138,12 +139,12 @@ body{
     border: solid 3px white;
     border-radius: 50%;
     text-align: center;
-    max-width: 150px;
-    max-height: 150px;
+    width: 150px;
+    height: 150px;
 }
 
 
-.button{
+.btn-personalizar{
     background: white;
     letter-spacing: 0.1em;
     font-size: 1em;
@@ -154,14 +155,14 @@ body{
     border-radius: 30px;
 }
 
-.button:hover{
+.btn-personalizar:hover{
     letter-spacing: 0.2em;
     background: var(--clr);
     color: var(--clr);
     box-shadow: 0 0 35px var(--clr);
 }
 
-button:before{
+.btn-personalizar:before{
     content: '';
     position: absolute;
     inset: 2px;
@@ -169,18 +170,18 @@ button:before{
     border-radius: 30px;
 }
 
-.button span{
+.btn-personalizar span{
     position: relative;
     z-index: 1;
 }
 
-.button i{
+.btn-personalizar i{
     position: absolute;
     inset: 0;
     display: block;
 }
 
-.button i::before{
+.btn-personalizar i::before{
     content: '';
     position: absolute;
     top: 0;
@@ -192,12 +193,12 @@ button:before{
     transition: 0.5s;
 }
 
-.button:hover i::before{
+.btn-personalizar:hover i::before{
     width: 30px;
     left: 30%;
 }
 
-.button i::after{
+.btn-personalizar i::after{
     content: '';
     position: absolute;
     bottom: 0;
@@ -209,7 +210,7 @@ button:before{
     transition: 0.5s;
 }
 
-.button:hover i::after{
+.btn-personalizar:hover i::after{
     width: 30px;
     left: 70%;
 }
@@ -233,6 +234,15 @@ button:before{
     top: 48%;
     left: 92%;
 }
+
+/*----modal----*/
+
+.button-modal {
+    text-align: left;
+}
+
+/* ^^ modal ^^ */
+
 /* ^^ main ^^ */
 
 
