@@ -18,10 +18,27 @@ body {
   transition: var(--tran-else-02);
 }
 
+.all {
+  margin-left: 88px;
+}
+
 /* sidebar */
 nav {
   font-family: "Poppins", sans-serif;
 }
+
+/* header */
+
+.main-header {
+  height: 50px;
+  align-items: center;
+  background-color: var(--body-color);
+}
+
+.main-header .logo {
+  height: 40px;
+}
+
 
 /* ======= light mode ======= */
 
@@ -71,6 +88,11 @@ nav {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.sidebar .image img{
+  width: 40px;
+  height: 40px;
 }
 
 .sidebar ul {
@@ -249,10 +271,17 @@ nav {
   align-items: center;
   justify-content: center;
   height: 100%;
-  min-width: 60px;
   cursor: pointer;
   border-radius: 6px;
   background: var(--sidebar-primary-color-light);
+}
+
+.sidebar .menu-bar .mode .toggle-switch {
+  min-width: 60px;
+}
+
+.animations-menu .toggle-switch-animations {
+  position: static;
 }
 
 .animations-menu .toggle-switch-animations {
@@ -316,7 +345,7 @@ body.light .switch::before,
 
 @keyframes animarbolhas {
   0% {
-    transform: translateY(-10vh) scale(0);
+    transform: translateY(3vh) scale(0);
   }
   100% {
     transform: translateY(98vh) scale(0.3);
@@ -333,16 +362,20 @@ body.light .switch::before,
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 30%;
+  width: 100%;
   transform: translate(-50%, -50%);
   list-style: none;
   text-align: center;
   transition: var(--tran-else-03);
+  display: flex;
+  align-items: center;
+  flex-direction: column;
 }
 
 .animations-menu li {
-  width: 100%;
   margin-top: 10px;
+  width: 40%;
+  justify-content: space-between;
 }
 
 .animations-menu li span, 
@@ -385,6 +418,10 @@ body.light .switch::before,
   color: var(--white-color);
 }
 
+ol, ul {
+  padding-left: 0;
+}
+
 /*----Barra de rolagem da pagina----*/
 
 ::-webkit-scrollbar {
@@ -397,46 +434,22 @@ body.light .switch::before,
 }
 
 @media only screen and (max-width: 1199px) {
-  .sidebar.close {
-    position: fixed;
-    left: -100%;
+  .all {
+    margin: 0;
   }
 
-  .sidebar .div-geral-nav {
-    position: relative;
+  .main-header .menu{
+    display: block !important;
   }
 
-  .sidebar header {
-    position: static;
-  }
-
-  .sidebar.close header .toggle {
-    position: fixed;
-    left: 0;
-    right: 10px;
-    transition: ease-in-out 0.3s;
-    animation: slideLeft;
-  }
-
-  .sidebar header .toggle {
-    animation: slideLeft;
-  }
-
-  @keyframes slideLeft {
-    0% {
-      left: -100%;
-    }
-    100% {
-      left: 100%;
-    }
-  }
   .sidebar {
-    left: 0;
-    width: 88px;
-  }
-
-  .sidebar .text,
-  .sidebar header .image-text .header-text {
     display: none;
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .animations-menu li {
+    width: 100%;
+    padding: 0 5vh;
   }
 }

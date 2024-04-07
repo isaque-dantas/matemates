@@ -25,7 +25,6 @@ if (localStorage.getItem("sidebarAnimationOff") === "true") {
 }
 
 if (localStorage.getItem("blueIsOff") === "true") {
-  console.log("entrou aqui com força como o shadow no meu cu");
   blueAnimation.forEach((element) => {
     element.classList.add("animation-off");
   });
@@ -168,6 +167,5 @@ function ToggleSideBar() {
   } else {
     generalNav.removeEventListener("mouseover", removeClose);
     generalNav.removeEventListener("mouseout", addClose);
-    console.log("removemos os eventos");
   }
 }
