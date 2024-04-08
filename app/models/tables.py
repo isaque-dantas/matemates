@@ -224,6 +224,10 @@ class User(db.Model, UserMixin):
         return User.query.filter_by(email=email).first()
 
     @staticmethod
+    def get_by_username(username):
+        return User.query.filter_by(username=username).first()
+
+    @staticmethod
     def get_by_id(user_id):
         return User.query.get_or_404(user_id)
 
@@ -290,8 +294,10 @@ class User(db.Model, UserMixin):
         return invited_email is not None or self.invitation_is_pending
 
     def edit_password(self, form_data):
-        if self.is_password_valid(form_data['current_password']):
-            self.password_hash = generate_password_hash(form_data['new_password'])
+        if self.is_password_valid(form_data['current-password']):
+            print(form_data['new-password'])
+            self.password_hash = generate_password_hash(form_data['new-password'])
+            db.session.commit()
         else:
             raise ValueError('Senha incorreta.')
 
