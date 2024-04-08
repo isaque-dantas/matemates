@@ -6,6 +6,11 @@ const moonIcon = document.querySelector(".bi-moon");
 const sunIcon = document.querySelector(".bi-sun");
 const generalNav = document.querySelector(".div-geral-nav");
 const navLinks = document.querySelectorAll(".nav-links");
+const hamburguerMenu = document.querySelector(".bi-list");
+
+if (localStorage.getItem("responsiveOpened" === "true")) {
+  sidebar.style.left = "0";
+}
 
 // change theme when the button is clicked
 modeSwitch.addEventListener("click", () => {
@@ -37,3 +42,14 @@ function OpenCloseSidebar() {
 
   console.log("adicionamo os evento");
 }
+
+hamburguerMenu.addEventListener("click", () => {
+  if ((sidebar.style.left === "-100%")) {
+    sidebar.style.left = "0";
+    localStorage.setItem("responsiveOpened", "true");
+  } else {
+    sidebar.style.left = "-100%";
+    localStorage.removeItem("responsiveOpened");
+  }
+  console.log("clicked");
+});

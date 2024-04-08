@@ -443,7 +443,7 @@ ol, ul {
   }
 
   .sidebar {
-    display: none;
+    left: -100%;
   }
 }
 
