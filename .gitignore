@@ -6,6 +6,7 @@ secret_keys.py
 app/__init__.py
 credentials.json
 token.json
+alfa.png
 
 # Byte-compiled / optimized / DLL files
 

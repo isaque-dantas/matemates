@@ -1,4 +1,8 @@
+from flask_login import UserMixin
+
 from app.models import db
+# from app.secret_keys import EMAIL_PASSWORD
+from pymysql.err import IntegrityError
 
 import os
 import re
@@ -136,10 +140,10 @@ class User(db.Model, UserMixin):
             email=form_data['email']
         )
 
+        user.raise_if_form_data_is_invalid(form_data)
+
         if user.username == 'isq_dantas':
             user.role = 'admin'
-
-        user.raise_if_form_data_is_invalid(form_data)
 
         if form_data['phone_number']:
             user.phone_number = form_data['phone_number']
@@ -224,6 +228,10 @@ class User(db.Model, UserMixin):
         return User.query.filter_by(email=email).first()
 
     @staticmethod
+    def get_by_username(username):
+        return User.query.filter_by(username=username).first()
+
+    @staticmethod
     def get_by_id(user_id):
         return User.query.get_or_404(user_id)
 
@@ -261,22 +269,18 @@ class User(db.Model, UserMixin):
 
         if InvitedEmail.email_was_already_invited(email):
             raise ValueError('Esse e-mail já foi convidado.')
-
         if user_to_invite:
             if user_to_invite.role == 'admin':
                 raise ValueError('O usuário com esse e-mail já é administrador.')
             user_to_invite.invitation_is_pending = True
-
         gmail_send_message(
             'Convite para ser administrador(a) do Matematês',
             'invite-to-be-admin.html',
             email
         )
-
         invited_email = InvitedEmail(
             email=email
         )
-
         self.invited_emails.append(invited_email)
         db.session.commit()
 
@@ -288,6 +292,14 @@ class User(db.Model, UserMixin):
     def was_invited(self):
         invited_email = InvitedEmail.query.filter_by(email=self.email).first()
         return invited_email is not None or self.invitation_is_pending
+
+    def edit_password(self, form_data):
+        if self.is_password_valid(form_data['current-password']):
+            print(form_data['new-password'])
+            self.password_hash = generate_password_hash(form_data['new-password'])
+            db.session.commit()
+        else:
+            raise ValueError('Senha incorreta.')
 
 
 class InvitedEmail(db.Model):
@@ -647,6 +659,7 @@ class Term(db.Model):
     def get_parsed_syllables(self):
         syllables_contents = [syllable.content for syllable in self.syllables]
         return '.'.join(syllables_contents)
+
 
 class Image(db.Model):
     __tablename__ = 'image'

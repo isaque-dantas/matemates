@@ -394,3 +394,8 @@ main {
 @media only screen and (max-width: 1999px){
   
 }
+
+#feedback-message {
+    opacity: 0;
+    transition: opacity ease-in-out .15s;
+}
