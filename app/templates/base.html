@@ -30,6 +30,10 @@
       rel="stylesheet"
       href="../static/css/{% block style %}{% endblock %}.css"
     />
+    <link
+      rel="stylesheet"
+      href="../static/css/{% block style2 %}{% endblock %}.css"
+    />
     <link rel="stylesheet" href="{{url_for('static', filename='css/base.css')}}">
 
     <!--FONTES-->
@@ -39,33 +43,39 @@
     <div class="bolhas">
       <div class="fundo-bolhas">
       </div>
-      <section class="p-3">
+      <section class="all p-3">
         {% block sidebar %}{% endblock %}
         <div class="options-container">
           <div class="options-close"><i class="bi bi-x-circle-fill"></i></div>
           <ul class="animations-menu">
-            <li class="d-flex justify-content-between">
+            <li class="d-flex">
               <span>Bolhas Caindo</span>
               <div class="toggle-switch-animations">
                 <span class="switch-animations" id="button1"></span>
               </div>
             </li>
-            <li class="d-flex justify-content-between align-items-center">
+            <li class="d-flex">
               <span>Borda Animada</span>
               <div class="toggle-switch-animations">
                 <span class="switch-animations" id="button2"></span>
               </div>
             </li>
-            <li class="d-flex justify-content-between align-items-center">
+            <li class="d-flex">
               <span>Bordas azúis</span>
               <div class="toggle-switch-animations">
                 <span class="switch-animations" id="button3"></span>
               </div>
             </li>
-            <li class="d-flex justify-content-between align-items-center">
+            <li class="d-flex">
               <span>Borda azul maior</span>
               <div class="toggle-switch-animations">
-                <span class="switch-animations" id="button3"></span>
+                <span class="switch-animations" id="button4"></span>
+              </div>
+            </li>
+            <li class="d-flex">
+              <span>SideBar Abrindo</span>
+              <div class="toggle-switch-animations">
+                <span class="switch-animations" id="button5"></span>
               </div>
             </li>
           </ul>

@@ -1,4 +1,5 @@
 const animationsToggle = document.querySelector(".bi-columns-gap");
+const animationsToggleDiv = document.querySelector(".animations-div");
 const closeButton = document.querySelector(".options-close");
 const animationContainer = document.querySelector(".options-container");
 const AnimationsSwitchToggler = document.querySelectorAll(".switch-animations");
@@ -7,6 +8,7 @@ const blueAnimation = Object.values(
   document.querySelectorAll(".animacao-azul")
 );
 const grandBlueAnimation = document.querySelector(".animacao-azul-superior");
+const animationsTogglers = [animationsToggle, animationsToggleDiv];
 
 AnimationsSwitchToggler.forEach((button) => {
   if (localStorage.getItem(button.id) === "true") {
@@ -18,8 +20,11 @@ if (localStorage.getItem("grandBlueIsOff") === "true") {
   grandBlueAnimation.classList.add("animation-off");
 }
 
+if (localStorage.getItem("sidebarAnimationOff") === "true") {
+  sidebar.classList.add("animation-off");
+}
+
 if (localStorage.getItem("blueIsOff") === "true") {
-  console.log("entrou aqui com força como o shadow no meu cu");
   blueAnimation.forEach((element) => {
     element.classList.add("animation-off");
   });
@@ -40,10 +45,13 @@ if (localStorage.getItem("noBorderAnimation") === "true") {
     }
   });
 }
+
 // shows the animations optiosn when the button is clicked
-animationsToggle.addEventListener("click", () => {
-  animationContainer.style.right = "0%";
-  localStorage.setItem("opennedMenu", "true");
+animationsTogglers.forEach((element) => {
+  element.addEventListener("click", () => {
+    animationContainer.style.right = "0%";
+    localStorage.setItem("opennedMenu", "true");
+  });
 });
 
 closeButton.addEventListener("click", () => {
@@ -130,6 +138,19 @@ AnimationsSwitchToggler.forEach((button, index) => {
         button.parentNode.parentNode.remove();
       }
       break;
+    case 4:
+      button.addEventListener("click", () => {
+        ToggleSideBar();
+        console.log(sidebar.classList.contains("animation-off"));
+        if (sidebar.classList.contains("animation-off")) {
+          localStorage.removeItem("sidebarAnimationOff");
+        } else {
+          localStorage.setItem("sidebarAnimationOff", "true");
+        }
+
+        sidebar.classList.toggle("animation-off");
+        toggleButton(button);
+      });
   }
 });
 
@@ -138,4 +159,13 @@ function toggleButton(button) {
   var buttonId = button.id;
   var isOff = button.classList.contains("animation-off");
   localStorage.setItem(buttonId, isOff);
+}
+
+function ToggleSideBar() {
+  if (sidebar.classList.contains("animation-off") === false) {
+    OpenCloseSidebar();
+  } else {
+    generalNav.removeEventListener("mouseover", removeClose);
+    generalNav.removeEventListener("mouseout", addClose);
+  }
 }

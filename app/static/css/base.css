@@ -3,20 +3,7 @@
 
 /*-------Geral-------*/
 
-:root {
-    /* Cores */
-    --body-color: #0e0b1c;
-    --primary-color: #695cfe;
-    --primary-color-light: #f6f5ff;
-    --toggle-color: #ddd;
-    --text-color: #707070;
-  
-    /* transições */
-    --tran-02: all 0.2s ease;
-    --tran-03: all 0.3s ease;
-    --tran-04: all 0.4s ease;
-    --tran-05: all 0.5s ease;
-  }
+
 
 * {
   margin: 0;
@@ -28,7 +15,11 @@ body {
   min-height: 100vh;
   background: var(--body-color);
   color: white;
-  transition: var(--tran-02);
+  transition: var(--tran-else-02);
+}
+
+.all {
+  margin-left: 88px;
 }
 
 /* sidebar */
@@ -36,9 +27,23 @@ nav {
   font-family: "Poppins", sans-serif;
 }
 
+/* header */
+
+.main-header {
+  height: 50px;
+  align-items: center;
+  background-color: var(--body-color);
+}
+
+.main-header .logo {
+  height: 40px;
+}
+
+
 /* ======= light mode ======= */
 
 /* ======= sideBar ======= */
+
 .sidebar {
   position: fixed;
   top: 0;
@@ -46,9 +51,15 @@ nav {
   height: 100%;
   width: 250px;
   background: var(--body-color);
+  box-shadow: -3px 0 10px var(--sidebar-primary-color);
   z-index: 100;
   padding: 10px 14px;
-  transition: var(--tran-05);
+  transition: var(--tran-else-07);
+  overflow: hidden;
+}
+
+.sidebar .div-geral-nav {
+  height: 100%;
 }
 
 .sidebar.close {
@@ -56,24 +67,32 @@ nav {
 }
 
 /* ======= Resuable css ======= */
-.sidebar .text {
+.sidebar .text,
+.sidebar .header-text {
   font-size: 16px;
   font-weight: 500;
-  color: var(--text-color);
-  transition: var(--tran-04);
+  color: var(--sidebar-text-color);
+  transition: opacity 0.5s ease;
   white-space: nowrap;
+  margin: 0 10px;
 }
 
 .sidebar.close .text,
-.sidebar.close .image-text .header-text {
-  display: none;
+.sidebar.close .header-text {
+  opacity: 0;
 }
 
 .sidebar .image {
   min-width: 60px;
+  max-width: 60px;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.sidebar .image img{
+  width: 40px;
+  height: 40px;
 }
 
 .sidebar ul {
@@ -96,10 +115,13 @@ nav {
   font-size: 20px;
 }
 
-.sidebar li .icon,
 .sidernar li .text {
-  color: var(--text-color);
-  transition: var(--tran-02);
+  color: var(--sidebar-text-color);
+  transition: var(--tran-else-02);
+}
+
+.sidebar li .icon {
+  transition: var(--tran-else-02);
 }
 
 .sidebar header {
@@ -108,7 +130,7 @@ nav {
 
 .sidebar .image-text img {
   width: 40px;
-  border-radius: 6px;
+  border-radius: 50%;
 }
 
 .sidebar header .image-text {
@@ -136,7 +158,7 @@ nav {
   transform: translateY(-50%) rotate(180deg);
   height: 25px;
   width: 25px;
-  background: var(--primary-color);
+  background: var(--sidebar-primary-color);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -145,7 +167,7 @@ nav {
   font-size: 18px;
   font-weight: 500;
   cursor: pointer;
-  transition: var(--tran-03);
+  transition: var(--tran-else-03);
 }
 
 .sidebar.close header .toggle {
@@ -157,13 +179,13 @@ nav {
 }
 
 .sidebar .search-box {
-  background: var(--primary-color-light);
+  background: var(--sidebar-primary-color-light);
   border-radius: 0;
   box-shadow: none;
   padding: 0;
   border: none;
   border-radius: 6px;
-  transition: var(--tran-05);
+  transition: var(--tran-else-05);
 }
 
 .sidebar .search-box input {
@@ -174,8 +196,8 @@ nav {
   border-radius: 6px;
   font-size: 16px;
   font-weight: 500;
-  color: #0e0b1c;
-  background-color: var(--primary-color-light);
+  color: var(--body-color);
+  background-color: var(--sidebar-primary-color-light);
 }
 
 .sidebar li a {
@@ -185,16 +207,22 @@ nav {
   align-items: center;
   text-decoration: none;
   border-radius: 6px;
-  transition: var(--tran-04);
+  transition: var(--tran-else-05);
 }
 
 .sidebar li a:hover {
-  background: var(--primary-color);
+  background: var(--sidebar-primary-color);
 }
 
 .sidebar li a:hover .icon,
 .sidebar li a:hover .text {
   color: var(--body-color);
+  letter-spacing: 2px;
+  font-weight: bold;
+}
+
+.sidebar li a .text {
+  transition: var( --tran-ease-in-out-05);
 }
 
 .sidebar .menu-bar {
@@ -205,13 +233,17 @@ nav {
 }
 
 .sidebar .menu-bar .logout a:hover {
-  background: red;
+  background: var(--leave-color);
 }
 
 .sidebar .menu-bar .mode {
   position: relative;
   border-radius: 6px;
-  background: var(--primary-color-light);
+  background: var(--sidebar-primary-color-light);
+}
+
+.sidebar .menu-bar .mode span.text {
+  color: var(--body-color);
 }
 
 .sidebar .menu-bar .mode .moon-sun {
@@ -223,7 +255,8 @@ nav {
 
 .sidebar .menu-bar .mode i {
   position: absolute;
-  transition: var(--tran-03);
+  transition: var(--tran-else-03);
+  color: var(--body-color);
 }
 
 .sidebar .menu-bar .mode .bi-moon {
@@ -238,15 +271,22 @@ nav {
   align-items: center;
   justify-content: center;
   height: 100%;
-  min-width: 60px;
   cursor: pointer;
   border-radius: 6px;
-  background: var(--primary-color-light);
+  background: var(--sidebar-primary-color-light);
+}
+
+.sidebar .menu-bar .mode .toggle-switch {
+  min-width: 60px;
 }
 
 .animations-menu .toggle-switch-animations {
-    height: fit-content;
-    background: none;
+  position: static;
+}
+
+.animations-menu .toggle-switch-animations {
+  height: fit-content;
+  background: none;
 }
 
 .animations-menu .toggle-switch-animations .switch-animations,
@@ -255,7 +295,7 @@ nav {
   height: 22px;
   width: 44px;
   border-radius: 25px;
-  background: var(--toggle-color);
+  background: var(--sidebar-toggle-color);
 }
 
 .switch-animations::before,
@@ -269,28 +309,16 @@ nav {
   left: 24px;
   transform: translateY(-50%);
   background: var(--body-color);
-  transition: var(--tran-03);
+  transition: var(--tran-else-03);
 }
 
 body.light .switch::before,
 .switch-animations.animation-off::before {
   left: 5px;
-  background-color: green;
-}
-
-
-main {
-  position: relative;
-  left: 100px;
-  width: calc(100% - 50px);
-  transition: var(--tran-03);
-}
-
-.sidebar.close ~ main {
-  left: 50px;
 }
 
 /*-------Fundo com bolinhas-------*/
+
 
 .bolhas {
   position: relative;
@@ -308,16 +336,16 @@ main {
   z-index: -1;
   width: 15px;
   height: 15px;
-  background: white;
+  background: var(--white-color);
   margin: 0 4px;
   border-radius: 50%;
-  box-shadow: 0 0 0 5px #ffffff44, 0 0 25px #ffffff, 0 0 50px #ffffff;
+  box-shadow: 0 0 0 5px var(--bubbles-tertiary-color), 0 0 25px var(--white-color), 0 0 50px var(--white-color);
   animation: animarbolhas calc(200s / var(--i)) linear infinite;
 }
 
 @keyframes animarbolhas {
   0% {
-    transform: translateY(-10vh) scale(0);
+    transform: translateY(3vh) scale(0);
   }
   100% {
     transform: translateY(98vh) scale(0.3);
@@ -325,8 +353,8 @@ main {
 }
 
 .fundo-bolhas span:nth-of-type(even) {
-  background: #8400ff;
-  box-shadow: 0 0 0 5px #8400ff44, 0 0 25px #8400ff, 0 0 50px #8400ff;
+  background: var(--bubbles-primary-color);
+  box-shadow: 0 0 0 5px var(--bubbles-secondary-color), 0 0 25px var(--bubbles-primary-color), 0 0 50px var(--bubbles-primary-color);
 }
 
 /* animations toggle menu */
@@ -334,17 +362,27 @@ main {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 30%;
+  width: 100%;
   transform: translate(-50%, -50%);
   list-style: none;
   text-align: center;
-  transition: var(--tran-03);
+  transition: var(--tran-else-03);
+  display: flex;
+  align-items: center;
+  flex-direction: column;
 }
 
 .animations-menu li {
-    width: 100%;
-    margin-top: 10px;
+  margin-top: 10px;
+  width: 40%;
+  justify-content: space-between;
 }
+
+.animations-menu li span,
+.animations-menu li .toggle-switch-animations .switch-animations{
+  color: var(--white-color)
+}
+
 
 .options-container {
   position: fixed;
@@ -354,9 +392,9 @@ main {
   width: 100%;
   height: 100%;
   background: var(--body-color);
-  opacity: 50%;
+  opacity: 0.75;
   text-align: center;
-  transition: all 0.7s ease;
+  transition: var(--tran-else-07);
 }
 
 .options-close {
@@ -368,31 +406,52 @@ main {
   float: right;
   margin: 20px;
   opacity: 100%;
-  transition: var(--tran-03);
+  transition: var(--tran-else-03);
 }
 
 .options-close i:hover {
-    color: red;
+  color: var(--leave-color);
 }
 
 .animations-menu li a:hover {
-  background: #000;
-  color: #fff;
+  background: var(--black-color);
+  color: var(--white-color);
+}
+
+ol, ul {
+  padding-left: 0;
 }
 
 /*----Barra de rolagem da pagina----*/
 
 ::-webkit-scrollbar {
   width: 3px;
-  background: #ffffff2e;
+  background: var(--scrollbar-page-primary-color);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #ffffff;
+  background: var(--white-color);
 }
 
-@media only screen and (max-width: 1999px){
-  
+@media only screen and (max-width: 1199px) {
+  .all {
+    margin: 0;
+  }
+
+  .main-header .menu{
+    display: block !important;
+  }
+
+  .sidebar {
+    left: -100%;
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .animations-menu li {
+    width: 100%;
+    padding: 0 5vh;
+  }
 }
 
 #feedback-message {

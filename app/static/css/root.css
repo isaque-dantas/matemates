@@ -1,0 +1,54 @@
+:root {
+    /* Cores */
+
+    /* Geral */
+    --body-color: #0e0b1c;
+    --leave-color: #ff3460;
+    --black-color: #000;
+    --white-color: #fff;
+    /* Geral */
+
+
+    /* Sidebar */
+    --sidebar-primary-color: #4fa6fc;
+    --sidebar-primary-color-light: #f6f5ff;
+    --sidebar-toggle-color: #ddd;
+    --sidebar-text-color: #9f9f9f;
+    /* Sidebar */
+
+
+    /* Bolhas */
+    --bubbles-primary-color: #4fa6fc;
+    --bubbles-secondary-color: #8400ff44;
+    --bubbles-tertiary-color: #ffffff44;
+    /* Bolhas */
+
+
+    /* Scrollbar */
+    --scrollbar-page-primary-color: #ffffff2e;
+    /* Scrollbar */
+
+
+    /* transições */
+
+    /* Else */
+    --tran-else-01: all 0.1s ease;
+    --tran-else-02: all 0.2s ease;
+    --tran-else-03: all 0.3s ease;
+    --tran-else-04: all 0.4s ease;
+    --tran-else-05: all 0.5s ease;
+    --tran-else-06: all 0.6s ease;
+    --tran-else-07: all 0.7s ease;
+    /* Else */
+
+
+    /* Else in Out */
+    --tran-ease-in-out-01: all 0.1s ease-in-out;
+    --tran-ease-in-out-02: all 0.2s ease-in-out;
+    --tran-ease-in-out-03: all 0.3s ease-in-out;
+    --tran-ease-in-out-04: all 0.4s ease-in-out;
+    --tran-ease-in-out-05: all 0.5s ease-in-out;
+    --tran-ease-in-out-06: all 0.6s ease-in-out;
+    --tran-ease-in-out-07: all 0.7s ease-in-out;
+    /* Else in Out */
+}
