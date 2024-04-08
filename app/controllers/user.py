@@ -68,8 +68,6 @@ def register():
 @login_required
 def perfil():
     form = RegisterForm()
-    form_data = get_form_data_from_request(request)
-    print(f'form_data: {form_data}')
 
     form_data = get_form_data_from_request(request)
     if form_data:
@@ -110,11 +108,40 @@ def delete_current_user():
     user.delete_user()
     return redirect(url_for('user.login'))
 
+
 @user_blueprint.route('/invite_to_be_admin/<email>')
 @login_required
 def invite_to_be_admin(email):
     if is_user_admin(current_user):
         user_to_invite = User.get_by_email(email)
         current_user.invite(user_to_invite)
+    else:
+        abort(403)
+
+
+@user_blueprint.route('/edit_password/<username>', methods=['POST'])
+@login_required
+def edit_password(username):
+    if current_user.username == username:
+        user = User.get_by_username(username)
+        if request.form:
+            form_data = get_form_data_from_request(request)
+            try:
+                user.edit_password(form_data)
+            except Exception as e:
+                return {
+                    'message': str(e),
+                    'category': 'danger'
+                }
+            else:
+                return {
+                    'message': 'Senha alterada com sucesso.',
+                    'category': 'success'
+                }
+        else:
+            return {
+                'message': 'Algo deu errado. Tente novamente.',
+                'category': 'warning'
+            }
     else:
         abort(403)
