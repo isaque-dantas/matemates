@@ -3,8 +3,6 @@
 
 /*-------Geral-------*/
 
-
-
 * {
   margin: 0;
   padding: 0;
@@ -38,7 +36,6 @@ nav {
 .main-header .logo {
   height: 40px;
 }
-
 
 /* ======= light mode ======= */
 
@@ -90,7 +87,7 @@ nav {
   justify-content: center;
 }
 
-.sidebar .image img{
+.sidebar .image img {
   width: 40px;
   height: 40px;
 }
@@ -115,7 +112,7 @@ nav {
   font-size: 20px;
 }
 
-.sidernar li .text {
+.sidebar li .text {
   color: var(--sidebar-text-color);
   transition: var(--tran-else-02);
 }
@@ -222,7 +219,7 @@ nav {
 }
 
 .sidebar li a .text {
-  transition: var( --tran-ease-in-out-05);
+  transition: var(--tran-ease-in-out-05);
 }
 
 .sidebar .menu-bar {
@@ -319,7 +316,6 @@ body.light .switch::before,
 
 /*-------Fundo com bolinhas-------*/
 
-
 .bolhas {
   position: relative;
   width: 100%;
@@ -339,7 +335,8 @@ body.light .switch::before,
   background: var(--white-color);
   margin: 0 4px;
   border-radius: 50%;
-  box-shadow: 0 0 0 5px var(--bubbles-tertiary-color), 0 0 25px var(--white-color), 0 0 50px var(--white-color);
+  box-shadow: 0 0 0 5px var(--bubbles-tertiary-color),
+    0 0 25px var(--white-color), 0 0 50px var(--white-color);
   animation: animarbolhas calc(200s / var(--i)) linear infinite;
 }
 
@@ -354,7 +351,8 @@ body.light .switch::before,
 
 .fundo-bolhas span:nth-of-type(even) {
   background: var(--bubbles-primary-color);
-  box-shadow: 0 0 0 5px var(--bubbles-secondary-color), 0 0 25px var(--bubbles-primary-color), 0 0 50px var(--bubbles-primary-color);
+  box-shadow: 0 0 0 5px var(--bubbles-secondary-color),
+    0 0 25px var(--bubbles-primary-color), 0 0 50px var(--bubbles-primary-color);
 }
 
 /* animations toggle menu */
@@ -382,7 +380,6 @@ body.light .switch::before,
 .animations-menu li .toggle-switch-animations .switch-animations{
   color: var(--white-color)
 }
-
 
 .options-container {
   position: fixed;
@@ -418,7 +415,8 @@ body.light .switch::before,
   color: var(--white-color);
 }
 
-ol, ul {
+ol,
+ul {
   padding-left: 0;
 }
 
@@ -438,12 +436,21 @@ ol, ul {
     margin: 0;
   }
 
-  .main-header .menu{
+  .main-header .menu {
     display: block !important;
   }
 
   .sidebar {
     left: -100%;
+  }
+
+  .sidebar.close {
+    width: 250px;
+  }
+
+  .sidebar.close .text,
+  .sidebar.close .header-text {
+    opacity: 100%;
   }
 }
 

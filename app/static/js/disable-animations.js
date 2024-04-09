@@ -23,6 +23,7 @@ if (localStorage.getItem("grandBlueIsOff") === "true") {
 if (localStorage.getItem("sidebarAnimationOff") === "true") {
   sidebar.classList.add("animation-off");
 }
+ToggleSideBar();
 
 if (localStorage.getItem("blueIsOff") === "true") {
   blueAnimation.forEach((element) => {
@@ -126,7 +127,6 @@ AnimationsSwitchToggler.forEach((button, index) => {
       if (grandBlueAnimation !== null) {
         button.addEventListener("click", () => {
           if (grandBlueAnimation.classList.contains("animation-off")) {
-            localStorage.removeItem("grandBlueIsOff");
           } else {
             localStorage.setItem("grandBlueIsOff", "true");
           }
@@ -140,17 +140,19 @@ AnimationsSwitchToggler.forEach((button, index) => {
       break;
     case 4:
       button.addEventListener("click", () => {
-        ToggleSideBar();
-        console.log(sidebar.classList.contains("animation-off"));
-        if (sidebar.classList.contains("animation-off")) {
-          localStorage.removeItem("sidebarAnimationOff");
-        } else {
-          localStorage.setItem("sidebarAnimationOff", "true");
-        }
-
         sidebar.classList.toggle("animation-off");
+        ToggleSideBar();
+        console.log(
+          "estado do local storage: " +
+            localStorage.getItem("sidebarAnimationOff")
+        );
+        console.log(sidebar.classList.contains("animation-off"));
         toggleButton(button);
       });
+
+      if (window.screen.width <= 1199) {
+        button.parentNode.parentNode.remove();
+      }
   }
 });
 
@@ -162,10 +164,17 @@ function toggleButton(button) {
 }
 
 function ToggleSideBar() {
-  if (sidebar.classList.contains("animation-off") === false) {
-    OpenCloseSidebar();
+  if (sidebar.classList.contains("animation-off")) {
+    sidebar.removeEventListener("mouseover", removeClose);
+    sidebar.removeEventListener("mouseout", addClose);
+    localStorage.setItem("sidebarAnimationOff", "true");
   } else {
-    generalNav.removeEventListener("mouseover", removeClose);
-    generalNav.removeEventListener("mouseout", addClose);
+    OpenCloseSidebar();
+    localStorage.removeItem("sidebarAnimationOff");
   }
 }
+
+console.log(
+  "estado do local storage: " + localStorage.getItem("sidebarAnimationOff")
+);
+console.log('contem animation-off: ' + sidebar.classList.contains("animation-off"));
