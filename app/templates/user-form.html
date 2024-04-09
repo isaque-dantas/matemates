@@ -56,6 +56,7 @@
                                 <div class="position-absolute">
                                     {% if is_registering %}
                                         <i class="eye eye-open bi bi-eye-slash position-absolute"></i>
+                                        {{ form.password(class="form-control") }}
                                     {% else %}
                                         <button type="button" class="button-modal form-control enable-on-edit"
                                                 data-bs-toggle="modal"
