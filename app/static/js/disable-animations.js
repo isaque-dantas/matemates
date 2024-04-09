@@ -156,14 +156,10 @@ function toggleButton(button) {
 function ToggleSideBar() {
   if (sidebar.classList.contains("animation-off")) {
     OpenCloseSidebar();
-    console.log("evento adicionado");
     localStorage.setItem("sidebarAnimationOff", "true");
   } else {
     localStorage.removeItem("sidebarAnimationOff");
     generalNav.removeEventListener("mouseover", removeClose);
     generalNav.removeEventListener("mouseout", addClose);
-    console.log("evento removido");
   }
 }
-
-console.log(localStorage.getItem("sidebarAnimationOff"));
