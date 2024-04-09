@@ -68,7 +68,7 @@ with app.app_context():
     }
 
     files = FileMultiDict()
-    files.add_file('image', r'isq_dantas.png')
+    files.add_file('image', images_filenames['rafael'])
 
     dados_usuario_comum.update(dict(files))
 
