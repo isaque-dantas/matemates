@@ -215,6 +215,8 @@ class User(db.Model, UserMixin):
             image_file.save(os.path.join('app/static/img/user_profile_picture/', filename))
             image_file.close()
             self.profile_image_path = filename
+        else:
+            self.profile_image_path = '$default.png'
 
     @staticmethod
     def get_first_and_last_name_from_name(name):
