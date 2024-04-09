@@ -39,8 +39,6 @@ function OpenCloseSidebar() {
   generalNav.addEventListener("mouseover", removeClose);
 
   generalNav.addEventListener("mouseout", addClose);
-
-  console.log("adicionamo os evento");
 }
 
 hamburguerMenu.addEventListener("click", () => {
@@ -51,5 +49,4 @@ hamburguerMenu.addEventListener("click", () => {
     sidebar.style.left = "-100%";
     localStorage.removeItem("responsiveOpened");
   }
-  console.log("clicked");
 });
