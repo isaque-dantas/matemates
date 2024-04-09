@@ -20,9 +20,10 @@ if (localStorage.getItem("grandBlueIsOff") === "true") {
   grandBlueAnimation.classList.add("animation-off");
 }
 
-if (localStorage.getItem("sidebarAnimationOff") === 'true' || localStorage.getItem("sidebarAnimationOff") === null) {
-  OpenCloseSidebar();
+if (localStorage.getItem("sidebarAnimationOff") === "true") {
+  sidebar.classList.add("animation-off");
 }
+ToggleSideBar();
 
 if (localStorage.getItem("blueIsOff") === "true") {
   blueAnimation.forEach((element) => {
@@ -139,10 +140,19 @@ AnimationsSwitchToggler.forEach((button, index) => {
       break;
     case 4:
       button.addEventListener("click", () => {
-        ToggleSideBar();
         sidebar.classList.toggle("animation-off");
+        ToggleSideBar();
+        console.log(
+          "estado do local storage: " +
+            localStorage.getItem("sidebarAnimationOff")
+        );
+        console.log(sidebar.classList.contains("animation-off"));
         toggleButton(button);
       });
+
+      if (window.screen.width <= 1199) {
+        button.parentNode.parentNode.remove();
+      }
   }
 });
 
@@ -155,13 +165,16 @@ function toggleButton(button) {
 
 function ToggleSideBar() {
   if (sidebar.classList.contains("animation-off")) {
-    OpenCloseSidebar();
-    localStorage.setItem("sidebarAnimationOff", "true");
-  } else {
-    localStorage.removeItem("sidebarAnimationOff");
     sidebar.removeEventListener("mouseover", removeClose);
     sidebar.removeEventListener("mouseout", addClose);
+    localStorage.setItem("sidebarAnimationOff", "true");
+  } else {
+    OpenCloseSidebar();
+    localStorage.removeItem("sidebarAnimationOff");
   }
 }
 
-console.log(localStorage.getItem("sidebarAnimationOff"));
+console.log(
+  "estado do local storage: " + localStorage.getItem("sidebarAnimationOff")
+);
+console.log('contem animation-off: ' + sidebar.classList.contains("animation-off"));
