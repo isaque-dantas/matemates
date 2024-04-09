@@ -20,7 +20,7 @@ if (localStorage.getItem("grandBlueIsOff") === "true") {
   grandBlueAnimation.classList.add("animation-off");
 }
 
-if (localStorage.getItem("sidebarAnimationOff") === "true") {
+if (localStorage.getItem("sidebarAnimationOff") === 'true' || localStorage.getItem("sidebarAnimationOff") === null) {
   OpenCloseSidebar();
 }
 
@@ -159,7 +159,9 @@ function ToggleSideBar() {
     localStorage.setItem("sidebarAnimationOff", "true");
   } else {
     localStorage.removeItem("sidebarAnimationOff");
-    generalNav.removeEventListener("mouseover", removeClose);
-    generalNav.removeEventListener("mouseout", addClose);
+    sidebar.removeEventListener("mouseover", removeClose);
+    sidebar.removeEventListener("mouseout", addClose);
   }
 }
+
+console.log(localStorage.getItem("sidebarAnimationOff"));

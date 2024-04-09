@@ -4,7 +4,6 @@ const modeSwitch = document.querySelector(".toggle-switch");
 const modeText = document.querySelector(".mode-text");
 const moonIcon = document.querySelector(".bi-moon");
 const sunIcon = document.querySelector(".bi-sun");
-const generalNav = document.querySelector(".div-geral-nav");
 const navLinks = document.querySelectorAll(".nav-links");
 const hamburguerMenu = document.querySelector(".bi-list");
 
@@ -36,9 +35,9 @@ function addClose() {
 }
 
 function OpenCloseSidebar() {
-  generalNav.addEventListener("mouseover", removeClose);
+  sidebar.addEventListener("mouseover", removeClose);
 
-  generalNav.addEventListener("mouseout", addClose);
+  sidebar.addEventListener("mouseout", addClose);
 }
 
 hamburguerMenu.addEventListener("click", () => {
