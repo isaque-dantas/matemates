@@ -2,7 +2,7 @@ from flask import render_template, Blueprint, abort, flash, request, url_for, re
 from flask_login import current_user, login_required
 
 from app.controllers import get_form_data_from_request
-from app.controllers.user import is_user_admin
+from app.controllers.user import is_user_admin, is_user_logged_in
 
 from app.models.tables import Entry
 from app.models.entry_forms import EntryCreationForm
@@ -16,11 +16,13 @@ def view_entry(entry_content):
     if entry:
         if is_user_admin(current_user):
             return render_template('entry.html', entry=entry, enumerate=enumerate, format=format,
-                                   user_is_admin=is_user_admin(current_user))
+                                   user_is_admin=is_user_admin(current_user), user=current_user,
+                                   is_current_user_logged_in=is_user_logged_in(current_user))
         else:
             if entry.is_validated:
                 return render_template('entry.html', entry=entry, enumerate=enumerate, format=format,
-                                       user_is_admin=is_user_admin(current_user))
+                                       user_is_admin=is_user_admin(current_user), user=current_user,
+                                       is_current_user_logged_in=is_user_logged_in(current_user))
             else:
                 abort(403)
     else:
@@ -33,7 +35,8 @@ def entry_search(search_query):
     print(f'entries: {entries}')
 
     return render_template('search_entry.html', search_query=search_query, entries=entries,
-                           user_is_admin=is_user_admin(current_user))
+                           user_is_admin=is_user_admin(current_user), user=current_user,
+                           is_current_user_logged_in=is_user_logged_in(current_user))
 
 
 @entry_blueprint.route('/create_entry', methods=['GET', 'POST'])
@@ -59,7 +62,8 @@ def entry_creation():
             flash('Verifique se todos os dados foram inseridos corretamente.', category='warning')
 
         return render_template('entry-form.html', form=form, user_is_admin=is_user_admin(current_user),
-                               is_edition=False, endpoint=url_for('entry.entry_creation'))
+                               is_edition=False, endpoint=url_for('entry.entry_creation'), user=current_user,
+                               is_current_user_logged_in=is_user_logged_in(current_user))
     else:
         abort(403)
 
@@ -87,7 +91,8 @@ def edit_entry(entry_id):
             flash('Verifique se todos os dados foram inseridos corretamente.', category='warning')
 
         return render_template('entry-form.html', form=form, user_is_admin=is_user_admin(current_user),
-                               is_edition=True, endpoint=url_for('entry.edit_entry', entry_id=entry.id))
+                               is_edition=True, endpoint=url_for('entry.edit_entry', entry_id=entry.id),
+                               user=current_user, is_current_user_logged_in=is_user_logged_in(current_user))
     else:
         abort(403)
 
