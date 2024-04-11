@@ -720,7 +720,15 @@ class KnowledgeArea(db.Model):
         related_entries = set()
         for definition in related_definitions:
             related_entries.add(definition.entry)
-        return related_entries
+        return list(related_entries)
+
+    def get_related_and_validated_entries(self):
+        related_definitions = self.definitions
+        related_entries = set()
+        for definition in related_definitions:
+            if definition.entry.is_validated:
+                related_entries.add(definition.entry)
+        return list(related_entries)
 
     @staticmethod
     def register(content, subject):
