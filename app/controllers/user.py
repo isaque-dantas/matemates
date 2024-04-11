@@ -19,28 +19,47 @@ def is_user_admin(user):
     return user_is_admin
 
 
-def is_current_user_logged_in() -> bool:
-    return not isinstance(current_user, AnonymousUserMixin)
+def is_user_logged_in(user) -> bool:
+    return not isinstance(user, AnonymousUserMixin)
 
 
 @user_blueprint.route('/login', methods=['GET', 'POST'])
 def login():
-    form = LoginForm()
-
-    if is_current_user_logged_in():
+    if is_user_logged_in(current_user):
         return redirect(url_for('dashboard.index'))
 
-    if form.validate_on_submit():
-        user = User.get_by_email(form.email.data)
-
-        if user is not None and user.is_password_valid(form.password.data):
-            login_user(user)
-            return redirect(url_for('dashboard.index'))
-        else:
-            flash('Email e/ou senha inválidos',
-                  category='danger')
-
+    form = LoginForm()
     return render_template('login.html', form=form)
+
+
+@user_blueprint.route('/auth_user', methods=['POST'])
+def auth_user():
+    form_data = get_form_data_from_request(request)
+
+    if 'email' not in form_data or 'password' not in form_data:
+        return {
+            'message': 'Insira o email e a senha, sem deixar nenhum deles vazios.',
+            'category': 'warning',
+            'user_was_logged': False
+        }
+    else:
+        user = User.get_by_email(form_data['email'])
+
+        print(form_data)
+
+        if user is not None and user.is_password_valid(form_data['password']):
+            login_user(user)
+            return {
+                'message': 'Login realizado com sucesso.',
+                'category': 'success',
+                'user_was_logged': True
+            }
+        else:
+            return {
+                'message': 'Email e/ou senha inválidos.',
+                'category': 'danger',
+                'user_was_logged': False
+            }
 
 
 @user_blueprint.route('/register', methods=['GET', 'POST'])
@@ -63,7 +82,8 @@ def register():
     elif request.method == 'POST':
         flash('Verifique se todos os dados foram inseridos corretamente.', category='warning')
 
-    return render_template('user-form.html', form=form, is_registering=True, endpoint='user.register')
+    return render_template('user-form.html', form=form, is_registering=True, endpoint='user.register',
+                           is_current_user_logged_in=is_user_logged_in(current_user))
 
 
 @user_blueprint.route('/perfil/', methods=['GET', 'POST'])
@@ -85,7 +105,9 @@ def perfil():
             flash('Perfil editado com sucesso.', category='success')
     elif request.method == 'POST':
         flash('Verifique se todos os dados foram inseridos corretamente.', category='warning')
-    return render_template('user-form.html', user=current_user, form=form, is_registering=False, endpoint='user.perfil')
+
+    return render_template('user-form.html', user=current_user, form=form, is_registering=False, endpoint='user.perfil',
+                           is_current_user_logged_in=is_user_logged_in(current_user))
 
 
 @user_blueprint.route('/logout')
@@ -138,7 +160,7 @@ def accept_invite(email):
         flash('Cadastre-se para continuar.', category='info')
         return redirect(url_for('user.register'))
     else:
-        if is_current_user_logged_in():
+        if is_user_logged_in(current_user):
             if current_user.email == email:
                 user.accept_invite_to_be_admin()
                 return redirect(url_for('dashboard.index'))
