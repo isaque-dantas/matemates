@@ -436,9 +436,9 @@ class Entry(db.Model):
             if 'definition' not in key and 'question' not in key:
                 continue
 
-            key_index = Entry.get_index_from_key(key)
-            key_description = Entry.get_description_from_key(key)
-            key_entity_name = Entry.get_entity_name_from_key(key)
+            key_index = Entry.get_index_from_form_data_key(key)
+            key_description = Entry.get_description_from_form_data_key(key)
+            key_entity_name = Entry.get_entity_name_from_form_data_key(key)
 
             try:
                 n_attributes[key_entity_name][key_index].update(
@@ -508,15 +508,15 @@ class Entry(db.Model):
         return entry_with_same_content is None or entry_with_same_content == self
 
     @staticmethod
-    def get_index_from_key(key: str):
+    def get_index_from_form_data_key(key: str):
         return int(key.rsplit('_', 1)[1]) - 1
 
     @staticmethod
-    def get_description_from_key(key: str):
+    def get_description_from_form_data_key(key: str):
         return key.rsplit('_', 1)[0].split('_', 1)[1]
 
     @staticmethod
-    def get_entity_name_from_key(key: str):
+    def get_entity_name_from_form_data_key(key: str):
         return key.split('_', 1)[0]
 
     @staticmethod

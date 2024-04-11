@@ -59,7 +59,7 @@ with app.app_context():
     User.register(dados_usuario_admin)
 
     dados_usuario_comum = {
-        'username': 'd_lula_13',
+        'username': 'd_lucas',
         'name': 'Davi Lucas',
         'password': '12345',
         'email': 'vicisaque413@gmail.com',
