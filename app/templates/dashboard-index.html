@@ -76,7 +76,11 @@
                     {% set col_number='12' %}
                 {% endif %}
 
-                {% set related_entries = list(knowledge_area.get_related_entries()) %}
+                {% if is_user_admin %}
+                    {% set related_entries = knowledge_area.get_related_entries() %}
+                {% else %}
+                    {% set related_entries = knowledge_area.get_related_and_validated_entries() %}
+                {% endif %}
 
                 {% if related_entries %}
                     <div class="top d-flex justify-content-between">
