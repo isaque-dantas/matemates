@@ -12,7 +12,7 @@ entry_blueprint = Blueprint('entry', __name__)
 
 @entry_blueprint.route('/entry/<entry_content>')
 def view_entry(entry_content):
-    entry = Entry.get_entry_by_content(entry_content.replace('_', ' '))
+    entry = Entry.get_by_content(entry_content)
     if entry:
         if is_user_admin(current_user):
             return render_template('entry.html', entry=entry, enumerate=enumerate, format=format,
@@ -110,7 +110,7 @@ def entry_data(entry_id):
 @entry_blueprint.route('/validate_entry/<entry_content>')
 def validate_entry(entry_content):
     if is_user_admin(current_user):
-        entry = Entry.get_entry_by_content(entry_content)
+        entry = Entry.get_by_content(entry_content)
         entry.turn_valid()
         return redirect(url_for('entry.view_entry', entry_content=entry_content))
     else:
@@ -121,7 +121,7 @@ def validate_entry(entry_content):
 @login_required
 def delete_entry(entry_content):
     if is_user_admin(current_user):
-        entry = Entry.get_entry_by_content(entry_content)
+        entry = Entry.get_by_content(entry_content)
         entry.delete_entry()
 
         return redirect(url_for('dashboard.index'))
