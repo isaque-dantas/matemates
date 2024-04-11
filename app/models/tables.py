@@ -520,12 +520,12 @@ class Entry(db.Model):
         return key.split('_', 1)[0]
 
     @staticmethod
-    def get_entry_by_content(content):
+    def get_by_content(content):
         content = content.replace('_', ' ')
         return Entry.query.filter_by(content=content).first()
 
     @staticmethod
-    def get_entry_by_id(entry_id):
+    def get_by_id(entry_id):
         return Entry.query.get(entry_id)
 
     @staticmethod
