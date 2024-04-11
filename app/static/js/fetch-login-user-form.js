@@ -2,26 +2,21 @@ document.addEventListener('DOMContentLoaded', () => {
     getNextPageURLFromURL()
     document.querySelector('#submit').addEventListener('click', () => {
         const formData = getFormData()
+        const jsonResponsePromise = sendFormData(formData, '/auth_user')
+        jsonResponsePromise.then((response) => {
+            updateFeedbackMessage(response)
 
-        if (formData.has('email') && formData.has('password')) {
-            const jsonResponsePromise = sendFormData(formData, '/auth_user')
-            jsonResponsePromise.then((response) => {
-                updateFeedbackMessage(response)
+            console.log(response)
 
-                console.log(response)
-
-                if (response['user_was_logged']) {
-                    const nextPageURL = getNextPageURLFromURL()
-                    if (nextPageURL !== undefined) {
-                        updateNextPageButton(nextPageURL)
-                    } else {
-                        updateNextPageButton('/dashboard')
-                    }
+            if (response['user_was_logged']) {
+                const nextPageURL = getNextPageURLFromURL()
+                if (nextPageURL !== undefined) {
+                    updateNextPageButton(nextPageURL)
+                } else {
+                    updateNextPageButton('/dashboard')
                 }
-            })
-        } else {
-            updateFeedbackMessage({'message': 'Insira o e-mail e a senha.', 'category': 'danger'})
-        }
+            }
+        })
     })
 })
 
