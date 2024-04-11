@@ -521,6 +521,7 @@ class Entry(db.Model):
 
     @staticmethod
     def get_entry_by_content(content):
+        content = content.replace('_', ' ')
         return Entry.query.filter_by(content=content).first()
 
     @staticmethod
