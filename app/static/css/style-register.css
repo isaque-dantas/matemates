@@ -127,7 +127,7 @@ body{
 .icon-usuario-nome {
     transform: translate(-50%, -50%);
     left: 50%;
-    top: 45%;
+    top: 54%;
 }
 
 .informacoes {
@@ -218,7 +218,6 @@ body{
 .buttons {
     transform: translate(-50%, -50%);
     left: 50%;
-    bottom: 10%;
 }
 
 /*----calendario----*/
