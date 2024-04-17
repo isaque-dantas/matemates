@@ -83,7 +83,7 @@ def register():
         flash('Verifique se todos os dados foram inseridos corretamente.', category='warning')
 
     return render_template('user-form.html', form=form, is_registering=True, endpoint='user.register',
-                           is_current_user_logged_in=is_user_logged_in(current_user))
+                           is_current_user_logged_in=is_user_logged_in(current_user), user=current_user)
 
 
 @user_blueprint.route('/perfil/', methods=['GET', 'POST'])
