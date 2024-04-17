@@ -49,13 +49,11 @@
                                 </button>
                             </div>
                             <!--OLA MEU MANO ISAQUE :) . TROQUEI ESSE TRECO QUE VC FEZ POR UMA TEXTAREA-->
-                            <textarea name="definition" cols="30" rows="2" class="criacao-definicao p-3 w-100"
-                                placeholder="Escreva uma definição"></textarea>
+                            {{ form.definition_content_1(cols="30", rows="2", class="criacao-definicao p-3 w-100", placeholder="Escreva uma definição") }}
                             <!--OLA MY FRIENDO IS AKI:) BOTEI UM BOTÃO PARA O MODO RESPONSIVO PQ NÃO TINHA COMO BOTAR ELE EMBAIXO DA TEXTAREA. O BOTÃO NÃO ESTÁ FUNCIONANDO-->
                             <button type="button" class="btn-add-field-group btn btn-outline-light moba">
                                 Adicionar outra definição
                             </button>
-                            <!--{{ form.definition_content_1(class="criacao-definicao p-2 w-100", placeholder="Escreva uma definição") }}-->
                         </div>
                     </div>
                 </div>
