@@ -24,62 +24,35 @@ content %}
         </div>
       </section>
 
-      <section class="informacoes mt-5 mb-5">
-        <div
-          class="d-flex position-relative m-5 gap-2 flex-column align-items-center has-n-field-groups z-2"
-          id="significado"
-        >
-          <div
-            id="definition-field-groups"
-            class="field-groups d-flex align-items-center flex-column gap-5 w-100"
-          >
-            <div
-              class="field-group d-flex flex-column gap-3 w-100 px-3"
-              id="definicao-1"
-            >
-              <div class="d-flex justify-content-between">
-                <div class="definition-options d-flex gap-3">
-                  <button
-                    type="button"
-                    class="btn btn-remove-field-group btn-dark"
-                    disabled
-                  >
-                    <img
-                      src="{{ url_for('static', filename='img/trash.svg') }}"
-                      alt=""
-                    />
-                  </button>
-                  <div class="select-area select d-flex align-self-stretch">
-                    {{ form.definition_knowledge_area_1() }}
-                  </div>
+            <section class="informacoes mt-5 mb-5">
+                <div class="d-flex position-relative m-5 gap-2 flex-column align-items-center has-n-field-groups z-2"
+                    id="significado">
+                    <div id="definition-field-groups"
+                        class="field-groups d-flex align-items-center flex-column gap-5 w-100">
+                        <div class="field-group d-flex flex-column gap-3 w-100 px-3" id="definicao-1">
+                            <div class="d-flex justify-content-between">
+                                <div class="definition-options d-flex gap-3">
+                                    <button type="button" class="btn btn-remove-field-group btn-dark" disabled>
+                                        <img src="{{ url_for('static', filename='img/trash.svg') }}" alt="">
+                                    </button>
+                                    <div class="select-area select d-flex align-self-stretch">
+                                        {{ form.definition_knowledge_area_1() }}
+                                    </div>
+                                </div>
+                                <!--OLA MEU MANO ISAQUE :) . TROQUEI ESSE BOTÃO DE LUGAR E AGORA ELE SÓ FUNCIONA QND CLICADO NA PRIMEIRA DEFINIÇÃO-->
+                                <button type="button" class="btn-add-field-group btn btn-outline-light px-4 pc">
+                                    Adicionar outra definição
+                                </button>
+                            </div>
+                            <!--OLA MEU MANO ISAQUE :) . TROQUEI ESSE TRECO QUE VC FEZ POR UMA TEXTAREA-->
+                            {{ form.definition_content_1(cols="30", rows="2", class="criacao-definicao p-3 w-100", placeholder="Escreva uma definição") }}
+                            <!--OLA MY FRIENDO IS AKI:) BOTEI UM BOTÃO PARA O MODO RESPONSIVO PQ NÃO TINHA COMO BOTAR ELE EMBAIXO DA TEXTAREA. O BOTÃO NÃO ESTÁ FUNCIONANDO-->
+                            <button type="button" class="btn-add-field-group btn btn-outline-light moba">
+                                Adicionar outra definição
+                            </button>
+                        </div>
+                    </div>
                 </div>
-                <!--OLA MEU MANO ISAQUE :) . TROQUEI ESSE BOTÃO DE LUGAR E AGORA ELE SÓ FUNCIONA QND CLICADO NA PRIMEIRA DEFINIÇÃO-->
-                <button
-                  type="button"
-                  class="btn-add-field-group btn btn-outline-light px-4 pc"
-                >
-                  Adicionar outra definição
-                </button>
-              </div>
-              <!--OLA MEU MANO ISAQUE :) . TROQUEI ESSE TRECO QUE VC FEZ POR UMA TEXTAREA-->
-              <textarea
-                name="definition"
-                cols="30"
-                rows="2"
-                class="criacao-definicao p-3 w-100"
-                placeholder="Escreva uma definição"
-              ></textarea>
-              <!--OLA MY FRIENDO IS AKI:) BOTEI UM BOTÃO PARA O MODO RESPONSIVO PQ NÃO TINHA COMO BOTAR ELE EMBAIXO DA TEXTAREA. O BOTÃO NÃO ESTÁ FUNCIONANDO-->
-              <button
-                type="button"
-                class="btn-add-field-group btn btn-outline-light moba"
-              >
-                Adicionar outra definição
-              </button>
-              <!--{{ form.definition_content_1(class="criacao-definicao p-2 w-100", placeholder="Escreva uma definição") }}-->
-            </div>
-          </div>
-        </div>
 
         <div
           class="d-none lh-lg position-relative m-5 gap-2 flex-column align-items-center has-n-field-groups z-2"
