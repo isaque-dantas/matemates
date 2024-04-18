@@ -5,34 +5,24 @@ const nFieldGroupsContainers = [representacao, exemplos, significado];
 
 function addFieldGroup(container) {
   const newFieldGroup = container.querySelector(".field-group").cloneNode(true);
-  container.appendChild(newFieldGroup);
-
-  const addFieldGroupBtns = container.querySelectorAll(".btn-add-field-group");
-  addFieldGroupBtns.forEach((button) => {
-    button.removeEventListener("click", addFieldGroup);
-  });
-
-  addFieldGroupBtns.forEach((button) => {
-    button.addEventListener("click", () => {
-      addFieldGroup(container);
-    });
-  });
-
-  removeFieldGroupBtn(container); // Update remove button listeners
+  container.querySelector(".field-groups").appendChild(newFieldGroup);
+  removeFieldGroupBtn(container);
 }
 
 function insertFieldGroupBtn(container) {
-  const addFieldGroupBtns = container.querySelectorAll(".btn-add-field-group");
-
-  addFieldGroupBtns.forEach((button) => {
-    button.addEventListener("click", () => {
+  container.addEventListener("click", (event) => {
+    if (event.target.classList.contains("btn-add-field-group")) {
       addFieldGroup(container);
-    });
+    }
   });
 }
 
-function removeFieldGroup(button) {
-  button.parentNode.parentNode.parentNode.remove();
+function removeFieldGroup(button, container) {
+  const fieldGroup = button.closest(".field-group");
+  if (fieldGroup) {
+    fieldGroup.remove();
+  }
+  removeFieldGroupBtn(container);
 }
 
 function removeFieldGroupBtn(container) {
@@ -40,18 +30,37 @@ function removeFieldGroupBtn(container) {
     ".btn-remove-field-group"
   );
 
-  if (removeFieldGroupBtns.length > 1) {
-    removeFieldGroupBtns.forEach((button) => {
-      button.disabled = false;
-      button.addEventListener("click", () => {
-        removeFieldGroup(button);
+  if (container.id === "representa") {
+    if (removeFieldGroupBtns.length > 2) {
+      removeFieldGroupBtns.forEach((button) => {
+        button.disabled = false;
+        button.addEventListener("click", () => {
+          removeFieldGroup(button, container);
+        });
       });
-    });
-  } else if (removeFieldGroupBtns.length === 1) {
-    removeFieldGroupBtns[0].disabled = true;
+    } else {
+      removeFieldGroupBtns.forEach((button) => {
+        button.disabled = true;
+      });
+    }
+  } else {
+    if (removeFieldGroupBtns.length > 1) {
+      removeFieldGroupBtns.forEach((button) => {
+        button.disabled = false;
+        button.addEventListener("click", () => {
+          removeFieldGroup(button, container);
+        });
+      });
+    } else {
+      removeFieldGroupBtns.forEach((button) => {
+        button.disabled = true;
+      });
+    }
   }
 }
 
 nFieldGroupsContainers.forEach((container) => {
   insertFieldGroupBtn(container);
+  removeFieldGroupBtn(container);
+  console.log(container.id);
 });
