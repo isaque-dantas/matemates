@@ -8,7 +8,6 @@ function addFieldGroup(container) {
   fieldGroups.appendChild(newFieldGroup);
   removeFieldGroupBtn(container);
   sortFieldGroupsIndexes();
-  console.log(fieldGroups.index)
 }
 
 function insertFieldGroupBtn(container) {
