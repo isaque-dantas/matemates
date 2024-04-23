@@ -16,7 +16,7 @@ AnimationsSwitchToggler.forEach((button) => {
   }
 });
 
-if (localStorage.getItem("grandBlueIsOff") === "true") {
+if (localStorage.getItem("grandBlueIsOff") === "true" && grandBlueAnimation !== null) {
   grandBlueAnimation.classList.add("animation-off");
 }
 
@@ -173,8 +173,3 @@ function ToggleSideBar() {
     localStorage.removeItem("sidebarAnimationOff");
   }
 }
-
-console.log(
-  "estado do local storage: " + localStorage.getItem("sidebarAnimationOff")
-);
-console.log('contem animation-off: ' + sidebar.classList.contains("animation-off"));
