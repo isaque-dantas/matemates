@@ -2,9 +2,12 @@ const nFieldGroupsContainers = document.querySelectorAll(".has-n-field-groups");
 
 function addFieldGroup(container) {
   const fieldGroups = container.querySelector(".field-groups");
-  const newFieldGroup = fieldGroups
-    .querySelector(".field-group")
-    .cloneNode(true);
+  const newFieldGroup = fieldGroups.querySelector(".field-group").cloneNode(true);
+
+  newFieldGroup.querySelectorAll("input, textarea").forEach((input) => {
+    input.value = "";
+  });
+
   fieldGroups.appendChild(newFieldGroup);
   removeFieldGroupBtn(container);
   sortFieldGroupsIndexes();
