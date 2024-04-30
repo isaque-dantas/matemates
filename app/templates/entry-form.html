@@ -1,154 +1,154 @@
 {% extends 'base-with-navbar-nav.html' %} {% block title %}Matematês // Criar
-verbete{% endblock %} {% block style %}style-create{% endblock %} {% block
+    verbete{% endblock %} {% block style %}style-create{% endblock %} {% block
 content %}
-<main class="mt-5">
-  <div class="container mb-5">{% include 'flash_messages.html' %}</div>
-  <form action="{{ endpoint }}" enctype="multipart/form-data" method="post">
-    {{ form.hidden_tag() }}
-    <section class="palavra-escolhida container col-8 d-flex flex-column">
-      <section class="palavra animacao-azul rounded">
-        <div class="position-absolute">
-          <div class="classe-genero d-flex gap-2">
-            <div class="select-classe select">
-              {{ form.main_term_grammatical_category(id="select-classe") }}
-            </div>
-            <div class="select-genero select d-block" id="genero">
-              {{ form.main_term_gender() }}
-            </div>
-          </div>
-          {{ form.entry_content(class="criacao-palavra-escolhida mt-3 p-2",
-          placeholder="Escreva o verbete") }}<br />
-          <span class="aviso-criacao-palavra-escolhida">Digite um ponto final (.) para separar as sílabas</span>
-        </div>
-      </section>
+    <main class="mt-5">
+        <div class="container mb-5">{% include 'flash_messages.html' %}</div>
+        <form action="{{ endpoint }}" enctype="multipart/form-data" method="post">
+            {{ form.hidden_tag() }}
+            <section class="palavra-escolhida container col-8 d-flex flex-column">
+                <section class="palavra animacao-azul rounded">
+                    <div class="position-absolute">
+                        <div class="classe-genero d-flex gap-2">
+                            <div class="select-classe select">
+                                {{ form.main_term_grammatical_category(id="select-classe") }}
+                            </div>
+                            <div class="select-genero select d-block" id="genero">
+                                {{ form.main_term_gender() }}
+                            </div>
+                        </div>
+                        {{ form.entry_content(class="criacao-palavra-escolhida mt-3 p-2",
+          placeholder="Escreva o verbete") }}<br/>
+                        <span class="aviso-criacao-palavra-escolhida">Digite um ponto final (.) para separar as sílabas</span>
+                    </div>
+                </section>
 
-      <section class="informacoes mt-5 mb-5">
-        <div class="d-flex position-relative m-5 gap-2 flex-column align-items-center has-n-field-groups z-2"
-          id="significado">
-          <div id="definition-field-groups" class="field-groups d-flex align-items-center flex-column gap-5 w-100">
-            <div class="field-group d-flex flex-column gap-3 w-100 px-3" id="definicao-1">
-              <div class="d-flex justify-content-between">
-                <div class="definition-options d-flex gap-3">
-                  <button type="button" class="btn btn-remove-field-group btn-dark" disabled>
-                    <img src="{{ url_for('static', filename='img/trash.svg') }}" alt="" />
-                  </button>
-                  <div class="select-area select d-flex align-self-stretch">
-                    {{ form.definition_knowledge_area_1() }}
-                  </div>
-                </div>
-                <!--OLA MEU MANO ISAQUE :) . TROQUEI ESSE BOTÃO DE LUGAR E AGORA ELE SÓ FUNCIONA QND CLICADO NA PRIMEIRA DEFINIÇÃO-->
-                <button type="button" class="btn-add-field-group btn btn-outline-light px-4 pc">
-                  Adicionar outra definição
-                </button>
-              </div>
-              <!--OLA MEU MANO ISAQUE :) . TROQUEI ESSE TRECO QUE VC FEZ POR UMA TEXTAREA-->
-              {{ form.definition_content_1(cols="30", rows="2",
+                <section class="informacoes mt-5 mb-5">
+                    <div class="d-flex position-relative m-5 gap-2 flex-column align-items-center has-n-field-groups z-2"
+                         id="significado">
+                        <div id="definition-field-groups"
+                             class="field-groups d-flex align-items-center flex-column gap-5 w-100">
+                            <div class="field-group d-flex flex-column gap-3 w-100 px-3" id="definicao-1">
+                                <div class="d-flex justify-content-between">
+                                    <div class="definition-options d-flex gap-3">
+                                        <button type="button" class="btn btn-remove-field-group btn-dark" disabled>
+                                            <img src="{{ url_for('static', filename='img/trash.svg') }}" alt=""/>
+                                        </button>
+                                        <div class="select-area select d-flex align-self-stretch">
+                                            {{ form.definition_knowledge_area_1() }}
+                                        </div>
+                                    </div>
+                                    <button type="button" class="btn-add-field-group btn btn-outline-light px-4 pc">
+                                        Adicionar outra definição
+                                    </button>
+                                </div>
+                                {{ form.definition_content_1(cols="30", rows="2",
               class="criacao-definicao p-3 w-100", placeholder="Escreva uma
               definição") }}
-              <!--OLA MY FRIENDO IS AKI:) BOTEI UM BOTÃO PARA O MODO RESPONSIVO PQ NÃO TINHA COMO BOTAR ELE EMBAIXO DA TEXTAREA. O BOTÃO NÃO ESTÁ FUNCIONANDO-->
-              <button type="button" class="btn-add-field-group btn btn-outline-light moba">
-                Adicionar outra definição
-              </button>
-            </div>
-          </div>
-        </div>
+                                <button type="button" class="btn-add-field-group btn btn-outline-light moba">
+                                    Adicionar outra definição
+                                </button>
+                            </div>
+                        </div>
+                    </div>
 
-        <div class="d-none lh-lg position-relative m-5 gap-2 flex-column align-items-center has-n-field-groups z-2"
-          id="exemplo">
-          <div id="question-field-groups" class="field-groups d-flex align-items-center flex-column gap-5 w-100">
-            <div class="field-group d-flex flex-column gap-3 w-100 px-3">
-              <div class="exemple-options d-flex justify-content-between">
-                <button type="button" class="btn btn-remove-field-group btn-dark" disabled>
-                  <img src="{{ url_for('static', filename='img/trash.svg') }}" alt="" />
-                </button>
-                <!--OLA ISAQUE JOGADOR DE ZOE :) MUDEI A POSIÇÃO DESSE BOTÃO E ELE FICOU COM O MESMO PROBLEMA DO DE CIMA-->
-                <button type="button" class="btn-add-field-group btn btn-outline-light px-4 pc">
-                  Adicionar outra questão
-                </button>
-              </div>
+                    <div class="d-none lh-lg position-relative m-5 gap-2 flex-column align-items-center has-n-field-groups z-2"
+                         id="exemplo">
+                        <div id="question-field-groups"
+                             class="field-groups d-flex align-items-center flex-column gap-5 w-100">
+                            <div class="field-group d-flex flex-column gap-3 w-100 px-3">
+                                <div class="exemple-options d-flex justify-content-between">
+                                    <button type="button" class="btn btn-remove-field-group btn-dark" disabled>
+                                        <img src="{{ url_for('static', filename='img/trash.svg') }}" alt=""/>
+                                    </button>
+                                    <button type="button" class="btn-add-field-group btn btn-outline-light px-4 pc">
+                                        Adicionar outra questão
+                                    </button>
+                                </div>
 
-              <div class="w-100 d-flex flex-column gap-3">
-                {{ form.question_statement_1(class="criacao-pergunta",
-                placeholder="Insira o enunciado") }} {{
-                form.question_answer_1(class="criacao-resposta",
+                                <div class="w-100 d-flex flex-column gap-3">
+                                    {{ form.question_statement_1(class="criacao-pergunta",
+                placeholder="Insira o enunciado") }} {{ form.question_answer_1(class="criacao-resposta",
                 placeholder="Insira a resposta") }}
-                <!--OLA ISAQUE-KUN :) BOTEI UM BOTÃO PARA O MODO RESPONSIVO PQ ERA NECESSÁRIO. ELE NÃO ESTÁ FUNCIONANDO-->
-                <button type="button" class="btn-add-field-group btn btn-outline-light px-4 moba">
-                  Adicionar outra questão
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+                                    <button type="button" class="btn-add-field-group btn btn-outline-light px-4 moba">
+                                        Adicionar outra questão
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-        <div class="d-none lh-lg position-relative m-5 gap-2 flex-column align-items-center has-n-field-groups z-2"
-          id="representa">
-          <div id="representa-field-groups" class="field-groups d-flex align-items-center flex-column gap-5 w-100">
-            <div class="field-group w-100 px-3">
-              <div class="illustration d-flex justify-content-between w-100 gap-5">
-                <!--OLA XLR8 :) CRIEI A DIV DEBAIXO PARA BOTAR O BOTÃO DE APAGAR NO RESPONSIVO. ELE NÃO ESTÁ FUNCIONANDO-->
-                <div class="w-100 moba">
-                  <button type="button" class="btn btn-remove-field-group btn-dark align-items-start" disabled>
-                    <img src="{{ url_for('static', filename='img/trash.svg') }}" alt="" />
-                  </button>
-                </div>
-                <label style="cursor: pointer" for="get-file" class="criacao-imagem z-2 fs-6 cursor-pointer"><img
-                    src="../static/img/selecionar-imagem.png" alt="" class="preview-image" /></label>
-                {{ form.image(class="d-none", id="get-file") }}
-                <div class="d-flex flex-column gap-3 w-100">
-                  <div class="d-flex justify-content-between pc">
-                    <!--OLA AYUMI-CHAN :) ADICIONEI ESSE BOTÃO DE APAGAR, ELE NÃO ESTÁ FUNCIONANDO-->
-                    <button type="button" class="btn btn-remove-field-group btn-dark" disabled>
-                      <img src="{{ url_for('static', filename='img/trash.svg') }}" alt="" />
+                    <div class="d-none lh-lg position-relative m-5 gap-2 flex-column align-items-center has-n-field-groups z-2"
+                         id="representa">
+                        <div id="representa-field-groups"
+                             class="field-groups d-flex align-items-center flex-column gap-5 w-100">
+                            <div class="field-group w-100 px-3">
+                                <div class="illustration d-flex justify-content-between w-100 gap-5">
+                                    <div class="w-100 moba">
+                                        <button type="button"
+                                                class="btn btn-remove-field-group btn-dark align-items-start" disabled>
+                                            <img src="{{ url_for('static', filename='img/trash.svg') }}" alt=""/>
+                                        </button>
+                                    </div>
+                                    <label style="cursor: pointer" for="get-file"
+                                           class="criacao-imagem z-2 fs-6 cursor-pointer"><img
+                                            src="../static/img/selecionar-imagem.png" alt=""
+                                            class="preview-image"/></label>
+                                    {{ form.image_1(class="d-none", id="get-file") }}
+                                    <div class="d-flex flex-column gap-3 w-100">
+                                        <div class="d-flex justify-content-between pc">
+                                            <button type="button" class="btn btn-remove-field-group btn-dark" disabled>
+                                                <img src="{{ url_for('static', filename='img/trash.svg') }}" alt=""/>
+                                            </button>
+                                            <button type="button"
+                                                    class="btn-add-field-group btn btn-outline-light px-4">
+                                                Adicionar outra ilustração
+                                            </button>
+                                        </div>
+                                        {{ form.image_caption_1(class="criacao-legenda z-2", cols="30", rows="3") }}
+                                        <button type="button"
+                                                class="btn-add-field-group btn btn-outline-light px-4 moba">
+                                            Adicionar outra ilustração
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <div class="validation d-flex gap-4 mb-5 mx-auto">
+                    <a href="{{ url_for('dashboard.index') }}"
+                       class="btn btn-outline-primary border-2 px-4">Cancelar</a>
+                    <button class="btn btn-outline-light border-2 px-5 fw-bold" type="submit">
+                        {%- if is_edition -%} Confirmar edição {%- else -%} Pré-visualizar
+                            verbete {%- endif -%}
                     </button>
-                    <!--OLA ISAQUE LIEBERT LOLI :) ADICIONEI ESSE BOTÃO DE ADICIONAR, ELE NÃO ESTÁ FUNCIONANDO-->
-                    <button type="button" class="btn-add-field-group btn btn-outline-light px-4">
-                      Adicionar outra ilustração
-                    </button>
-                  </div>
-                  <!--OLA ISAQUE SEVERINO GOMES :) TAMBÉM BOTEI TEXTAREA AQUI-->
-                  <textarea name="" id="image-description_1" cols="30" rows="3" class="criacao-legenda z-2"></textarea>
-                  <!--{{ form.image_caption(class="criacao-legenda z-2 w-75", placeholder="Crie uma legenda para a imagem") }}-->
-                  <!--OLA COMPARTIMENTO ISAQUE CUANTICO :) BOTEI ESSE BOTÃO RESPONSIVO PQ SIM. ELE NÃO ESTÁ FUNCIONANDO-->
-                  <button type="button" class="btn-add-field-group btn btn-outline-light px-4 moba">
-                    Adicionar outra ilustração
-                  </button>
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-      <div class="validation d-flex gap-4 mb-5 mx-auto">
-        <a href="{{ url_for('dashboard.index') }}" class="btn btn-outline-primary border-2 px-4">Cancelar</a>
-        <button class="btn btn-outline-light border-2 px-5 fw-bold" type="submit">
-          {%- if is_edition -%} Confirmar edição {%- else -%} Pré-visualizar
-          verbete {%- endif -%}
-        </button>
-      </div>
-      <div class="btn-box d-flex justify-content-between">
-        <button type="button" class="btn-exemplo-definicao add-definicao border-0 selecionado" style="--clr: #1e9bff"
-          id="btn-sig" onclick="mostrarDefinicao(this)">
-          <span>DEFINIÇÃO</span><i></i>
-        </button>
-        <button type="button" class="btn-exemplo-definicao add-exemplos border-0" style="--clr: #1e9bff" id="btn-ex"
-          onclick="mostrarExemplos(this)">
-          <span> EXEMPLOS</span><i></i>
-        </button>
-        <button type="button" class="btn-exemplo-definicao add-img border-0" style="--clr: #1e9bff" id="btn-recomenda"
-          onclick="mostrarRepresentacao(this)">
-          <span>ILUSTRAÇÃO</span><i></i>
-        </button>
-      </div>
-    </section>
-  </form>
-</main>
+                <div class="btn-box d-flex justify-content-between">
+                    <button type="button" class="btn-exemplo-definicao add-definicao border-0 selecionado"
+                            style="--clr: #1e9bff"
+                            id="btn-sig" onclick="mostrarDefinicao(this)">
+                        <span>DEFINIÇÃO</span><i></i>
+                    </button>
+                    <button type="button" class="btn-exemplo-definicao add-exemplos border-0" style="--clr: #1e9bff"
+                            id="btn-ex"
+                            onclick="mostrarExemplos(this)">
+                        <span> EXEMPLOS</span><i></i>
+                    </button>
+                    <button type="button" class="btn-exemplo-definicao add-img border-0" style="--clr: #1e9bff"
+                            id="btn-recomenda"
+                            onclick="mostrarRepresentacao(this)">
+                        <span>ILUSTRAÇÃO</span><i></i>
+                    </button>
+                </div>
+            </section>
+        </form>
+    </main>
 
-<script src="{{ url_for('static', filename='js/script.js') }}"></script>
-<script src="{{ url_for('static', filename='js/change_image.js') }}"></script>
-<!-- <script src="{{ url_for('static', filename='js/manage-field-groups-adding.js') }}"></script> -->
-<script src="{{ url_for('static', filename='js/fieldGroups.js') }}"></script>
-<script src="{{ url_for('static', filename='js/change-disabled-property-of-empty-valued-selects.js') }}"></script>
-<script src="{{ url_for('static', filename='js/fetch-create-term-form.js') }}"></script>
-<script src="{{ url_for('static', filename='js/load-entry-data-in-entry-form.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/change_image.js') }}"></script>
+    <!-- <script src="{{ url_for('static', filename='js/manage-field-groups-adding.js') }}"></script> -->
+    <script src="{{ url_for('static', filename='js/fieldGroups.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/change-disabled-property-of-empty-valued-selects.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/fetch-create-term-form.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/load-entry-data-in-entry-form.js') }}"></script>
 {% endblock %}

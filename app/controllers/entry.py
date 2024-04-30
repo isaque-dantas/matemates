@@ -73,7 +73,7 @@ def entry_creation():
 def edit_entry(entry_id):
     if is_user_admin(current_user):
         form = EntryCreationForm()
-        entry = Entry.get_entry_by_id(entry_id)
+        entry = Entry.get_by_id(entry_id)
 
         if form.validate_on_submit():
             try:
@@ -101,7 +101,7 @@ def edit_entry(entry_id):
 @login_required
 def entry_data(entry_id):
     if is_user_admin(current_user):
-        entry = Entry.get_entry_by_id(entry_id)
+        entry = Entry.get_by_id(entry_id)
         return entry.get_dict_of_properties()
     else:
         abort(403)

@@ -48,10 +48,10 @@ class EntryCreationForm(FlaskForm):
 
     question_answer_1 = StringField('Resposta')
 
-    image = FileField('Imagem', validators=[
+    image_1 = FileField('Imagem', validators=[
         FileAllowed(['jpg', 'png', 'jpeg'], 'Apenas arquivos \'jpg\', \'png\' ou \'jpeg\' são permitidos.'),
     ])
 
-    image_caption = StringField()
+    image_caption_1 = TextAreaField('Legenda da imagem')
 
     submit = SubmitField('Confirmar')
