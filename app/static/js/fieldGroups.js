@@ -53,15 +53,14 @@ function sortFieldGroupsIndexes() {
 
 function updateFieldGroupIndex(fieldGroup, newIndex) {
   updateIDIndex(fieldGroup, newIndex);
-  const fieldsQueries = ["input", "select"];
-  fieldsQueries.forEach((fieldQuery) => {
-    const field = fieldGroup.querySelector(fieldQuery);
-    if (field) {
-      updateIDIndex(field, newIndex);
-      updateNameIndex(field, newIndex);
-    }
+
+  const inputs = fieldGroup.querySelectorAll("input, select, textarea");
+  inputs.forEach((input) => {
+    updateIDIndex(input, newIndex);
+    updateNameIndex(input, newIndex);
   });
 }
+
 
 function updateIDIndex(element, newIndex) {
   element.id = getDescriptionFromProperty(element.id) + newIndex.toString();
