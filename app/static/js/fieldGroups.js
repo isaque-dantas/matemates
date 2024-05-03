@@ -2,11 +2,23 @@ const nFieldGroupsContainers = document.querySelectorAll(".has-n-field-groups");
 
 function addFieldGroup(container) {
   const fieldGroups = container.querySelector(".field-groups");
-  const newFieldGroup = fieldGroups.querySelector(".field-group").cloneNode(true);
+  const newFieldGroup = fieldGroups
+    .querySelector(".field-group")
+    .cloneNode(true);
 
   newFieldGroup.querySelectorAll("input, textarea").forEach((input) => {
     input.value = "";
   });
+
+  const imageSelect = newFieldGroup.querySelector(".preview-image");
+  imageSelect.src = "../static/img/selecionar-imagem.png";
+  imageSelect.style.padding = "20px";
+
+  const previewId = imageSelect.id.replace("preview-image-", "");
+  const inputLabel = newFieldGroup.querySelector(".criacao-imagem");
+  console.log(previewId)
+  inputLabel.htmlFor = "get-file-" + previewId;
+
 
   fieldGroups.appendChild(newFieldGroup);
   removeFieldGroupBtn(container);
@@ -57,13 +69,12 @@ function sortFieldGroupsIndexes() {
 function updateFieldGroupIndex(fieldGroup, newIndex) {
   updateIDIndex(fieldGroup, newIndex);
 
-  const inputs = fieldGroup.querySelectorAll("input, select, textarea");
+  const inputs = fieldGroup.querySelectorAll("input, select, textaream, img");
   inputs.forEach((input) => {
     updateIDIndex(input, newIndex);
     updateNameIndex(input, newIndex);
   });
 }
-
 
 function updateIDIndex(element, newIndex) {
   element.id = getDescriptionFromProperty(element.id) + newIndex.toString();
