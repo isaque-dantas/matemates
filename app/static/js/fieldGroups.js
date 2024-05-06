@@ -42,13 +42,15 @@ function addFieldGroup(container) {
     input.value = "";
   });
 
-  const imageSelect = newFieldGroup.querySelector(".preview-image");
-  imageSelect.src = "../static/img/selecionar-imagem.png";
-  imageSelect.style.padding = "20px";
+  if (container.id === "representa") {
+    const imageSelect = newFieldGroup.querySelector(".preview-image");
+    imageSelect.src = "../static/img/selecionar-imagem.png";
+    imageSelect.style.padding = "20px";
+    updateLabelForAttribute(container);
+  }
 
   fieldGroups.appendChild(newFieldGroup);
   imageInputs = document.querySelectorAll(".get-file");
-  updateLabelForAttribute(container);
   imageHandle();
   removeFieldGroupBtn(container);
   sortFieldGroupsIndexes();
