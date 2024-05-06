@@ -1,34 +1,36 @@
 const nFieldGroupsContainers = document.querySelectorAll(".has-n-field-groups");
-let imageInputs = document.querySelectorAll(".get-file");
 
-imageInputs.forEach((input) => {
-  input.addEventListener("change", function (e) {
-    const imageInputs = document.querySelectorAll(".get-file");
-    const file = e.target.files[0];
-    const previewId = input.id.replace("get-file-", "");
-    const previewImage = document.getElementById("preview-image-" + previewId);
-    console.log("image preview:" + previewImage);
-    console.log(imageInputs);
+function imageHandle() {
+  imageInputs.forEach((input) => {
+    input.addEventListener("change", function (e) {
+      const imageInputs = document.querySelectorAll(".get-file");
+      const file = e.target.files[0];
+      const previewId = input.id.replace("get-file-", "");
+      const previewImage = document.getElementById(
+        "preview-image-" + previewId
+      );
+      console.log("input:", input);
 
-    if (file && previewImage) {
-      const reader = new FileReader();
+      if (file && previewImage) {
+        const reader = new FileReader();
 
-      reader.onload = function (e) {
-        const image = e.target.result;
-        const imageMatch = image.match(/^data:image\/.*/);
+        reader.onload = function (e) {
+          const image = e.target.result;
+          const imageMatch = image.match(/^data:image\/.*/);
 
-        if (imageMatch) {
-          previewImage.src = e.target.result;
-          previewImage.style.padding = 0;
-        } else {
-          alert("Escolha apenas imagens");
-        }
-      };
+          if (imageMatch) {
+            previewImage.src = e.target.result;
+            previewImage.style.padding = 0;
+          } else {
+            alert("Escolha apenas imagens");
+          }
+        };
 
-      reader.readAsDataURL(file);
-    }
+        reader.readAsDataURL(file);
+      }
+    });
   });
-});
+}
 
 function addFieldGroup(container) {
   const fieldGroups = container.querySelector(".field-groups");
@@ -46,6 +48,8 @@ function addFieldGroup(container) {
 
   fieldGroups.appendChild(newFieldGroup);
   imageInputs = document.querySelectorAll(".get-file");
+  updateLabelForAttribute(container);
+  imageHandle();
   removeFieldGroupBtn(container);
   sortFieldGroupsIndexes();
 }
@@ -64,7 +68,16 @@ function removeFieldGroup(button, container) {
     fieldGroup.remove();
     removeFieldGroupBtn(container);
     sortFieldGroupsIndexes();
+    updateLabelForAttribute(container);
   }
+}
+
+function updateLabelForAttribute(container) {
+  const fieldGroups = container.querySelectorAll(".field-group");
+  fieldGroups.forEach((fieldGroup, index) => {
+    const imageLabel = fieldGroup.querySelector(".criacao-imagem");
+    imageLabel.htmlFor = "get-file-" + (index + 1);
+  });
 }
 
 function removeFieldGroupBtn(container) {
