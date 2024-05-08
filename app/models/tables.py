@@ -323,7 +323,7 @@ class Entry(db.Model):
     content = db.Column(db.String(256), nullable=False, unique=True)
     is_validated = db.Column(db.Boolean, nullable=False, default=False)
 
-    image = db.relationship('Image', backref='entry', uselist=False)
+    image = db.relationship('Image', backref='entry')
     questions = db.relationship('Question', backref='entry')
     definitions = db.relationship('Definition', backref='entry')
     terms = db.relationship('Term', backref='entry')
@@ -342,7 +342,7 @@ class Entry(db.Model):
         db.session.add(entry)
 
         entry.register_terms_and_syllables(entry_content_with_dots_and_asterisks, form_data)
-        entry.register_image(form_data)
+        entry.register_images(form_data)
         entry.register_n_attributes(form_data)
 
         return entry
@@ -361,7 +361,7 @@ class Entry(db.Model):
         self.delete_image()
 
         self.register_terms_and_syllables(entry_content_with_dots_and_asterisks, form_data)
-        self.register_image(form_data)
+        self.register_images(form_data)
         self.register_n_attributes(form_data)
 
     def raise_if_form_data_is_invalid(self, form_data):
@@ -409,7 +409,7 @@ class Entry(db.Model):
 
         db.session.commit()
 
-    def register_image(self, form_data):
+    def register_images(self, form_data):
         image_file = form_data['image']
         if image_file.filename and image_file:
             filename = f'{self.get_normalized_content()}.{get_extension_from_filename(image_file.filename)}'
@@ -429,11 +429,12 @@ class Entry(db.Model):
     def register_n_attributes(self, form_data):
         n_attributes = {
             'definition': [],
-            'question': []
+            'question': [],
+            'image': []
         }
 
         for key, value in form_data.items():
-            if 'definition' not in key and 'question' not in key:
+            if 'definition' not in key and 'question' not in key and 'image' not in key:
                 continue
 
             key_index = Entry.get_index_from_form_data_key(key)
@@ -459,6 +460,8 @@ class Entry(db.Model):
                 )
 
                 db.session.add(definition)
+            else:
+                raise ValueError('Insira as definições corretamente.')
 
         for question in n_attributes['question']:
             if question['statement'] and question['answer']:
@@ -470,6 +473,26 @@ class Entry(db.Model):
                 )
 
                 db.session.add(question)
+            else:
+                raise ValueError('Insira as questões corretamente.')
+
+        for image in n_attributes['image']:
+            image_content = image['content']
+            if image_content:
+                filename = f'{self.get_normalized_content()}.{get_extension_from_filename(image_content.filename)}'
+                image_content.save(os.path.join('app/static/img/entry_illustration/', filename))
+                image_content.close()
+
+                image = Image(
+                    path=filename,
+                    caption=form_data['image_caption'] if form_data['image_caption'] else None,
+                    order=image['order'],
+                    entry=self
+                )
+
+                db.session.add(image)
+            else:
+                raise ValueError('Insira as ilustrações corretamente.')
 
         db.session.commit()
 
@@ -670,6 +693,7 @@ class Image(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     path = db.Column(db.String(256), nullable=False)
     caption = db.Column(db.String(256), nullable=True)
+    order = db.Column(db.Integer, nullable=False)
     entry_id = db.Column(db.Integer, db.ForeignKey('entry.id'))
 
 

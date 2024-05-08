@@ -14,17 +14,12 @@ entry_blueprint = Blueprint('entry', __name__)
 def view_entry(entry_content):
     entry = Entry.get_by_content(entry_content)
     if entry:
-        if is_user_admin(current_user):
+        if is_user_admin(current_user) or entry.is_validated:
             return render_template('entry.html', entry=entry, enumerate=enumerate, format=format,
                                    user_is_admin=is_user_admin(current_user), user=current_user,
                                    is_current_user_logged_in=is_user_logged_in(current_user))
         else:
-            if entry.is_validated:
-                return render_template('entry.html', entry=entry, enumerate=enumerate, format=format,
-                                       user_is_admin=is_user_admin(current_user), user=current_user,
-                                       is_current_user_logged_in=is_user_logged_in(current_user))
-            else:
-                abort(403)
+            abort(403)
     else:
         abort(404)
 
@@ -47,11 +42,11 @@ def entry_creation():
 
         if form.validate_on_submit():
             try:
-                print(f'request.files: {dict(request.files)}')
-                print(f'request.form: {dict(request.form)}')
-                form_data = dict(request.form)
-                form_files = dict(request.files)
-                form_data.update(form_files)
+                # print(f'request.files: {dict(request.files)}')
+                # print(f'request.form: {dict(request.form)}')
+                form_data = get_form_data_from_request(request)
+                print(form_data)
+
                 new_entry = Entry.register(form_data)
             except Exception as e:
                 flash(str(e), category='danger')
