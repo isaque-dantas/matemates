@@ -226,12 +226,19 @@ nav {
 }
 
 .exemplo img {
+  position: relative;
   border: solid 3px white;
   border-radius: 5px;
   padding: 20px;
   max-width: 150px;
   max-height: 150px;
 }
+
+.exemplo .caption {
+  text-align: center;
+  margin-top: 5px;
+}
+
 /*--*/
 .perguntas {
   margin: 4rem 3rem 3rem 3rem;

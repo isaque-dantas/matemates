@@ -1,4 +1,5 @@
 const nFieldGroupsContainers = document.querySelectorAll(".has-n-field-groups");
+let imageInputs = document.querySelectorAll(".get-file");
 
 function imageHandle() {
   imageInputs.forEach((input) => {
@@ -9,7 +10,6 @@ function imageHandle() {
       const previewImage = document.getElementById(
         "preview-image-" + previewId
       );
-      console.log("input:", input);
 
       if (file && previewImage) {
         const reader = new FileReader();
@@ -46,8 +46,11 @@ function addFieldGroup(container) {
     const imageSelect = newFieldGroup.querySelector(".preview-image");
     imageSelect.src = "../static/img/selecionar-imagem.png";
     imageSelect.style.padding = "20px";
-    updateLabelForAttribute(container);
   }
+
+  const imageLabel = newFieldGroup.querySelector(".criacao-imagem");
+  const newInputId = "get-file-" + (imageInputs.length + 1);
+  imageLabel.htmlFor = newInputId;
 
   fieldGroups.appendChild(newFieldGroup);
   imageInputs = document.querySelectorAll(".get-file");
