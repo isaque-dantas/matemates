@@ -5,160 +5,168 @@
 {% block style %}style-entry{% endblock %}
 
 {% block content %}
-    <main class="mt-5 container d-flex justify-content-between">
-        <div class="mb-5">
-            {% include 'flash_messages.html' %}
+<main class="mt-5 container d-flex justify-content-between">
+    <div class="mb-5">
+        {% include 'flash_messages.html' %}
+    </div>
+    <section class="pesquisa-responsivo col-3">
+        <div class="search-box d-flex justify-content-between align-items-center">
+            <input type="text" class="search-txt" placeholder="Pesquise um termo aqui!" />
+            <i class="bi bi-search" alt="lupa"></i>
         </div>
-        <section class="pesquisa-responsivo col-3">
-            <div class="search-box d-flex justify-content-between align-items-center">
-                <input type="text" class="search-txt" placeholder="Pesquise um termo aqui!"/>
-                <i class="bi bi-search" alt="lupa"></i>
-            </div>
-        </section>
-        <section class="palavra-escolhida col-8 d-flex flex-column">
-            <div class="d-flex gap-5">
-                <section class="palavra rounded w-100 animacao-azul-superior">
-                    <div class="position-absolute">
-                        <p>
-                            {{ entry.get_main_term().grammatical_category.capitalize() }} {{ entry.get_main_term().get_gender_in_full() }}
-                        </p>
-                        <h1>{% include 'entry-content-parsed.html' %}</h1>
-                    </div>
-                </section>
-                {% if user_is_admin %}
-                    <div class="d-flex flex-column gap-3">
-                        <a href="{{ url_for('entry.edit_entry', entry_id=entry.id) }}"
-                           class="btn btn-primary d-flex justify-content-center align-content-center"
-                           style="width: 40px; height: 40px"><img src="{{ url_for('static', filename='img/edit.svg') }}"
-                                                                  alt=""></a>
-                        <a href="{{ url_for('entry.delete_entry', entry_content=entry.get_normalized_content()) }}"
-                           class="btn btn-primary d-flex justify-content-center align-content-center"
-                           style="width: 40px; height: 40px"><img src="{{ url_for('static', filename='img/trash.svg') }}" alt=""></a>
-                    </div>
-                {% endif %}
-            </div>
-
-            <section class="significado animated mt-5">
-                <div class="sig d-flex justify-content-between" id="significado">
-                    <ol class="significado-conteudo m-5 lh-lg">
-                        {% for definition in entry.definitions %}
-                            {% if definition.knowledge_area %}
-                                <li class="area">
-                                    <span class="border p-1 rounded me-2"
-                                          style="font-size: 14px; font-family: monospace">{{ definition.knowledge_area.content }}</span>
-
-                                    <div class="mt-2">{{ definition.content }}</div>
-                                </li>
-                            {% else %}
-                                <li>{{ definition.content }}</li>
-                            {% endif %}
-                        {% endfor %}
-                    </ol>
-
-                    {% if entry.image %}
-                        <div class="representacao p-5 d-flex flex-column justify-content-center">
-                            <div class="exemplo d-flex align-items-center justify-content-center">
-                                <div id="carouselExample" class="carousel slide">
-                                    <div class="carousel-inner">
-                                        <div class="carousel-item active">
-                                        <img src={{ url_for('static', filename='img/entry_illustration/{}'.format(entry.image.path)) }} alt="">
-                                      </div>
-                                      <div class="carousel-item">
-                                        <img src={{ url_for('static', filename='img/entry_illustration/{}'.format(entry.image.path)) }} alt="...">
-                                      </div>
-                                    </div>
-                                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-                                      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                      <span class="visually-hidden">Previous</span>
-                                    </button>
-                                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-                                      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                      <span class="visually-hidden">Next</span>
-                                    </button>
-                                  </div>
-                            </div>
-                        </div>
-                    {% endif %}
+    </section>
+    <section class="palavra-escolhida col-8 d-flex flex-column">
+        <div class="d-flex gap-5">
+            <section class="palavra rounded w-100 animacao-azul-superior">
+                <div class="position-absolute">
+                    <p>
+                        {{ entry.get_main_term().grammatical_category.capitalize() }} {{
+                        entry.get_main_term().get_gender_in_full() }}
+                    </p>
+                    <h1>{% include 'entry-content-parsed.html' %}</h1>
                 </div>
-                {% if entry.questions %}
-                    <div class="d-none justify-content-between lh-lg position-relative" id="exemplo">
-                        <h5 class="titulo-perguntas position-absolute z-2">Questões</h5>
-                        <ul class="perguntas lh-lg">
-                            {% for question in entry.questions %} {% if question.explanation %}
-                                <li>
-                                    {{ question.statement }}<br/>R: {{ question.answer }}<br/>E: {{ question.explanation }}
-                                </li>
-                            {% else %}
-                                <li>{{ question.statement }}<br/>R: {{ question.answer }}</li>
-                            {% endif %} {% endfor %}
-                        </ul>
-                    </div>
-                {% endif %}
             </section>
-            {% if entry.questions %}
-                <div class="btn-box">
-                    <button type="button" class="btn-exemplo-definicao d-block mt-5 border-0" style="--clr: #1e9bff"
-                            id="btn-ex">
-                        <span>VEJA EXEMPLOS</span><i></i>
-                    </button>
-                    <button type="button" class="btn-exemplo-definicao d-none mt-5 border-0" style="--clr: #1e9bff"
-                            id="btn-sig">
-                        <span>VOLTE PARA DEFINIÇÃO</span><i></i>
-                    </button>
-                </div>
-            {% endif %}
-        </section>
-
-        <section class="recomendacao col-3">
-            <div class="search-box justify-content-between align-items-center">
-                <input type="text" class="search-txt" placeholder="Pesquise um termo aqui!"/>
-                <i class="bi bi-search" alt="lupa"></i>
+            {% if user_is_admin %}
+            <div class="d-flex flex-column gap-3">
+                <a href="{{ url_for('entry.edit_entry', entry_id=entry.id) }}"
+                    class="btn btn-primary d-flex justify-content-center align-content-center"
+                    style="width: 40px; height: 40px"><img src="{{ url_for('static', filename='img/edit.svg') }}"
+                        alt=""></a>
+                <a href="{{ url_for('entry.delete_entry', entry_content=entry.get_normalized_content()) }}"
+                    class="btn btn-primary d-flex justify-content-center align-content-center"
+                    style="width: 40px; height: 40px"><img src="{{ url_for('static', filename='img/trash.svg') }}"
+                        alt=""></a>
             </div>
-            {% if entry.is_validated %}
-                <a href="" class="link-termo-do-dia">
-                    <div class="termo-do-dia mt-5">
-                        <span></span><span></span><span></span><span></span>
-                        <h4 class="d-flex justify-content-center p-3 rounded-top fw-bold">
-                            TERMO DO DIA
-                        </h4>
-                        <div class="elementos">
-                            <h2 class="d-flex justify-content-center">Be.ta</h2>
-                            <div class="imagem d-flex justify-content-center fs-1 pb-4">β</div>
-                            <div class="significado-recomendacao">
-                                <p>
-                                    Trata-se do homem beta, um termo emprestado da biologia, que
-                                    significa o oposto do macho alfa, o líder de um grupo de animais.
-                                </p>
+            {% endif %}
+        </div>
+
+        <section class="significado animated mt-5">
+            <div class="sig d-flex justify-content-between" id="significado">
+                <ol class="significado-conteudo m-5 lh-lg">
+                    {% for definition in entry.definitions %}
+                    {% if definition.knowledge_area %}
+                    <li class="area">
+                        <span class="border p-1 rounded me-2" style="font-size: 14px; font-family: monospace">{{
+                            definition.knowledge_area.content }}</span>
+
+                        <div class="mt-2">{{ definition.content }}</div>
+                    </li>
+                    {% else %}
+                    <li>{{ definition.content }}</li>
+                    {% endif %}
+                    {% endfor %}
+                </ol>
+
+                {% if entry.image %}
+                <div class="representacao p-5 d-flex flex-column justify-content-center">
+                    <div class="exemplo d-flex align-items-center justify-content-center">
+                        <div id="carouselExample" class="carousel slide">
+                            <div class="carousel-inner">
+                                <div class="carousel-item active">
+                                    <img src={{ url_for('static', filename='img/entry_illustration/{}'
+                                        .format(entry.image.path)) }} alt="">
+                                    <div class="caption d-none d-md-block">
+                                        <p> ângulo ɑ, de 45°. Também poderia ser representado como o ângulo BÂC.</p>
+                                    </div>
+                                </div>
+                                <div class="carousel-item">
+                                    <img src={{ url_for('static', filename='img/entry_illustration/{}'
+                                        .format(entry.image.path)) }} alt="...">
+                                </div>
                             </div>
-                            <div class="legenda d-flex align-items-center justify-content-center"></div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample"
+                                data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carouselExample"
+                                data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
                         </div>
                     </div>
-                </a>
-            {% else %}
-                <div class="validacao mt-5">
-                    <span></span><span></span><span></span><span></span>
-                    <h4 class="d-flex justify-content-center p-3 rounded-top fw-bold">
-                        Aceitar verbete?
-                    </h4>
-                    <div class="elementos d-flex flex-column">
-                        <a href="{{ url_for('entry.validate_entry', entry_content=entry.get_normalized_content()) }}"
-                           type="button"
-                           class="btn-confirmacao mt-5 border-0 text-center text-decoration-none"
-                           style="--clr: #00ff18">
-                            <span>ACEITAR</span><i></i>
-                        </a>
-                        <a href="{{ url_for('entry.delete_entry', entry_content=entry.get_normalized_content()) }}"
-                           type="button"
-                           class="btn-confirmacao mt-5 border-0 text-center text-decoration-none"
-                           style="--clr: #ff0037">
-                            <span>NEGAR</span><i></i>
-                        </a>
-                    </div>
                 </div>
+                {% endif %}
+            </div>
+            {% if entry.questions %}
+            <div class="d-none justify-content-between lh-lg position-relative" id="exemplo">
+                <h5 class="titulo-perguntas position-absolute z-2">Questões</h5>
+                <ul class="perguntas lh-lg">
+                    {% for question in entry.questions %} {% if question.explanation %}
+                    <li>
+                        {{ question.statement }}<br />R: {{ question.answer }}<br />E: {{ question.explanation }}
+                    </li>
+                    {% else %}
+                    <li>{{ question.statement }}<br />R: {{ question.answer }}</li>
+                    {% endif %} {% endfor %}
+                </ul>
+            </div>
             {% endif %}
         </section>
-    </main>
-    <script src="{{ url_for('static', filename='js/btn-exemplos.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/handle-search-box-enter-event.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/handle-entry-validation-after-creation.js') }}"></script>
+        {% if entry.questions %}
+        <div class="btn-box">
+            <button type="button" class="btn-exemplo-definicao d-block mt-5 border-0" style="--clr: #1e9bff"
+                id="btn-ex">
+                <span>VEJA EXEMPLOS</span><i></i>
+            </button>
+            <button type="button" class="btn-exemplo-definicao d-none mt-5 border-0" style="--clr: #1e9bff"
+                id="btn-sig">
+                <span>VOLTE PARA DEFINIÇÃO</span><i></i>
+            </button>
+        </div>
+        {% endif %}
+    </section>
+
+    <section class="recomendacao col-3">
+        <div class="search-box justify-content-between align-items-center">
+            <input type="text" class="search-txt" placeholder="Pesquise um termo aqui!" />
+            <i class="bi bi-search" alt="lupa"></i>
+        </div>
+        {% if entry.is_validated %}
+        <a href="" class="link-termo-do-dia">
+            <div class="termo-do-dia mt-5">
+                <span></span><span></span><span></span><span></span>
+                <h4 class="d-flex justify-content-center p-3 rounded-top fw-bold">
+                    TERMO DO DIA
+                </h4>
+                <div class="elementos">
+                    <h2 class="d-flex justify-content-center">Be.ta</h2>
+                    <div class="imagem d-flex justify-content-center fs-1 pb-4">β</div>
+                    <div class="significado-recomendacao">
+                        <p>
+                            Trata-se do homem beta, um termo emprestado da biologia, que
+                            significa o oposto do macho alfa, o líder de um grupo de animais.
+                        </p>
+                    </div>
+                    <div class="legenda d-flex align-items-center justify-content-center"></div>
+                </div>
+            </div>
+        </a>
+        {% else %}
+        <div class="validacao mt-5">
+            <span></span><span></span><span></span><span></span>
+            <h4 class="d-flex justify-content-center p-3 rounded-top fw-bold">
+                Aceitar verbete?
+            </h4>
+            <div class="elementos d-flex flex-column">
+                <a href="{{ url_for('entry.validate_entry', entry_content=entry.get_normalized_content()) }}"
+                    type="button" class="btn-confirmacao mt-5 border-0 text-center text-decoration-none"
+                    style="--clr: #00ff18">
+                    <span>ACEITAR</span><i></i>
+                </a>
+                <a href="{{ url_for('entry.delete_entry', entry_content=entry.get_normalized_content()) }}"
+                    type="button" class="btn-confirmacao mt-5 border-0 text-center text-decoration-none"
+                    style="--clr: #ff0037">
+                    <span>NEGAR</span><i></i>
+                </a>
+            </div>
+        </div>
+        {% endif %}
+    </section>
+</main>
+<script src="{{ url_for('static', filename='js/btn-exemplos.js') }}"></script>
+<script src="{{ url_for('static', filename='js/handle-search-box-enter-event.js') }}"></script>
+<script src="{{ url_for('static', filename='js/handle-entry-validation-after-creation.js') }}"></script>
+<script src="{{ url_for('static', filename='js/carousel.js') }}"></script>
 {% endblock %}
