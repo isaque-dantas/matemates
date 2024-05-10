@@ -1,30 +1,24 @@
-from flask_login import UserMixin
-
-from app.models import db
 # from app.secret_keys import EMAIL_PASSWORD
-from pymysql.err import IntegrityError
 
+import base64
 import os
 import re
-
 import unicodedata
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from operator import itemgetter
 
 from flask_login import UserMixin
-from pymysql.err import IntegrityError
-from werkzeug.security import generate_password_hash, check_password_hash
-
-from app.models import db
-
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
-import base64
 from jinja2 import Environment, PackageLoader, select_autoescape
+from pymysql.err import IntegrityError
+from werkzeug.security import generate_password_hash, check_password_hash
+
+from app.models import db
 
 
 def normalize_string(query_string: str) -> str:
@@ -342,8 +336,10 @@ class Entry(db.Model):
         db.session.add(entry)
 
         entry.register_terms_and_syllables(entry_content_with_dots_and_asterisks, form_data)
-        entry.register_images(form_data)
+        # entry.register_images(form_data)
         entry.register_n_attributes(form_data)
+
+        db.session.commit()
 
         return entry
 
@@ -407,8 +403,6 @@ class Entry(db.Model):
 
                 db.session.add(syllable)
 
-        db.session.commit()
-
     def register_images(self, form_data):
         image_file = form_data['image']
         if image_file.filename and image_file:
@@ -424,7 +418,6 @@ class Entry(db.Model):
             image_file.close()
 
             db.session.add(image)
-            db.session.commit()
 
     def register_n_attributes(self, form_data):
         n_attributes = {
@@ -473,19 +466,24 @@ class Entry(db.Model):
                 )
 
                 db.session.add(question)
-            else:
+            elif (question['statement'] is not None) ^ (question['answer'] is not None):
                 raise ValueError('Insira as questões corretamente.')
 
         for image in n_attributes['image']:
             image_content = image['content']
             if image_content:
-                filename = f'{self.get_normalized_content()}.{get_extension_from_filename(image_content.filename)}'
+                filename = f'{self.get_normalized_content()}--{image["order"]}.{get_extension_from_filename(image_content.filename)}'
                 image_content.save(os.path.join('app/static/img/entry_illustration/', filename))
                 image_content.close()
 
+                try:
+                    image_caption = image['caption']
+                except KeyError:
+                    image_caption = None
+
                 image = Image(
                     path=filename,
-                    caption=form_data['image_caption'] if form_data['image_caption'] else None,
+                    caption=image_caption if image_caption else None,
                     order=image['order'],
                     entry=self
                 )

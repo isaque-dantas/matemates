@@ -41,13 +41,13 @@ def entry_creation():
         form = EntryCreationForm()
 
         if form.validate_on_submit():
+            form_data = get_form_data_from_request(request)
+            print(form_data)
+            new_entry = Entry.register(form_data)
             try:
+                pass
                 # print(f'request.files: {dict(request.files)}')
                 # print(f'request.form: {dict(request.form)}')
-                form_data = get_form_data_from_request(request)
-                print(form_data)
-
-                new_entry = Entry.register(form_data)
             except Exception as e:
                 flash(str(e), category='danger')
             else:
