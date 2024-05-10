@@ -96,11 +96,13 @@ with app.app_context():
         'definition_knowledge_area_2': 'geometria',
         'question_statement_1': 'O que é um ângulo reto?',
         'question_answer_1': 'batata',
-        'image_caption': ''
+        'image_caption_1': 'legenda imagem 1',
+        'image_caption_2': 'legenda imagem 2',
     }
 
     files = FileMultiDict()
-    files.add_file('image', images_filenames['calculadora'])
+    files.add_file('image_content_1', images_filenames['calculadora'])
+    files.add_file('image_content_2', images_filenames['rafael'])
 
     dados_angulo_reto.update(dict(files))
 
@@ -112,11 +114,11 @@ with app.app_context():
         'main_term_gender': 'F',
         'definition_content_1': 'Dispositivo eletrônico usado para facilitar cálculos matemáticos.',
         'definition_knowledge_area_1': 'álgebra',
-        'image_caption': ''
+        'image_caption_1': 'legenda imagem 1'
     }
 
     files = FileMultiDict()
-    files.add_file('image', images_filenames['calculadora'])
+    files.add_file('image_content_1', images_filenames['calculadora'])
 
     dados_calculadora.update(dict(files))
 
@@ -136,11 +138,11 @@ with app.app_context():
         'definition_knowledge_area_4': 'estatística e probabilidade',
         'definition_content_5': 'The teacher',
         'definition_knowledge_area_5': 'estatística e probabilidade',
-        'image_caption': ''
+        'image_caption_1': ''
     }
 
     files = FileMultiDict()
-    files.add_file('image', images_filenames['seno'])
+    files.add_file('image_content_1', images_filenames['seno'])
 
     dados_rafael.update(dict(files))
 

@@ -48,7 +48,7 @@ class EntryCreationForm(FlaskForm):
 
     question_answer_1 = StringField('Resposta')
 
-    image_1 = FileField('Imagem', validators=[
+    image_content_1 = FileField('Imagem', validators=[
         FileAllowed(['jpg', 'png', 'jpeg'], 'Apenas arquivos \'jpg\', \'png\' ou \'jpeg\' são permitidos.'),
     ])
 
