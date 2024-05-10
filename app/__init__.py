@@ -1,13 +1,13 @@
 from flask import Flask
 from flask_login import LoginManager
 
-from app.secret_keys import FLASK_SECRET_KEY, MYSQL_USER_PASSWORD
+from app.secret_keys import FLASK_SECRET_KEY, MYSQL_USER_PASSWORD, MYSQL_USER
 
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = FLASK_SECRET_KEY
 app.config['SQLALCHEMY_DATABASE_URI'] = \
-    f'mysql+pymysql://root:{MYSQL_USER_PASSWORD}@localhost/matemates_db'
+    f'mysql+pymysql://{MYSQL_USER}:{MYSQL_USER_PASSWORD}@localhost/matemates_db'
 
 from app.controllers import entry, user, dashboard, errors
 
