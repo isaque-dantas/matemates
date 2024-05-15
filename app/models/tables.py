@@ -317,7 +317,7 @@ class Entry(db.Model):
     content = db.Column(db.String(256), nullable=False, unique=True)
     is_validated = db.Column(db.Boolean, nullable=False, default=False)
 
-    image = db.relationship('Image', backref='entry')
+    images = db.relationship('Image', backref='entry')
     questions = db.relationship('Question', backref='entry')
     definitions = db.relationship('Definition', backref='entry')
     terms = db.relationship('Term', backref='entry')
@@ -514,12 +514,12 @@ class Entry(db.Model):
             db.session.delete(term)
 
     def delete_image(self):
-        if self.image:
+        if self.images:
             try:
-                os.remove(self.image.path)
+                os.remove(self.images.path)
             except FileNotFoundError:
                 pass
-            db.session.delete(self.image)
+            db.session.delete(self.images)
 
     def get_normalized_content(self):
         return normalize_string(self.content).replace(' ', '_')

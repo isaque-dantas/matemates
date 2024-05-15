@@ -14,6 +14,7 @@ entry_blueprint = Blueprint('entry', __name__)
 def view_entry(entry_content):
     entry = Entry.get_by_content(entry_content)
     if entry:
+        print(entry.images)
         if is_user_admin(current_user) or entry.is_validated:
             return render_template('entry.html', entry=entry, enumerate=enumerate, format=format,
                                    user_is_admin=is_user_admin(current_user), user=current_user,
