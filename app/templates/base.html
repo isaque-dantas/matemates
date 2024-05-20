@@ -32,7 +32,7 @@
     />
     <link
       rel="stylesheet"
-      href="../static/css/{% block style2 %}{% endblock %}.css"
+      href="../static/css/root.css"
     />
     <link rel="stylesheet" href="{{url_for('static', filename='css/base.css')}}">
 
@@ -43,7 +43,7 @@
     <div class="bolhas">
       <div class="fundo-bolhas">
       </div>
-      <section class="all p-3 position-relative">
+      <section class="all p-3">
         {% block sidebar %}{% endblock %}
         <div class="options-container">
           <div class="options-close"><i class="bi bi-x-circle-fill"></i></div>
