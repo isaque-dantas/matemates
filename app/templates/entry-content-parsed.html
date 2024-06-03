@@ -1,0 +1,8 @@
+{%- for term in entry.terms -%}
+    {%- if not loop.first -%}&nbsp;{%- endif -%}
+    {%- if term.is_main_term -%}
+        <strong>{{ term.get_parsed_syllables() }}</strong>
+    {%- else -%}
+        <span>{{ term.get_parsed_syllables() }}</span>
+    {%- endif -%}
+{%- endfor -%}
