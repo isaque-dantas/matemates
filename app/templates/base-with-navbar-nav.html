@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% block sidebar %}
+    <header class="main-header container d-flex justify-content-between">
+        <img class="logo" src="../static/img/LOGO.png" alt="">
+        <i class="menu bi bi-list fs-2 d-none"></i>
+    </header>
+    <nav class="sidebar close">
+        <div class="div-geral-nav">
+            {% if is_current_user_logged_in %}
+                <header class="image-container">
+                    <div class="image-text">
+                        <span class="image">
+                            <img src="{{ url_for('static', filename='img/user_profile_picture/'+user.profile_image_path) }}"
+                                 alt="foto de usuário">
+                        </span>
+                        <div class="text header-text">
+                            <span class="name">{{ user.get_parsed_name() }}</span>
+                            <span class="profession">@{{ user.username }}</span>
+                        </div>
+                    </div>
+                </header>
+            {% endif %}
+            <div class="menu-bar">
+                {% if is_current_user_logged_in %}
+                    <div class="menu">
+                {% else %}
+                    <div class="menu m-0">
+                {% endif %}
+                <ul class="menu-links">
+                    <li class="nav-link">
+                        <a href="{{ url_for('dashboard.index') }}">
+                            <i class="bi bi-house icon"></i>
+                            <span class="text nav-text">Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-link">
+                        <a href="{{ url_for('user.perfil') }}">
+                            <i class="bi bi-person icon"></i>
+                            <span class="text nav-text">Perfil</span>
+                        </a>
+                    </li>
+                    <li class="nav-link">
+                        <a href="#">
+                            <i class="bi bi-heart icon"></i>
+                            <span class="text nav-text">Favoritos</span>
+                        </a>
+                    </li>
+                    <li class="nav-link animations-div">
+                        <a href="#">
+                            <i class="bi bi-columns-gap icon"></i>
+                            <span class="text nav-text">Animações</span>
+                        </a>
+                    </li>
+                </ul>
+                </div>
+                <div class="bottom-content">
+                    {% if is_current_user_logged_in %}
+                        <li class="logout">
+                            <a href="{{ url_for('user.logout') }}">
+                                <i class="bi bi-box-arrow-left icon"></i>
+                                <span class="text nav-text">Logout</span>
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="nav-link">
+                            <a href="{{ url_for('user.login') }}">
+                                <i class="bi bi-box-arrow-in-right icon"></i>
+                                <span class="text nav-text">Login</span>
+                            </a>
+                        </li>
+                    {% endif %}
+                    <li class="mode">
+                        <div class="moon-sun">
+                            <i class="bi bi-moon icon"></i>
+                            <i class="bi bi-sun icon"></i>
+                        </div>
+                        <span class="mode-text text">Light mode</span>
+                        <div class="toggle-switch">
+                            <span class="switch"></span>
+                        </div>
+                    </li>
+                </div>
+                </div>
+    </nav>
+{% endblock %}

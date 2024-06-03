@@ -1,0 +1,56 @@
+{% extends 'base-with-navbar-nav.html' %}
+
+{% block title %}Pesquisa{% endblock %}
+{% block style %}style-search{% endblock %}
+
+{% block content %}
+    <main class="container my-5">
+        <section class="pesquisa-responsivo col-3">
+            <div class="search-box d-flex justify-content-between align-items-center">
+                <input type="text" class="search-txt" placeholder="{{ search_query }}">
+                <i class="bi bi-search" alt="lupa"></i>
+            </div>
+        </section>
+        <section class="pesquisa">
+            <div class="search-box justify-content-between align-items-center">
+                <input type="text" class="search-txt w-100" placeholder="{{ search_query }}">
+                <i class="bi bi-search" alt="lupa"></i>
+            </div>
+        </section>
+
+        <h1 class="palavra-pesquisada fs-4 mt-3 ms-3">Resultados encontrados para "<span>{{ search_query }}</span>"</h1>
+
+        {% if entries %}
+            <div class="verbetes row">
+                {% for entry in entries %}
+                    <div class="col-3 mt-5">
+                        <a href="{{ url_for('entry.view_entry', entry_content=entry.get_normalized_content()) }}"
+                           class="card text-decoration-none border-0 ">
+                            <div class="card-body p-3">
+                                <h6 class="card-subtitle text-body-secondary">{{ entry.get_main_term().grammatical_category }} {{ entry.get_main_term().get_gender_in_full() }}</h6>
+                                <h5 class="card-title fw-bold fs-3 mt-1 mb-4">{{ entry.content }}</h5>
+                                <ol class="d-flex flex-column gap-2 list-unstyled">
+                                    {% for definition in entry.definitions %}
+                                        {% if definition.knowledge_area %}
+                                            <li class="area">
+                                                <span class="border p-1 rounded"
+                                                      style="font-size: 14px; font-family: monospace">{{ definition.knowledge_area.content }}</span>
+                                                <div class="text-limit mt-2">{{ definition.content }}</div>
+                                            </li>
+                                        {% else %}
+                                            <li>{{ definition.content }}</li>
+                                        {% endif %}
+                                    {% endfor %}
+                                </ol>
+                            </div>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <hr class="mt-5">
+            <h5 class="text-center text-secondary mt-5">Não foram encontrados resultados para a sua pesquisa</h5>
+        {% endif %}
+    </main>
+    <script src="{{ url_for('static', filename='js/handle-search-box-enter-event.js') }}"></script>
+{% endblock %}

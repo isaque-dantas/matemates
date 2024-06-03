@@ -1,0 +1,158 @@
+/*-------main-------*/
+
+/*--Caixa de pesquisa--*/
+.search-box{
+    height: 40px;
+    padding: 20px;
+    border-radius: 40px;
+    background: #0e0b1c;
+    width: 100%;
+    border: solid 2px white;
+    box-shadow: 0 0 10px #ffffff;
+    color: white;
+    display: flex;
+}
+
+.search-txt{
+    border: none;
+    background: none;
+    outline: none;
+    padding: 0;
+    color: white;
+    font-size: 16px;
+    line-height: 40px;
+}
+
+.search-letters {
+    list-style: none;
+    padding: 0;
+}
+
+/*--Termo do dia--*/
+
+.link-termo-do-dia, .link-verbete{
+    text-decoration: none;
+}
+
+.termo-do-dia h4{
+    background: #ffffff;
+    color: #0e0b1c;
+}
+
+.termo-do-dia .elementos{
+    padding: 0 20px 15px 20px;
+}
+
+.termo-do-dia {
+    width: 100%;
+    color: white;
+    position: relative;
+    overflow: hidden;
+}
+
+.termo-do-dia::after{
+    content: "";
+    width: 0%;
+    height: 2px;
+    background: linear-gradient(transparent, #ffffff);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    transition: 0.5s ease-in-out;
+}
+
+
+.termo-do-dia:hover::after{
+    width: 100%;
+}
+
+/*--Caixa de verbetes--*/
+
+.topic-title {
+    color: #8400ff;
+} 
+
+.verbetes-box {
+    border: solid 2px #8400ff;
+    box-shadow: 0 0 5px #8400ff, 0 0 10px #8400ff;
+    border-radius: 10px 10px 0 0;
+    overflow-x: scroll;
+}
+
+.verbete {
+    min-width: 300px;
+    height: 170px;
+    position: relative;
+    background-color: #0e0b1c;
+    border-top: solid 2px white;
+    border-bottom: solid 2px white;
+    border-radius: 5px;
+    color: white;
+    overflow: hidden;
+}
+
+.verbete::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 60px; 
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0), #0e0b1c);
+}
+
+.verbetes-box::-webkit-scrollbar {
+    height: 4px;
+    background: #ffffff2e;
+    
+}
+
+.verbetes-box::-webkit-scrollbar-thumb {
+    height: 4px;
+    background: #ffffff8f;
+}
+
+/*^^ Barra de rolagem da pagina ^^*/
+
+@media only screen and (max-device-width: 1199px) {
+    .link-nav{
+        display: none;
+    }
+
+    nav{
+        width: auto;
+    }
+    .dropdown{
+        display: block;
+    }
+
+    .dropdown-toggle::after{
+        content: none;
+    }
+
+    .top{
+        flex-direction: column-reverse;
+    }
+
+    .top .col-8, .top .col-3{
+        width: 100%;
+    }
+
+    .geral{
+        padding: 20px;
+    }
+
+    .search-letters{
+        display: none !important;
+    }
+
+    .verbete{
+        min-width: 100%;
+        height: 170px;
+    }
+}
+
+#invitation-feedback {
+    opacity: 0;
+    transition: opacity ease-in-out .15s;
+}

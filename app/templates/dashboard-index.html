@@ -1,0 +1,127 @@
+{% extends 'base-with-navbar-nav.html' %}
+
+{% block title %}Matematês // Criar termo{% endblock %}
+{% block style %}style-dashboard{% endblock %}
+
+{% block content %}
+    <main class="container">
+        <section class="mt-5">
+            <div class="search-box justify-content-between align-items-center">
+                <input type="text" class="search-txt w-100" placeholder="Pesquise um termo aqui!">
+                <i class="bi bi-search" alt="lupa"></i>
+            </div>
+            <div class="letters mt-2">
+                <ul class="search-letters d-flex justify-content-between px-4">
+                    <li>A</li>
+                    <li>B</li>
+                    <li>C</li>
+                    <li>D</li>
+                    <li>E</li>
+                    <li>F</li>
+                    <li>G</li>
+                    <li>H</li>
+                    <li>I</li>
+                    <li>J</li>
+                    <li>K</li>
+                    <li>L</li>
+                    <li>M</li>
+                    <li>N</li>
+                    <li>O</li>
+                    <li>P</li>
+                    <li>Q</li>
+                    <li>R</li>
+                    <li>S</li>
+                    <li>T</li>
+                    <li>U</li>
+                    <li>V</li>
+                    <li>W</li>
+                    <li>X</li>
+                    <li>Y</li>
+                    <li>Z</li>
+                </ul>
+            </div>
+        </section>
+
+        {% if is_current_user_logged_in %}
+            <section class="container my-5">
+                {% if user.invitation_is_pending %}
+                    <div>
+                        <p class="fw-medium text-primary">Você foi convidado(a) para ser administrador(a) do
+                            Matematês.</p>
+                        <a href="{{ url_for('user.accept_invite', email=user.email) }}"
+                           class="btn btn-outline-primary px-4 py-2 fw-bold">Aceitar convite</a>
+                    </div>
+                {% endif %}
+                {% if user.is_admin() %}
+                    <div class="d-flex flex-column">
+                        <p id="invitation-feedback" class="fw-bold text-primary">O convite foi enviado com sucesso!</p>
+                        <div class="d-flex gap-4 align-items-end">
+                            <div class="d-flex flex-column gap-2">
+                                <label for="input-email-to-invite">Convide alguém para ser administrador(a)</label>
+                                <input id="input-email-to-invite" type="text" placeholder="Ex.: pedro@gmail.com"
+                                       class="form-control">
+                            </div>
+                            <button id="send-invitation-btn" class="btn btn-outline-primary fw-bold">Enviar convite
+                            </button>
+                        </div>
+                    </div>
+                {% endif %}
+            </section>
+        {% endif %}
+        <section class="geral my-5">
+            {% for knowledge_area in knowledge_areas %}
+                {% if loop.first %}
+                    {% set col_number='8' %}
+                {% else %}
+                    {% set col_number='12' %}
+                {% endif %}
+
+                {% if is_user_admin %}
+                    {% set related_entries = knowledge_area.get_related_entries() %}
+                {% else %}
+                    {% set related_entries = knowledge_area.get_related_and_validated_entries() %}
+                {% endif %}
+
+                {% if related_entries %}
+                    <div class="top d-flex justify-content-between">
+                        <div class="mt-5 col-{{ col_number }}">
+                            <h4 class="topic-title p-3 fw-bold">{{ knowledge_area.content.capitalize() }}</h4>
+                            <div class="verbetes-box d-flex gap-5 p-4">
+                                {% for entry in related_entries*4 %}
+                                    <a href="{{ url_for('entry.view_entry', entry_content=entry.get_normalized_content()) }}"
+                                       class="link-verbete verbete p-3">
+                                        <h2 class="d-flex justify-content-center">{% include 'entry-content-parsed.html' %}</h2>
+                                        <div class="significado-recomendacao">
+                                            <p>{{ entry.get_definition_with_knowledge_area(knowledge_area).content }}</p>
+                                        </div>
+                                    </a>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% if loop.first %}
+                            <div class="col-3 d-flex">
+                                <a href="" class="link-termo-do-dia align-self-end">
+                                    <div class="termo-do-dia">
+                                        <span></span><span></span><span></span><span></span>
+                                        <h4 class="d-flex justify-content-center p-3 rounded-top fw-bold">TERMO DO
+                                            DIA</h4>
+                                        <div class="elementos">
+                                            <h2 class="d-flex justify-content-center">Be.ta</h2>
+                                            <div class="significado-recomendacao">
+                                                <p>Trata-se do homem beta, um termo emprestado da biologia, que
+                                                    significa o
+                                                    oposto do macho alfa, o líder de um grupo de animais.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </section>
+    </main>
+    <script src="{{ url_for('static', filename='js/handle-search-box-enter-event.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/send-invitation-to-be-admin.js') }}"></script>
+{% endblock %}
