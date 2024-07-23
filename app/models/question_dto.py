@@ -1,8 +1,8 @@
-from app.models.tables import Question
+from app.models.tables import QuestionRepository
 
 
 class QuestionDto:
-    def __init__(self, question: Question):
+    def __init__(self, question: QuestionRepository):
         self.statement = question.statement
         self.answer = question.answer
         self.explanation = question.explanation

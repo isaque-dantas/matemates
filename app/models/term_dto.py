@@ -1,9 +1,9 @@
 from app.models.syllable_dto import SyllableDto
-from app.models.tables import Term
+from app.models.tables import TermRepository
 
 
 class TermDto:
-    def __init__(self, term: Term):
+    def __init__(self, term: TermRepository):
         self.content = term.content,
         self.gender = term.gender,
         self.grammatical_category = term.grammatical_category,

@@ -3,7 +3,7 @@ from flask_wtf.file import FileAllowed
 from wtforms import StringField, SubmitField, SelectField, FileField, TextAreaField
 from wtforms.validators import DataRequired, Length
 
-from app.models.tables import Term, Definition, KnowledgeArea
+from app.models.tables import TermRepository, Definition, KnowledgeArea
 from app import app
 
 
@@ -11,7 +11,7 @@ class EntryCreationForm(FlaskForm):
     entry_content = StringField('Conteúdo',
                                 validators=[
                                     DataRequired(),
-                                    Length(max=Term.MAX_LENGTH['content'])
+                                    Length(max=TermRepository.MAX_LENGTH['content'])
                                 ])
 
     main_term_grammatical_category = SelectField('Classe gramatical',
@@ -27,8 +27,8 @@ class EntryCreationForm(FlaskForm):
     main_term_gender = SelectField('Classe gramatical',
                                    choices=[
                                        ('', 'Gênero'),
-                                       ('M', Term.abbreviation_to_gender_in_full('M').capitalize()),
-                                       ('F', Term.abbreviation_to_gender_in_full('F').capitalize())
+                                       ('M', TermRepository.abbreviation_to_gender_in_full('M').capitalize()),
+                                       ('F', TermRepository.abbreviation_to_gender_in_full('F').capitalize())
                                    ])
 
     definition_content_1 = TextAreaField('Definição #1',

@@ -3,7 +3,7 @@ from flask_login import AnonymousUserMixin, login_required, login_user, logout_u
 
 from app.controllers import get_form_data_from_request
 
-from app.models.tables import User
+from app.models.tables import UserRepository
 from app.models.user_forms import LoginForm, RegisterForm
 
 from googleapiclient.errors import HttpError
@@ -43,7 +43,7 @@ def auth_user():
             'user_was_logged': False
         }
     else:
-        user = User.get_by_email(form_data['email'])
+        user = UserRepository.get_by_email(form_data['email'])
 
         print(form_data)
 
@@ -72,7 +72,7 @@ def register():
             print(f'request.form: {dict(request.form)}')
             form_data = get_form_data_from_request(request)
 
-            User.register(form_data)
+            UserRepository.register(form_data)
         except Exception as e:
             flash(str(e), category='danger')
         else:
@@ -97,7 +97,7 @@ def perfil():
             print(f'request.files: {dict(request.files)}')
             print(f'request.form: {dict(request.form)}')
 
-            User.update_user(current_user, form_data)
+            UserRepository.update_user(current_user, form_data)
             print('ended update')
         except Exception as e:
             flash(str(e), category='danger')
@@ -127,7 +127,7 @@ def user_data():
 @user_blueprint.route('/delete_current_user/')
 @login_required
 def delete_current_user():
-    user = User.get_by_id(current_user.id)
+    user = UserRepository.get_by_id(current_user.id)
     logout_user()
     user.delete_user()
     return redirect(url_for('user.login'))
@@ -155,7 +155,7 @@ def invite_to_be_admin(email):
 
 @user_blueprint.route('/accept_invite/<email>')
 def accept_invite(email):
-    user = User.get_by_email(email)
+    user = UserRepository.get_by_email(email)
     if user is None:
         flash('Cadastre-se para continuar.', category='info')
         return redirect(url_for('user.register'))
@@ -174,7 +174,7 @@ def accept_invite(email):
 @login_required
 def edit_password(username):
     if current_user.username == username:
-        user = User.get_by_username(username)
+        user = UserRepository.get_by_username(username)
         if request.form:
             form_data = get_form_data_from_request(request)
             try:

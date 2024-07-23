@@ -89,7 +89,7 @@ def gmail_send_message(subject, template_filename, email):
         raise HttpError(f'Um erro ocorreu: {error}')
 
 
-class User(db.Model, UserMixin):
+class UserRepository(db.Model, UserMixin):
     __tablename__ = 'user'
 
     MAX_LENGTH = {
@@ -122,11 +122,11 @@ class User(db.Model, UserMixin):
     def register(form_data):
         password_hash = generate_password_hash(form_data['password'])
 
-        first_and_last_name = User.get_first_and_last_name_from_name(form_data['name'])
+        first_and_last_name = UserRepository.get_first_and_last_name_from_name(form_data['name'])
         first_name = first_and_last_name['first_name']
         last_name = first_and_last_name['last_name']
 
-        user = User(
+        user = UserRepository(
             first_name=first_name,
             last_name=last_name,
             username=form_data['username'],
@@ -157,7 +157,7 @@ class User(db.Model, UserMixin):
         print('started update')
         self.raise_if_form_data_is_invalid(form_data)
         print('raise success')
-        first_and_last_name = User.get_first_and_last_name_from_name(form_data['name'])
+        first_and_last_name = UserRepository.get_first_and_last_name_from_name(form_data['name'])
         self.first_name = first_and_last_name['first_name']
         self.last_name = first_and_last_name['last_name']
 
@@ -195,11 +195,11 @@ class User(db.Model, UserMixin):
             raise IntegrityError('Esse nome de usuário já foi cadastrado.')
 
     def email_has_integrity(self, form_data):
-        user_with_same_email = User.query.filter_by(email=form_data['email']).first()
+        user_with_same_email = UserRepository.query.filter_by(email=form_data['email']).first()
         return user_with_same_email is None or user_with_same_email == self
 
     def username_has_integrity(self, form_data):
-        user_with_same_username = User.query.filter_by(username=form_data['username']).first()
+        user_with_same_username = UserRepository.query.filter_by(username=form_data['username']).first()
         return user_with_same_username is None or user_with_same_username == self
 
     def register_image(self, form_data):
@@ -221,15 +221,15 @@ class User(db.Model, UserMixin):
 
     @staticmethod
     def get_by_email(email):
-        return User.query.filter_by(email=email).first()
+        return UserRepository.query.filter_by(email=email).first()
 
     @staticmethod
     def get_by_username(username):
-        return User.query.filter_by(username=username).first()
+        return UserRepository.query.filter_by(username=username).first()
 
     @staticmethod
     def get_by_id(user_id):
-        return User.query.get_or_404(user_id)
+        return UserRepository.query.get_or_404(user_id)
 
     def is_password_valid(self, password):
         return check_password_hash(self.password_hash, password)
@@ -261,9 +261,9 @@ class User(db.Model, UserMixin):
         db.session.commit()
 
     def invite(self, email):
-        user_to_invite = User.get_by_email(email)
+        user_to_invite = UserRepository.get_by_email(email)
 
-        if InvitedEmail.email_was_already_invited(email):
+        if InvitedEmailRepository.email_was_already_invited(email):
             raise ValueError('Esse e-mail já foi convidado.')
         if user_to_invite:
             if user_to_invite.role == 'admin':
@@ -274,7 +274,7 @@ class User(db.Model, UserMixin):
             'invite-to-be-admin.html',
             email
         )
-        invited_email = InvitedEmail(
+        invited_email = InvitedEmailRepository(
             email=email
         )
         self.invited_emails.append(invited_email)
@@ -286,7 +286,7 @@ class User(db.Model, UserMixin):
         db.session.commit()
 
     def was_invited(self):
-        invited_email = InvitedEmail.query.filter_by(email=self.email).first()
+        invited_email = InvitedEmailRepository.query.filter_by(email=self.email).first()
         return invited_email is not None or self.invitation_is_pending
 
     def edit_password(self, form_data):
@@ -298,7 +298,7 @@ class User(db.Model, UserMixin):
             raise ValueError('Senha incorreta.')
 
 
-class InvitedEmail(db.Model):
+class InvitedEmailRepository(db.Model):
     __tablename__ = 'invited_email'
     id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True)
     email = db.Column(db.String(128), nullable=False)
@@ -306,12 +306,12 @@ class InvitedEmail(db.Model):
 
     @staticmethod
     def email_was_already_invited(email):
-        invited_email = InvitedEmail.query.filter_by(email=email).first()
+        invited_email = InvitedEmailRepository.query.filter_by(email=email).first()
         print(invited_email)
         return invited_email is not None
 
 
-class Entry(db.Model):
+class EntryRepository(db.Model):
     __tablename__ = 'entry'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     content = db.Column(db.String(256), nullable=False, unique=True)
@@ -326,12 +326,12 @@ class Entry(db.Model):
     def register(form_data):
         entry_content = form_data['entry_content'].casefold()
 
-        entry = Entry(
+        entry = EntryRepository(
             content=entry_content.replace('*', '').replace('.', '')
         )
 
         entry.raise_if_form_data_is_invalid(form_data)
-        entry_content_with_dots_and_asterisks = Entry.normalize_entry_content_asterisks(entry_content)
+        entry_content_with_dots_and_asterisks = EntryRepository.normalize_entry_content_asterisks(entry_content)
 
         db.session.add(entry)
 
@@ -347,7 +347,7 @@ class Entry(db.Model):
         self.raise_if_form_data_is_invalid(form_data)
 
         entry_content_with_dots_and_asterisks = form_data['entry_content'].casefold()
-        entry_content_with_dots_and_asterisks = Entry.normalize_entry_content_asterisks(
+        entry_content_with_dots_and_asterisks = EntryRepository.normalize_entry_content_asterisks(
             entry_content_with_dots_and_asterisks
         )
 
@@ -380,13 +380,13 @@ class Entry(db.Model):
     def register_terms_and_syllables(self, entry_content_with_dots_and_asterisks, form_data):
         terms_contents = entry_content_with_dots_and_asterisks.split()
         for i, term_content in enumerate(terms_contents):
-            term = Term(
+            term = TermRepository(
                 content=term_content.replace('.', '').replace('*', ''),
                 order=i,
                 entry=self
             )
 
-            if Term.is_term_content_of_main_term(term_content):
+            if TermRepository.is_term_content_of_main_term(term_content):
                 term.is_main_term = True
                 term.gender = form_data['main_term_gender']
                 term.grammatical_category = form_data['main_term_grammatical_category']
@@ -395,7 +395,7 @@ class Entry(db.Model):
 
             syllables = term_content.split('.')
             for j, syllable in enumerate(syllables):
-                syllable = Syllable(
+                syllable = SyllableRepository(
                     content=syllable.replace('*', ''),
                     order=j,
                     term=term
@@ -409,7 +409,7 @@ class Entry(db.Model):
             filename = f'{self.get_normalized_content()}.{get_extension_from_filename(image_file.filename)}'
             image_file.save(os.path.join('app/static/img/entry_illustration/', filename))
 
-            image = Image(
+            image = ImageRepository(
                 path=filename,
                 caption=form_data['image_caption'] if form_data['image_caption'] else None,
                 entry=self
@@ -430,9 +430,9 @@ class Entry(db.Model):
             if 'definition' not in key and 'question' not in key and 'image' not in key:
                 continue
 
-            key_index = Entry.get_index_from_form_data_key(key)
-            key_description = Entry.get_description_from_form_data_key(key)
-            key_entity_name = Entry.get_entity_name_from_form_data_key(key)
+            key_index = EntryRepository.get_index_from_form_data_key(key)
+            key_description = EntryRepository.get_description_from_form_data_key(key)
+            key_entity_name = EntryRepository.get_entity_name_from_form_data_key(key)
 
             try:
                 n_attributes[key_entity_name][key_index].update(
@@ -458,7 +458,7 @@ class Entry(db.Model):
 
         for question in n_attributes['question']:
             if question['statement'] and question['answer']:
-                question = Question(
+                question = QuestionRepository(
                     statement=question['statement'],
                     answer=question['answer'],
                     order=question['order'],
@@ -481,7 +481,7 @@ class Entry(db.Model):
                 except KeyError:
                     image_caption = None
 
-                image = Image(
+                image = ImageRepository(
                     path=filename,
                     caption=image_caption if image_caption else None,
                     order=image['order'],
@@ -525,7 +525,7 @@ class Entry(db.Model):
         return normalize_string(self.content).replace(' ', '_')
 
     def has_integrity(self, entry_content):
-        entry_with_same_content = Entry.query.filter_by(content=entry_content).first()
+        entry_with_same_content = EntryRepository.query.filter_by(content=entry_content).first()
         return entry_with_same_content is None or entry_with_same_content == self
 
     @staticmethod
@@ -543,15 +543,15 @@ class Entry(db.Model):
     @staticmethod
     def get_by_content(content):
         content = content.replace('_', ' ')
-        return Entry.query.filter_by(content=content).first()
+        return EntryRepository.query.filter_by(content=content).first()
 
     @staticmethod
     def get_by_id(entry_id):
-        return Entry.query.get(entry_id)
+        return EntryRepository.query.get(entry_id)
 
     @staticmethod
     def search_for_related_entries(search_sentence, gender=None, grammatical_category=None):
-        related_entries = Entry.query.with_entities(Entry.id, Entry.content).all()
+        related_entries = EntryRepository.query.with_entities(EntryRepository.id, EntryRepository.content).all()
 
         entries_and_occurrences = []
 
@@ -583,7 +583,7 @@ class Entry(db.Model):
         for entry_and_occurrences in entries_and_occurrences:
             if entry_and_occurrences['occurrences'] != 0:
                 related_entries.append(
-                    Entry.query.get(entry_and_occurrences['entry_id'])
+                    EntryRepository.query.get(entry_and_occurrences['entry_id'])
                 )
 
         return related_entries
@@ -592,7 +592,7 @@ class Entry(db.Model):
         return Definition.query.filter_by(knowledge_area=knowledge_area, entry=self).first()
 
     def get_main_term(self):
-        return Term.query.filter_by(entry=self, is_main_term=True).first()
+        return TermRepository.query.filter_by(entry=self, is_main_term=True).first()
 
     def get_dict_of_properties(self):
         n_properties = {}
@@ -642,10 +642,10 @@ class Entry(db.Model):
         db.session.commit()
 
     def get_term_by_content(self, term_content):
-        return Term.query.filter_by(entry=self, content=term_content).first()
+        return TermRepository.query.filter_by(entry=self, content=term_content).first()
 
 
-class Term(db.Model):
+class TermRepository(db.Model):
     __tablename__ = 'term'
 
     MAX_LENGTH = {
@@ -665,7 +665,7 @@ class Term(db.Model):
     entry_id = db.Column(db.Integer, db.ForeignKey('entry.id'))
 
     def get_gender_in_full(self):
-        return Term.abbreviation_to_gender_in_full(self.gender)
+        return TermRepository.abbreviation_to_gender_in_full(self.gender)
 
     @staticmethod
     def abbreviation_to_gender_in_full(abbreviation):
@@ -685,7 +685,7 @@ class Term(db.Model):
         return '.'.join(syllables_contents)
 
 
-class Image(db.Model):
+class ImageRepository(db.Model):
     __tablename__ = 'image'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -695,7 +695,7 @@ class Image(db.Model):
     entry_id = db.Column(db.Integer, db.ForeignKey('entry.id'))
 
 
-class Question(db.Model):
+class QuestionRepository(db.Model):
     __tablename__ = 'question'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -706,7 +706,7 @@ class Question(db.Model):
     entry_id = db.Column(db.Integer, db.ForeignKey('entry.id'))
 
 
-class Syllable(db.Model):
+class SyllableRepository(db.Model):
     __tablename__ = 'syllable'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)

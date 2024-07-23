@@ -3,12 +3,12 @@ import json
 from app.models.definition_dto import DefinitionDto
 from app.models.image_dto import ImageDto
 from app.models.question_dto import QuestionDto
-from app.models.tables import Entry
+from app.models.tables import EntryRepository
 from app.models.term_dto import TermDto
 
 
 class EntryDto:
-    def __init__(self, entry: Entry):
+    def __init__(self, entry: EntryRepository):
         self.content: str = entry.content
         self.is_validated: bool = entry.is_validated
         self.images = entry.images

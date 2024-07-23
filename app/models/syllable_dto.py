@@ -1,8 +1,8 @@
-from app.models.tables import Syllable
+from app.models.tables import SyllableRepository
 
 
 class SyllableDto:
-    def __init__(self, syllable: Syllable):
+    def __init__(self, syllable: SyllableRepository):
         self.content = syllable.content,
         self.order = syllable.order
 

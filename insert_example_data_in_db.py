@@ -1,5 +1,5 @@
 from app import app
-from app.models.tables import Entry, KnowledgeArea, User
+from app.models.tables import EntryRepository, KnowledgeArea, UserRepository
 from app.models import db
 from werkzeug.datastructures import FileMultiDict
 
@@ -56,7 +56,7 @@ with app.app_context():
 
     dados_usuario_admin.update(dict(files))
 
-    User.register(dados_usuario_admin)
+    UserRepository.register(dados_usuario_admin)
 
     dados_usuario_comum = {
         'username': 'd_lucas',
@@ -72,7 +72,7 @@ with app.app_context():
 
     dados_usuario_comum.update(dict(files))
 
-    User.register(dados_usuario_comum)
+    UserRepository.register(dados_usuario_comum)
 
     knowledge_areas = [
         {'content': 'álgebra', 'subject': 'matemática'},
@@ -106,7 +106,7 @@ with app.app_context():
 
     dados_angulo_reto.update(dict(files))
 
-    Entry.register(dados_angulo_reto)
+    EntryRepository.register(dados_angulo_reto)
 
     dados_calculadora = {
         'entry_content': 'cal.cu.la.do.ra',
@@ -122,7 +122,7 @@ with app.app_context():
 
     dados_calculadora.update(dict(files))
 
-    Entry.register(dados_calculadora)
+    EntryRepository.register(dados_calculadora)
 
     dados_rafael = {
         'entry_content': 'ra.fa.el',
@@ -146,4 +146,4 @@ with app.app_context():
 
     dados_rafael.update(dict(files))
 
-    Entry.register(dados_rafael)
+    EntryRepository.register(dados_rafael)

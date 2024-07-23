@@ -3,32 +3,32 @@ from flask_wtf.file import FileField, FileAllowed
 from wtforms import StringField, SubmitField, EmailField, PasswordField, DateField
 from wtforms.validators import DataRequired, Length
 
-from app.models.tables import User
+from app.models.tables import UserRepository
 
 
 class RegisterForm(FlaskForm):
     username = StringField('Nome de usuário',
                            validators=[
                                DataRequired(),
-                               Length(2, User.MAX_LENGTH['username'])
+                               Length(2, UserRepository.MAX_LENGTH['username'])
                            ])
 
     name = StringField('Nome e sobrenome',
                        validators=[
                            DataRequired(),
-                           Length(2, User.MAX_LENGTH['name'])
+                           Length(2, UserRepository.MAX_LENGTH['name'])
                        ])
 
     password = PasswordField('Senha',
                              validators=[
                                  DataRequired(),
-                                 Length(4, User.MAX_LENGTH['password'])
+                                 Length(4, UserRepository.MAX_LENGTH['password'])
                              ])
 
     email = EmailField('E-mail',
                        validators=[
                            DataRequired(),
-                           Length(max=User.MAX_LENGTH['email']),
+                           Length(max=UserRepository.MAX_LENGTH['email']),
                        ])
 
     phone_number = StringField('Telefone')
@@ -45,13 +45,13 @@ class LoginForm(FlaskForm):
     email = EmailField('E-mail',
                        validators=[
                            DataRequired(),
-                           Length(max=User.MAX_LENGTH['email'])
+                           Length(max=UserRepository.MAX_LENGTH['email'])
                        ])
 
     password = PasswordField('Senha',
                              validators=[
                                  DataRequired(),
-                                 Length(max=User.MAX_LENGTH['password'])
+                                 Length(max=UserRepository.MAX_LENGTH['password'])
                              ])
 
     submit = SubmitField('Confirmar')
