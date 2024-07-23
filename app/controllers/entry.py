@@ -5,7 +5,7 @@ from flask_login import current_user, login_required
 
 from app.controllers import get_form_data_from_request
 from app.controllers.user import is_user_admin, is_user_logged_in
-from app.models.entry_dto import EntryDto
+from app.models.dtos.entry_dto import EntryDto
 from app.models.entry_forms import EntryCreationForm
 from app.models.tables import EntryRepository
 

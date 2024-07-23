@@ -1,4 +1,4 @@
-from app.models.knowledge_area_dto import KnowledgeAreaDto
+from app.models.dtos.knowledge_area_dto import KnowledgeAreaDto
 from app.models.tables import Definition
 
 

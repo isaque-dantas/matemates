@@ -1,10 +1,8 @@
-import json
-
-from app.models.definition_dto import DefinitionDto
-from app.models.image_dto import ImageDto
-from app.models.question_dto import QuestionDto
+from app.models.dtos.definition_dto import DefinitionDto
+from app.models.dtos.image_dto import ImageDto
+from app.models.dtos.question_dto import QuestionDto
 from app.models.tables import EntryRepository
-from app.models.term_dto import TermDto
+from app.models.dtos.term_dto import TermDto
 
 
 class EntryDto:

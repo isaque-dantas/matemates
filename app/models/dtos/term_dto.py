@@ -1,4 +1,4 @@
-from app.models.syllable_dto import SyllableDto
+from app.models.dtos.syllable_dto import SyllableDto
 from app.models.tables import TermRepository
 
 
