@@ -3,7 +3,7 @@ from flask_wtf.file import FileAllowed
 from wtforms import StringField, SubmitField, SelectField, FileField, TextAreaField
 from wtforms.validators import DataRequired, Length
 
-from app.models.tables import TermRepository, Definition, KnowledgeArea
+from app.models.tables import TermRepository, DefinitionRepository, KnowledgeAreaRepository
 from app import app
 
 
@@ -34,14 +34,14 @@ class EntryCreationForm(FlaskForm):
     definition_content_1 = TextAreaField('Definição #1',
                                          validators=[
                                              DataRequired(),
-                                             Length(max=Definition.MAX_LENGTH['content'])
+                                             Length(max=DefinitionRepository.MAX_LENGTH['content'])
                                          ])
     with app.app_context():
         definition_knowledge_area_1 = SelectField(
             'Área do conhecimento',
             choices=[
                 ('', 'Selecione uma opção'),
-                *KnowledgeArea.get_term_creation_form_definitions_choices()
+                *KnowledgeAreaRepository.get_term_creation_form_definitions_choices()
             ])
 
     question_statement_1 = StringField('Enunciado')

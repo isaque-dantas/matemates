@@ -1,5 +1,5 @@
 from app import app
-from app.models.tables import EntryRepository, KnowledgeArea, UserRepository
+from app.models.tables import EntryRepository, KnowledgeAreaRepository, UserRepository
 from app.models import db
 from werkzeug.datastructures import FileMultiDict
 
@@ -84,7 +84,7 @@ with app.app_context():
     ]
 
     for knowledge_area in knowledge_areas:
-        KnowledgeArea.register(knowledge_area['content'], knowledge_area['subject'])
+        KnowledgeAreaRepository.register(knowledge_area['content'], knowledge_area['subject'])
 
     dados_angulo_reto = {
         'entry_content': '*Ân.gu.lo* re.to',

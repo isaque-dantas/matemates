@@ -1,8 +1,8 @@
-from app.models.tables import KnowledgeArea
+from app.models.tables import KnowledgeAreaRepository
 
 
 class KnowledgeAreaDto:
-    def __init__(self, knowledge_area: KnowledgeArea):
+    def __init__(self, knowledge_area: KnowledgeAreaRepository):
         self.content = knowledge_area.content
         self.subject = knowledge_area.subject
 

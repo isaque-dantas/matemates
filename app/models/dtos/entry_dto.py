@@ -20,27 +20,4 @@ class EntryDto:
         self.definitions = list(map(lambda definition: DefinitionDto(definition).to_serializable(), self.definitions))
         self.terms = list(map(lambda term: TermDto(term).to_serializable(), self.terms))
 
-        print(self.__dict__)
-
         return self.__dict__
-
-        # return {
-        #     "content": self.content,
-        #     "is_validated": self.is_validated,
-        #     "images": self.images,
-        #     "questions": self.questions,
-        #     "definitions": self.definitions,
-        #     "terms": self.terms
-        # }
-
-# id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-# content = db.Column(db.String(256), nullable=False, unique=True)
-# gender = db.Column(db.Enum('M', 'F'), nullable=True)
-# grammatical_category = db.Column(
-#     db.Enum('substantivo', 'verbo', 'adjetivo', 'numeral'), nullable=True
-# )
-# is_main_term = db.Column(db.Boolean, nullable=False, default=False)
-# order = db.Column(db.Integer, nullable=False)
-# 
-# syllables = db.relationship('Syllable', backref='term')
-# entry_id = db.Column(db.Integer, db.ForeignKey('entry.id'))

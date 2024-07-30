@@ -19,6 +19,7 @@ def get(query):
         return list(map(lambda e: EntryDto(e).to_serializable(), entries))
 
     entry = EntryRepository.get_by_content(query)
+    print(entry)
     if not entry:
         abort(404)
 

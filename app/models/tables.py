@@ -116,7 +116,7 @@ class UserRepository(db.Model, UserMixin):
     profile_image_path = db.Column(db.String(MAX_LENGTH['profile_image_path']), nullable=True)
     invitation_is_pending = db.Column(db.Boolean, nullable=False, default=False)
 
-    invited_emails = db.relationship('InvitedEmail', backref='user')
+    invited_emails = db.relationship('InvitedEmailRepository', backref='user')
 
     @staticmethod
     def register(form_data):
@@ -317,10 +317,10 @@ class EntryRepository(db.Model):
     content = db.Column(db.String(256), nullable=False, unique=True)
     is_validated = db.Column(db.Boolean, nullable=False, default=False)
 
-    images = db.relationship('Image', backref='entry')
-    questions = db.relationship('Question', backref='entry')
-    definitions = db.relationship('Definition', backref='entry')
-    terms = db.relationship('Term', backref='entry')
+    images = db.relationship('ImageRepository', backref='entry')
+    questions = db.relationship('QuestionRepository', backref='entry')
+    definitions = db.relationship('DefinitionRepository', backref='entry')
+    terms = db.relationship('TermRepository', backref='entry')
 
     @staticmethod
     def register(form_data):
@@ -445,11 +445,11 @@ class EntryRepository(db.Model):
 
         for definition_data in n_attributes['definition']:
             if definition_data['content'] and definition_data['knowledge_area']:
-                definition = Definition(
+                definition = DefinitionRepository(
                     content=definition_data['content'],
                     order=definition_data['order'],
                     entry=self,
-                    knowledge_area=KnowledgeArea.query.filter_by(content=definition_data['knowledge_area']).first()
+                    knowledge_area=KnowledgeAreaRepository.query.filter_by(content=definition_data['knowledge_area']).first()
                 )
 
                 db.session.add(definition)
@@ -589,7 +589,7 @@ class EntryRepository(db.Model):
         return related_entries
 
     def get_definition_with_knowledge_area(self, knowledge_area):
-        return Definition.query.filter_by(knowledge_area=knowledge_area, entry=self).first()
+        return DefinitionRepository.query.filter_by(knowledge_area=knowledge_area, entry=self).first()
 
     def get_main_term(self):
         return TermRepository.query.filter_by(entry=self, is_main_term=True).first()
@@ -661,7 +661,7 @@ class TermRepository(db.Model):
     is_main_term = db.Column(db.Boolean, nullable=False, default=False)
     order = db.Column(db.Integer, nullable=False)
 
-    syllables = db.relationship('Syllable', backref='term')
+    syllables = db.relationship('SyllableRepository', backref='term')
     entry_id = db.Column(db.Integer, db.ForeignKey('entry.id'))
 
     def get_gender_in_full(self):
@@ -715,17 +715,17 @@ class SyllableRepository(db.Model):
     term_id = db.Column(db.Integer, db.ForeignKey('term.id'))
 
 
-class KnowledgeArea(db.Model):
+class KnowledgeAreaRepository(db.Model):
     __tablename__ = 'knowledge_area'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     content = db.Column(db.String(128), nullable=False, unique=True)
     subject = db.Column(db.String(128), nullable=False)
-    definitions = db.relationship('Definition', backref='knowledge_area')
+    definitions = db.relationship('DefinitionRepository', backref='knowledge_area')
 
     @staticmethod
     def get_term_creation_form_definitions_choices():
-        contents = KnowledgeArea.query.with_entities(KnowledgeArea.content).order_by(KnowledgeArea.content).all()
+        contents = KnowledgeAreaRepository.query.with_entities(KnowledgeAreaRepository.content).order_by(KnowledgeAreaRepository.content).all()
 
         for i, content in enumerate(contents):
             content_capitalized = content[0][0].upper() + content[0][1:]
@@ -735,7 +735,7 @@ class KnowledgeArea(db.Model):
 
     @staticmethod
     def get_all():
-        return KnowledgeArea.query.all()
+        return KnowledgeAreaRepository.query.all()
 
     def get_related_entries(self):
         related_definitions = self.definitions
@@ -754,7 +754,7 @@ class KnowledgeArea(db.Model):
 
     @staticmethod
     def register(content, subject):
-        knowledge_area = KnowledgeArea(
+        knowledge_area = KnowledgeAreaRepository(
             content=content,
             subject=subject
         )
@@ -762,7 +762,7 @@ class KnowledgeArea(db.Model):
         db.session.commit()
 
 
-class Definition(db.Model):
+class DefinitionRepository(db.Model):
     __tablename__ = 'definition'
 
     MAX_LENGTH = {
