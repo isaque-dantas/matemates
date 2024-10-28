@@ -11,7 +11,8 @@ entry_blueprint = Blueprint('entry', __name__)
 
 
 @entry_blueprint.route('/entry/<entry_content>')
-def view_entry(entry_content):
+@entry_blueprint.route('/entry')
+def view_entry(entry_content = 'calculadora'):
     entry = Entry.get_by_content(entry_content)
     if entry:
         print(entry.images)
