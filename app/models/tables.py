@@ -7,6 +7,7 @@ import unicodedata
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from operator import itemgetter
+import datetime
 
 from flask_login import UserMixin
 from google.auth.transport.requests import Request
@@ -150,7 +151,8 @@ class User(db.Model, UserMixin):
             user.phone_number = form_data['phone_number']
 
         if form_data['birth_date']:
-            user.birth_date = form_data['birth_date']
+            year, month, day = [int(x) for x in form_data['birth_date'].split('-')]
+            user.birth_date = datetime.date(year, month, day)
 
         if user.was_invited():
             user.accept_invite_to_be_admin()
@@ -175,7 +177,8 @@ class User(db.Model, UserMixin):
         if form_data['phone_number']:
             self.phone_number = form_data['phone_number']
         if form_data['birth_date']:
-            self.birth_date = form_data['birth_date']
+            year, month, day = [int(x) for x in form_data['birth_date'].split('-')]
+            self.birth_date = datetime.date(year, month, day)
 
         if form_data['image']:
             self.register_image(form_data)
@@ -538,7 +541,7 @@ class Entry(db.Model):
             db.session.delete(self.images)
 
     def get_normalized_content(self):
-        return normalize_string(self.content).replace(' ', '_')
+        return self.content.replace(' ', '_')
 
     def has_integrity(self, entry_content):
         entry_with_same_content = Entry.query.filter_by(
