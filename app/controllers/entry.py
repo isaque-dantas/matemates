@@ -3,27 +3,32 @@ from flask_login import current_user, login_required
 
 from app.controllers import get_form_data_from_request
 from app.controllers.user import is_user_admin, is_user_logged_in
-
-from app.models.tables import Entry, normalize_string
 from app.models.entry_forms import EntryCreationForm
+from app.models.tables import Entry
 
 entry_blueprint = Blueprint('entry', __name__)
 
 
 @entry_blueprint.route('/entry/<entry_content>')
 @entry_blueprint.route('/entry')
-def view_entry(entry_content = 'calculadora'):
+def view_entry(entry_content='calculadora'):
     entry = Entry.get_by_content(entry_content)
-    if entry:
-        print(entry.images)
-        if is_user_admin(current_user) or entry.is_validated:
-            return render_template('entry.html', entry=entry, enumerate=enumerate, format=format,
-                                   user_is_admin=is_user_admin(current_user), user=current_user,
-                                   is_current_user_logged_in=is_user_logged_in(current_user))
-        else:
-            abort(403)
-    else:
+
+    if not entry:
         abort(404)
+
+    if not (is_user_admin(current_user) or entry.is_validated):
+        abort(403)
+
+    return render_template(
+        'entry.html',
+        entry=entry,
+        enumerate=enumerate,
+        format=format,
+        user_is_admin=is_user_admin(current_user),
+        user=current_user,
+        is_current_user_logged_in=is_user_logged_in(current_user)
+    )
 
 
 @entry_blueprint.route('/search/<search_query>')
