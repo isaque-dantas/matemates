@@ -14,16 +14,18 @@ def get_filename_from_url(url):
 
 
 images_urls = {
-    'calculadora': 'https://static.vecteezy.com/system/resources/previews/000/355/501/large_2x/vector-calculator-icon.jpg',
-    'rafael': 'http://www.thefamouspeople.com/profiles/thumbs/raphael-3.jpg',
-    'seno': 'https://www.neurochispas.com/wp-content/uploads/2021/05/funciones-seno-con-varias-amplitudes.png'
+    'calculadora':
+    'https://static.vecteezy.com/system/resources/previews/000/355/501/large_2x/vector-calculator-icon.jpg',
+    'rafael':
+    'http://www.thefamouspeople.com/profiles/thumbs/raphael-3.jpg',
+    'seno':
+    'https://www.neurochispas.com/wp-content/uploads/2021/05/funciones-seno-con-varias-amplitudes.png'
 }
 
 images_filenames = {}
 for image_url in images_urls:
     images_filenames.update(
-        {image_url: get_filename_from_url(images_urls[image_url])}
-    )
+        {image_url: get_filename_from_url(images_urls[image_url])})
 
 
 def download_images():
@@ -47,7 +49,7 @@ with app.app_context():
         'name': 'Isaque Dantas',
         'password': '12345',
         'email': 'isaque@gmail.com',
-        'phone_number': '1234567890',   
+        'phone_number': '1234567890',
         'birth_date': date(2007, 3, 14)
     }
 
@@ -75,16 +77,35 @@ with app.app_context():
     User.register(dados_usuario_comum)
 
     knowledge_areas = [
-        {'content': 'álgebra', 'subject': 'matemática'},
-        {'content': 'geometria', 'subject': 'matemática'},
-        {'content': 'trigonometria', 'subject': 'matemática'},
-        {'content': 'matemática discreta', 'subject': 'matemática'},
-        {'content': 'estatística e probabilidade', 'subject': 'matemática'},
-        {'content': 'cálculo', 'subject': 'matemática'},
+        {
+            'content': 'álgebra',
+            'subject': 'matemática'
+        },
+        {
+            'content': 'geometria',
+            'subject': 'matemática'
+        },
+        {
+            'content': 'trigonometria',
+            'subject': 'matemática'
+        },
+        {
+            'content': 'matemática discreta',
+            'subject': 'matemática'
+        },
+        {
+            'content': 'estatística e probabilidade',
+            'subject': 'matemática'
+        },
+        {
+            'content': 'cálculo',
+            'subject': 'matemática'
+        },
     ]
 
     for knowledge_area in knowledge_areas:
-        KnowledgeArea.register(knowledge_area['content'], knowledge_area['subject'])
+        KnowledgeArea.register(knowledge_area['content'],
+                               knowledge_area['subject'])
 
     dados_angulo_reto = {
         'entry_content': '*Ân.gu.lo* re.to',
@@ -92,7 +113,8 @@ with app.app_context():
         'main_term_gender': 'M',
         'definition_content_1': 'Ângulo com valor de 90°.',
         'definition_knowledge_area_1': 'geometria',
-        'definition_content_2': 'Classificação dos ângulos de quadrados e retângulos.',
+        'definition_content_2':
+        'Classificação dos ângulos de quadrados e retângulos.',
         'definition_knowledge_area_2': 'geometria',
         'question_statement_1': 'O que é um ângulo reto?',
         'question_answer_1': 'batata',
@@ -112,7 +134,8 @@ with app.app_context():
         'entry_content': 'cal.cu.la.do.ra',
         'main_term_grammatical_category': 'substantivo',
         'main_term_gender': 'F',
-        'definition_content_1': 'Dispositivo eletrônico usado para facilitar cálculos matemáticos.',
+        'definition_content_1':
+        'Dispositivo eletrônico usado para facilitar cálculos matemáticos.',
         'definition_knowledge_area_1': 'álgebra',
         'image_caption_1': 'legenda imagem 1'
     }

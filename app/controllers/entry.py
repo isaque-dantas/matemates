@@ -4,7 +4,7 @@ from flask_login import current_user, login_required
 from app.controllers import get_form_data_from_request
 from app.controllers.user import is_user_admin, is_user_logged_in
 
-from app.models.tables import Entry
+from app.models.tables import Entry, normalize_string
 from app.models.entry_forms import EntryCreationForm
 
 entry_blueprint = Blueprint('entry', __name__)

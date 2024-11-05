@@ -1,13 +1,20 @@
 from flask import Flask
 from flask_login import LoginManager
+from flask_migrate import Migrate
 
-from app.secret_keys import FLASK_SECRET_KEY, MYSQL_USER_PASSWORD, MYSQL_USER
+from app.models.tables import User, Entry, Definition, Term, Syllable, Image, Question, KnowledgeArea
+
+from app.models import db
+
+# from app.secret_keys import FLASK_SECRET_KEY, MYSQL_USER_PASSWORD, MYSQL_USER
 
 app = Flask(__name__)
 
-app.config['SECRET_KEY'] = FLASK_SECRET_KEY
-app.config['SQLALCHEMY_DATABASE_URI'] = \
-    f'mysql+pymysql://{MYSQL_USER}:{MYSQL_USER_PASSWORD}@localhost/matemates_db'
+app.config['SECRET_KEY'] = "bafjksjfdkasjdkf"
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+
+db.init_app(app)
+migrate = Migrate(app, db)
 
 from app.controllers import entry, user, dashboard, errors
 
