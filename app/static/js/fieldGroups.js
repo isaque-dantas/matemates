@@ -1,7 +1,10 @@
 const nFieldGroupsContainers = document.querySelectorAll(".has-n-field-groups");
 let imageInputs = document.querySelectorAll(".get-file");
 
+document.addEventListener("DOMContentLoaded", imageHandle)
+
 function imageHandle() {
+    console.log(imageInputs)
     imageInputs.forEach((input) => {
         input.addEventListener("change", function (e) {
             const imageInputs = document.querySelectorAll(".get-file");
@@ -42,15 +45,19 @@ function addFieldGroup(container) {
         input.value = "";
     });
 
-  if (container.id === "representa") {
-    const imageSelect = newFieldGroup.querySelector(".preview-image");
-    imageSelect.src = "../static/img/selecionar-imagem.png";
-    imageSelect.style.padding = "20px";
+    if (container.id === "representa") {
+        const imageSelect = newFieldGroup.querySelector(".preview-image");
+        imageSelect.src = "../static/img/selecionar-imagem.png";
+        imageSelect.style.padding = "20px";
 
-    const imageLabel = newFieldGroup.querySelector(".get-file");
-    const newInputId = "get-file-" + (imageInputs.length + 1);
-    imageLabel.htmlFor = newInputId;
-  }
+        const imageLabel = newFieldGroup.querySelector(".criacao-imagem");
+        const newInputId = "get-file-" + (imageInputs.length + 1);
+        imageLabel.htmlFor = newInputId;
+        console.log()
+        console.log("imageLabel")
+        console.log(imageLabel)
+        console.log()
+    }
 
     fieldGroups.appendChild(newFieldGroup);
     imageInputs = document.querySelectorAll(".get-file");

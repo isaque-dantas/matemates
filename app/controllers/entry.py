@@ -1,10 +1,10 @@
-from flask import render_template, Blueprint, abort, flash, request, url_for, redirect
+from flask import render_template, Blueprint, abort, flash, request, url_for, redirect, send_file
 from flask_login import current_user, login_required
 
 from app.controllers import get_form_data_from_request
 from app.controllers.user import is_user_admin, is_user_logged_in
 from app.models.entry_forms import EntryCreationForm
-from app.models.tables import Entry
+from app.models.tables import Entry, KnowledgeArea, Image
 
 entry_blueprint = Blueprint('entry', __name__)
 
@@ -19,6 +19,9 @@ def view_entry(entry_content='calculadora'):
 
     if not (is_user_admin(current_user) or entry.is_validated):
         abort(403)
+
+    print(f"{entry.images=}")
+    print(f"{[image.path for image in entry.images]=}")
 
     return render_template(
         'entry.html',
@@ -63,9 +66,15 @@ def entry_creation():
         elif request.method == 'POST':
             flash('Verifique se todos os dados foram inseridos corretamente.', category='warning')
 
-        return render_template('entry-form.html', form=form, user_is_admin=is_user_admin(current_user),
-                               is_edition=False, endpoint=url_for('entry.entry_creation'), user=current_user,
-                               is_current_user_logged_in=is_user_logged_in(current_user))
+        return render_template(
+            'entry-form.html',
+            form=form,
+            user_is_admin=is_user_admin(current_user),
+            is_edition=False,
+            endpoint=url_for('entry.entry_creation'),
+            user=current_user,
+            is_current_user_logged_in=is_user_logged_in(current_user)
+        )
     else:
         abort(403)
 
@@ -77,24 +86,41 @@ def edit_entry(entry_id):
         form = EntryCreationForm()
         entry = Entry.get_by_id(entry_id)
 
+        print(f'request.files: {dict(request.files)}')
+        print(f'request.form: {dict(request.form)}')
+
         if form.validate_on_submit():
             try:
-                print(f'request.files: {dict(request.files)}')
-                print(f'request.form: {dict(request.form)}')
                 form_data = get_form_data_from_request(request)
-
+                print(f"{form_data=}")
                 entry.update(form_data)
             except Exception as e:
                 flash(str(e), category='danger')
+                raise e
             else:
                 flash('Verbete editado com sucesso.', category='success')
                 return redirect(url_for('entry.view_entry', entry_content=entry.get_normalized_content()))
         elif request.method == 'POST':
+            print(form.errors)
             flash('Verifique se todos os dados foram inseridos corretamente.', category='warning')
 
-        return render_template('entry-form.html', form=form, user_is_admin=is_user_admin(current_user),
-                               is_edition=True, endpoint=url_for('entry.edit_entry', entry_id=entry.id),
-                               user=current_user, is_current_user_logged_in=is_user_logged_in(current_user))
+        choices = KnowledgeArea.get_term_creation_form_definitions_choices()
+
+        # print(entry.get_main_term().grammatical_category)
+
+        return render_template(
+            'entry-form.html',
+            form=form,
+            user_is_admin=is_user_admin(current_user),
+            is_edition=True,
+            endpoint=url_for('entry.edit_entry', entry_id=entry.id),
+            user=current_user,
+            is_current_user_logged_in=is_user_logged_in(current_user),
+            entry=entry,
+            enumerate=enumerate,
+            choices=choices,
+            len=len
+        )
     else:
         abort(403)
 
@@ -129,3 +155,9 @@ def delete_entry(entry_content):
         return redirect(url_for('dashboard.index'))
     else:
         abort(403)
+
+
+@entry_blueprint.route('/entry_image/<int:entry_id>/<int:image_order>')
+def entry_image(entry_id: int, image_order: int):
+    image = Image.query.filter_by(entry_id=entry_id, order=image_order).first()
+    return send_file(f"static/img/entry_illustration/{image.path}")

@@ -104,8 +104,7 @@ with app.app_context():
     ]
 
     for knowledge_area in knowledge_areas:
-        KnowledgeArea.register(knowledge_area['content'],
-                               knowledge_area['subject'])
+        KnowledgeArea.register(knowledge_area['content'], knowledge_area['subject'])
 
     dados_angulo_reto = {
         'entry_content': '*Ân.gu.lo* re.to',

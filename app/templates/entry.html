@@ -64,8 +64,7 @@
                             <div class="carousel-inner">
                                 {% for image in entry.images %}
                                 <div class="carousel-item {{'active' if image.order == 0 else '' }}">
-                                    <img src={{ url_for('static', filename='img/entry_illustration/{}'
-                                        .format(image.path)) }} alt="">
+                                    <img src={{ url_for('static', filename='img/entry_illustration/{}'.format(image.path)) }} alt="">
                                     {% if image.caption %}
                                         <div class="caption d-none d-md-block">
                                             <p>{{ image.caption }}</p>

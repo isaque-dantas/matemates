@@ -1,13 +1,13 @@
 # from app.secret_keys import EMAIL_PASSWORD
-
+from flask import url_for
 import base64
+import datetime
 import os
 import re
 import unicodedata
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from operator import itemgetter
-import datetime
 
 from flask_login import UserMixin
 from google.auth.transport.requests import Request
@@ -151,8 +151,11 @@ class User(db.Model, UserMixin):
             user.phone_number = form_data['phone_number']
 
         if form_data['birth_date']:
-            year, month, day = [int(x) for x in form_data['birth_date'].split('-')]
-            user.birth_date = datetime.date(year, month, day)
+            if isinstance(form_data['birth_date'], datetime.date):
+                user.birth_date = form_data['birth_date']
+            else:
+                year, month, day = [int(x) for x in form_data['birth_date'].split('-')]
+                user.birth_date = datetime.date(year, month, day)
 
         if user.was_invited():
             user.accept_invite_to_be_admin()
@@ -350,13 +353,11 @@ class Entry(db.Model):
         entry = Entry(content=entry_content.replace('*', '').replace('.', ''))
 
         entry.raise_if_form_data_is_invalid(form_data)
-        entry_content_with_dots_and_asterisks = Entry.normalize_entry_content_asterisks(
-            entry_content)
+        entry_content_with_dots_and_asterisks = Entry.normalize_entry_content_asterisks(entry_content)
 
         db.session.add(entry)
 
-        entry.register_terms_and_syllables(
-            entry_content_with_dots_and_asterisks, form_data)
+        entry.register_terms_and_syllables(entry_content_with_dots_and_asterisks, form_data)
         # entry.register_images(form_data)
         entry.register_n_attributes(form_data)
 
@@ -372,15 +373,13 @@ class Entry(db.Model):
         entry_content_with_dots_and_asterisks = Entry.normalize_entry_content_asterisks(
             entry_content_with_dots_and_asterisks)
 
-        self.content = entry_content_with_dots_and_asterisks.replace(
-            '*', '').replace('.', '')
+        self.content = entry_content_with_dots_and_asterisks.replace('*', '').replace('.', '')
 
         self.delete_n_properties()
-        self.delete_image()
+        self.delete_images(form_data)
 
-        self.register_terms_and_syllables(
-            entry_content_with_dots_and_asterisks, form_data)
-        self.register_images(form_data)
+        self.register_terms_and_syllables(entry_content_with_dots_and_asterisks, form_data)
+        # self.register_images(form_data)
         self.register_n_attributes(form_data)
 
     def raise_if_form_data_is_invalid(self, form_data):
@@ -402,28 +401,21 @@ class Entry(db.Model):
             entry_content = '*' + entry_content + '*'
         return entry_content
 
-    def register_terms_and_syllables(self,
-                                     entry_content_with_dots_and_asterisks,
-                                     form_data):
+    def register_terms_and_syllables(self, entry_content_with_dots_and_asterisks, form_data):
         terms_contents = entry_content_with_dots_and_asterisks.split()
         for i, term_content in enumerate(terms_contents):
-            term = Term(content=term_content.replace('.', '').replace('*', ''),
-                        order=i,
-                        entry=self)
+            term = Term(content=term_content.replace('.', '').replace('*', ''), order=i, entry=self)
 
             if Term.is_term_content_of_main_term(term_content):
                 term.is_main_term = True
                 term.gender = form_data['main_term_gender']
-                term.grammatical_category = form_data[
-                    'main_term_grammatical_category']
+                term.grammatical_category = form_data['main_term_grammatical_category']
 
             db.session.add(term)
 
             syllables = term_content.split('.')
             for j, syllable in enumerate(syllables):
-                syllable = Syllable(content=syllable.replace('*', ''),
-                                    order=j,
-                                    term=term)
+                syllable = Syllable(content=syllable.replace('*', ''), order=j, term=term)
 
                 db.session.add(syllable)
 
@@ -431,13 +423,13 @@ class Entry(db.Model):
         image_file = form_data['image']
         if image_file.filename and image_file:
             filename = f'{self.get_normalized_content()}.{get_extension_from_filename(image_file.filename)}'
-            image_file.save(
-                os.path.join('app/static/img/entry_illustration/', filename))
+            image_file.save(os.path.join('app/static/img/entry_illustration/', filename))
 
-            image = Image(path=filename,
-                          caption=form_data['image_caption']
-                          if form_data['image_caption'] else None,
-                          entry=self)
+            image = Image(
+                path=filename,
+                caption=form_data['image_caption'] if form_data['image_caption'] else None,
+                entry=self
+            )
 
             image_file.close()
 
@@ -455,13 +447,14 @@ class Entry(db.Model):
             key_entity_name = Entry.get_entity_name_from_form_data_key(key)
 
             try:
-                n_attributes[key_entity_name][key_index].update(
-                    {key_description: value})
+                n_attributes[key_entity_name][key_index].update({key_description: value})
             except IndexError:
                 n_attributes[key_entity_name].append({
                     key_description: value,
                     'order': key_index
                 })
+
+        print(f"{n_attributes=}")
 
         for definition_data in n_attributes['definition']:
             if definition_data['content'] and definition_data['knowledge_area']:
@@ -477,24 +470,27 @@ class Entry(db.Model):
                 raise ValueError('Insira as definições corretamente.')
 
         for question in n_attributes['question']:
-            if question['statement'] and question['answer']:
+            print(f"{question=}")
+            if question.get('statement', None) and question.get('answer', None):
                 question = Question(statement=question['statement'],
                                     answer=question['answer'],
                                     order=question['order'],
                                     entry=self)
 
                 db.session.add(question)
-            elif (question['statement'] is not None) ^ (question['answer']
-                                                        is not None):
+            elif (bool(question.get('statement', None))) ^ (bool(question.get('answer', None))):
                 raise ValueError('Insira as questões corretamente.')
 
         for image in n_attributes['image']:
             image_content = image['content']
+            print(f"{image=}")
+            print(f"{image_content.filename=}")
+            if image_content.filename == "":
+                continue
+
             if image_content:
                 filename = f'{self.get_normalized_content()}--{image["order"]}.{get_extension_from_filename(image_content.filename)}'
-                image_content.save(
-                    os.path.join('app/static/img/entry_illustration/',
-                                 filename))
+                image_content.save(os.path.join('app/static/img/entry_illustration/', filename))
                 image_content.close()
 
                 try:
@@ -515,7 +511,7 @@ class Entry(db.Model):
 
     def delete_entry(self):
         self.delete_n_properties()
-        self.delete_image()
+        self.delete_images()
         db.session.delete(self)
         db.session.commit()
 
@@ -532,13 +528,24 @@ class Entry(db.Model):
                 db.session.delete(syllable)
             db.session.delete(term)
 
-    def delete_image(self):
+    def delete_images(self, form_data: dict | None = None):
+        print()
+        print(f"{self.images=}")
         if self.images:
-            try:
-                os.remove(self.images.path)
-            except FileNotFoundError:
-                pass
-            db.session.delete(self.images)
+            for image in self.images:
+                print(f'image in delete_images: {image}')
+                print(f'filename{form_data.get("image_content_{}".format(image.order + 1), None)}')
+                if form_data and form_data.get(f'image_content_{image.order + 1}', None).filename == '':
+                    print(f"--- --- ---   CONTINUOU {form_data['image_content_{}'.format(image.order+1)]} --- --- ---")
+                    continue
+
+                try:
+                    os.remove(f"/home/isaque/PycharmProjects/matemates/app/static/img/entry_illustration/{image.path}")
+                    db.session.delete(image)
+                except FileNotFoundError as e:
+                    print(e)
+
+        print()
 
     def get_normalized_content(self):
         return self.content.replace(' ', '_')
@@ -636,9 +643,9 @@ class Entry(db.Model):
         for i, definition in enumerate(self.definitions):
             n_properties.update({
                 f'definition_content_{i + 1}':
-                definition.content,
+                    definition.content,
                 f'definition_knowledge_area_{i + 1}':
-                definition.knowledge_area.content
+                    definition.knowledge_area.content
             })
 
         entry_content_with_dots_and_asterisks = ''
@@ -657,7 +664,7 @@ class Entry(db.Model):
         fixed_properties = {
             'entry_content': entry_content_with_dots_and_asterisks,
             'main_term_grammatical_category':
-            self.get_main_term().grammatical_category,
+                self.get_main_term().grammatical_category,
             'main_term_gender': self.get_main_term().gender
         }
 
@@ -673,6 +680,17 @@ class Entry(db.Model):
     def get_term_by_content(self, term_content):
         return Term.query.filter_by(entry=self, content=term_content).first()
 
+    def get_parsed_content(self):
+        terms_contents = [
+            ('*' if term.is_main_term else '') +
+            '.'.join(syllable.content for syllable in term.syllables)
+            + ('*' if term.is_main_term else '')
+
+            for term in self.terms
+        ]
+
+        return ' '.join(terms_contents)
+
 
 class Term(db.Model):
     __tablename__ = 'term'
@@ -682,9 +700,7 @@ class Term(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     content = db.Column(db.String(256), nullable=False, unique=True)
     gender = db.Column(db.Enum('M', 'F'), nullable=True)
-    grammatical_category = db.Column(db.Enum('substantivo', 'verbo',
-                                             'adjetivo', 'numeral'),
-                                     nullable=True)
+    grammatical_category = db.Column(db.Enum('substantivo', 'verbo', 'adjetivo', 'numeral'), nullable=True)
     is_main_term = db.Column(db.Boolean, nullable=False, default=False)
     order = db.Column(db.Integer, nullable=False)
 
@@ -752,8 +768,7 @@ class KnowledgeArea(db.Model):
 
     @staticmethod
     def get_term_creation_form_definitions_choices():
-        contents = KnowledgeArea.query.with_entities(
-            KnowledgeArea.content).order_by(KnowledgeArea.content).all()
+        contents = KnowledgeArea.query.with_entities(KnowledgeArea.content).order_by(KnowledgeArea.content).all()
 
         for i, content in enumerate(contents):
             content_capitalized = content[0][0].upper() + content[0][1:]
@@ -796,9 +811,10 @@ class Definition(db.Model):
     content = db.Column(db.String(MAX_LENGTH['content']), nullable=False)
     order = db.Column(db.Integer, nullable=False)
     entry_id = db.Column(db.Integer, db.ForeignKey('entry.id'))
-    knowledge_area_id = db.Column(db.Integer,
-                                  db.ForeignKey('knowledge_area.id'))
+    knowledge_area_id = db.Column(db.Integer, db.ForeignKey('knowledge_area.id'))
 
+    def get_knowledge_area_content(self):
+        return KnowledgeArea.query.get(self.knowledge_area_id).content
 
 # if __name__ == '__main__':
 #     from app import app

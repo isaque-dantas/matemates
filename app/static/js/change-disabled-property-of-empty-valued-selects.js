@@ -1,11 +1,20 @@
-const selects = document.querySelectorAll("select");
-selects.forEach((select) => {
-  const options = select.options;
-  for (let i = 0; i < options.length; i++) {
-    const option = options.item(i);
-    if (option.value === "") {
-      option.disabled = true;
-      option.selected = true;
-    }
-  }
-});
+document.addEventListener("DOMContentLoaded", () => {
+    const selects = document.querySelectorAll("select");
+
+    console.log(selects)
+
+    selects.forEach((select) => {
+        const options = Array.from(select.options)
+
+        for (let option of options) {
+            if (option.value === "") {
+                option.disabled = true;
+
+                if (!options.some((option) => option.selected)) option.selected = true;
+            }
+        }
+    });
+
+})
+
+
